@@ -21,12 +21,34 @@ function getLogoCoordinates(imageSrc) {
         const imageData = offscreenCtx.getImageData(0, 0, img.width, img.height);
         const data = imageData.data;
 
+        // Find bounding box of non-transparent pixels
+        let minX = img.width, minY = img.height, maxX = 0, maxY = 0;
         for (let y = 0; y < img.height; y++) {
             for (let x = 0; x < img.width; x++) {
                 const index = (y * img.width + x) * 4;
                 const alpha = data[index + 3];
-                if (alpha > 0) { // Only consider non-transparent pixels
-                    logoShape.push({ x: x, y: y });
+                if (alpha > 0) {
+                    if (x < minX) minX = x;
+                    if (y < minY) minY = y;
+                    if (x > maxX) maxX = x;
+                    if (y > maxY) maxY = y;
+                }
+            }
+        }
+        const logoWidth = maxX - minX;
+        const logoHeight = maxY - minY;
+
+        // Calculate offset to center the logo
+        const offsetX = canvas.width / 2 - logoWidth / 2 - minX;
+        const offsetY = canvas.height / 2 - logoHeight / 2 - minY;
+
+        // Now push coordinates with offset
+        for (let y = 0; y < img.height; y++) {
+            for (let x = 0; x < img.width; x++) {
+                const index = (y * img.width + x) * 4;
+                const alpha = data[index + 3];
+                if (alpha > 0) {
+                    logoShape.push({ x: x + offsetX, y: y + offsetY });
                 }
             }
         }
