@@ -7,8 +7,12 @@ canvas.height = window.innerHeight;
 const particles = [];
 const logoShape = []; // Array of target coordinates for particles to form the logo
 
+// Logo dimensions
+const LOGO_WIDTH = 731;
+const LOGO_HEIGHT = 107;
+
 // Example: Function to get logo shape coordinates (replace with your logic)
-function getLogoCoordinates(imageSrc) {
+function getLogoCoordinates(imageSrc, particleGap = 0) {
     const img = new Image();
     img.src = imageSrc;
     img.onload = () => {
@@ -38,17 +42,47 @@ function getLogoCoordinates(imageSrc) {
         const logoWidth = maxX - minX;
         const logoHeight = maxY - minY;
 
-        // Calculate offset to center the logo
-        const offsetX = canvas.width / 2 - logoWidth / 2 - minX;
-        const offsetY = canvas.height / 2 - logoHeight / 2 - minY;
+        // Calculate final logo position (centered on page)
+        const finalLogoX = canvas.width / 2 - LOGO_WIDTH / 2;
+        const finalLogoY = canvas.height / 2 - LOGO_HEIGHT / 2;
 
-        // Now push coordinates with offset
-        for (let y = 0; y < img.height; y++) {
-            for (let x = 0; x < img.width; x++) {
+        // Calculate scale factors
+        const scaleX = LOGO_WIDTH / logoWidth;
+        const scaleY = LOGO_HEIGHT / logoHeight;
+
+        // Calculate viewport-scaled logo position (for starting positions)
+        const viewportScaleX = canvas.width / logoWidth;
+        const viewportScaleY = canvas.height / logoHeight;
+        const viewportScale = Math.min(viewportScaleX, viewportScaleY) * 0.98; // 0.8 to leave some margin
+
+        // Calculate viewport-scaled logo center
+        const viewportLogoX = canvas.width / 2 - (logoWidth * viewportScale) / 2;
+        const viewportLogoY = canvas.height / 2 - (logoHeight * viewportScale) / 2;
+
+        // Now push coordinates with both start and target positions
+        for (let y = 0; y < img.height; y += (particleGap + 1))  {
+            for (let x = 0; x < img.width; x += (particleGap + 1)) {
                 const index = (y * img.width + x) * 4;
                 const alpha = data[index + 3];
                 if (alpha > 0) {
-                    logoShape.push({ x: x + offsetX, y: y + offsetY });
+                    // Calculate relative position within the logo (0-1)
+                    const relativeX = (x - minX) / logoWidth;
+                    const relativeY = (y - minY) / logoHeight;
+
+                    // Calculate start position (viewport-scaled)
+                    const startX = viewportLogoX + (relativeX * logoWidth * viewportScale);
+                    const startY = viewportLogoY + (relativeY * logoHeight * viewportScale);
+
+                    // Calculate target position (final logo size)
+                    const targetX = finalLogoX + (relativeX * LOGO_WIDTH);
+                    const targetY = finalLogoY + (relativeY * LOGO_HEIGHT);
+
+                    logoShape.push({ 
+                        startX, 
+                        startY, 
+                        targetX, 
+                        targetY 
+                    });
                 }
             }
         }
@@ -57,26 +91,29 @@ function getLogoCoordinates(imageSrc) {
 }
 
 class Particle {
-    constructor(x, y, targetX, targetY) {
-        this.x = x;
-        this.y = y;
+    constructor(startX, startY, targetX, targetY) {
+        this.x = startX;
+        this.y = startY;
         this.targetX = targetX;
         this.targetY = targetY;
-        this.vx = (Math.random() - 0.5) * 5;
-        this.vy = (Math.random() - 0.5) * 5;
-        this.friction = .95;
-        this.radius = 1;//Math.random() * 2 + 1;
-        this.color = 'white'; // Customize particle color
+        this.vx = 0;
+        this.vy = 0;
+        this.friction = 0.97;
+        this.radius = 1;
+        this.color = 'white';
+        this.animationProgress = 0;
+        this.animationSpeed = 0.02; // Adjust for faster/slower animation
     }
 
     update() {
+        // Calculate direction to target
         const dx = this.targetX - this.x;
         const dy = this.targetY - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         // Attraction force
-        if (distance > 1) { // Avoid division by zero
-            const attractionForce = 0.3; // Adjust as needed
+        if (distance > 1) {
+            const attractionForce = 0.2;
             this.vx += (dx / distance) * attractionForce;
             this.vy += (dy / distance) * attractionForce;
         }
@@ -88,6 +125,9 @@ class Particle {
         // Update position
         this.x += this.vx;
         this.y += this.vy;
+
+        // Update animation progress
+        this.animationProgress += this.animationSpeed;
     }
 
     draw() {
@@ -100,16 +140,19 @@ class Particle {
 
 function initParticles() {
     for (let i = 0; i < logoShape.length; i++) {
-        const randomX = Math.random() * canvas.width;
-        const randomY = Math.random() * canvas.height;
-        const particle = new Particle(randomX, randomY, logoShape[i].x, logoShape[i].y);
+        const particle = new Particle(
+            logoShape[i].startX, 
+            logoShape[i].startY, 
+            logoShape[i].targetX, 
+            logoShape[i].targetY
+        );
         particles.push(particle);
     }
 }
 
 function animate() {
     requestAnimationFrame(animate);
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (let i = 0; i < particles.length; i++) {
         particles[i].update();
@@ -118,5 +161,5 @@ function animate() {
 }
 
 // Call function to load logo and start animation
-getLogoCoordinates('./bryan-elliott-image.png');
+getLogoCoordinates('./bryan-elliott-image.png', 2);
 animate();
