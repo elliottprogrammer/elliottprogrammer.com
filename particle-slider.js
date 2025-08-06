@@ -20,8 +20,6 @@ function ParticleSlider(options) {
     self.mouseForce = 10000;
     self.restless = true;
     self.imgs = [];
-    self.xOffset = 0;
-    self.yOffset = 0;
     
     // Apply custom options
     if (options) {
@@ -29,8 +27,7 @@ function ParticleSlider(options) {
             "color", "hoverColor", "width", "height", "ptlGap", "ptlSize", 
             "slideDelay", "arrowPadding", "sliderId", "showArrowControls", 
             "onNextSlide", "monochrome", "mouseForce", "restless", "imgs", 
-            "onSizeChange", "onWidthChange", "onHeightChange", "xOffset",
-            "yOffset"
+            "onSizeChange", "onWidthChange", "onHeightChange"
         ];
         
         for (var i = 0, len = optionKeys.length; i < len; i++) {
@@ -312,10 +309,10 @@ ParticleSlider.prototype.Particle = psParticle;
 ParticleSlider.prototype.swapList = function(particle, fromList, toList) {
     var self = this;
     
-    if (particle == null) {
+    if (particle === null) {
         particle = new self.Particle(self);
     }
-
+    
     if (fromList.first === particle) {
         if (particle.next !== null) {
             particle.next.prev = null;
@@ -550,8 +547,8 @@ ParticleSlider.prototype.init = function(force) {
         
         var pixels = self.getPixelFromImageData(
             self.srcCtx.getImageData(0, 0, self.$srcCanv.width, self.$srcCanv.height),
-            ~~(self.cw / 2 - self.$srcCanv.width / 2) + self.xOffset,
-            ~~(self.ch / 2 - self.$srcCanv.height / 2) + self.yOffset,
+            ~~(self.cw / 2 - self.$srcCanv.width / 2),
+            ~~(self.ch / 2 - self.$srcCanv.height / 2)
         );
         
         if (self.showArrowControls === true) {

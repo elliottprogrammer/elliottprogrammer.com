@@ -1,102 +1,199 @@
-<html>
+<html lang="en">
   <head>
   	<meta name="viewport" content="width=device-width" />
   	<title>ElliottProgrammer.com - Senior Frontend Engineer</title>
-    <style>
-        html, body {
-            background-color: black;
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-
-        .slides {
-            display: none;
-        }
-
-        @media (min-width: 1000px) {
-            body {
-                background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGkAAAAgCAMAAAAmC6asAAAAMFBMVEX19vf19vft7u/19vfp6uv19vfx8vP19vf19vf19vf19vfm5+j19vcAAAD19vfl5udu+MchAAAADnRSTlOIVcIz10StZneZEewiAMEzGswAAAF/SURBVHja7ZXZbsQwCEXjneXa/P/fFntm0uRpVGkaqVX8YAW4cMCxkq1ftW7STbpJP1sJb0lFPkJiekuq4TMkfkti+gxpe0uivRmB9LQOlHraNixnYErPONAfcYZntYfv9aDtJTmUO5OCeukGR5paqZtbGaSVzYWIlZ9DI6vVpC6shJw5TzdlZk47qZpldAkteBVToxNJrLGqoil6MPE9A1bSNorUXPYWvbLUjbg37lwRNPYW6x6eJK4ilB2hVmChJw2nWx4He3Map1exMVFvQyMVN78rlexbY7Gk0tWUm7gsHUnikQ6dwzLRLM/tRKIlGMMFoijmpthqBocLFTLWO41GnhrFXZIGTiTz5pIyA9G4uqSeSV3W4bSsqvycg0x9RTpcKHaHHybNOZBXfPa41jNjLCeqjRopzgI4kXYcsDqVZWJaZwVWHpYBTOuoACCvEpjTC3DFd6/oVV9YmPw+CWsb+H1SxVWkkgkoV5B6ijasXnMjBPIf/u436e+TvgDCaqPX6lO5yQAAAABJRU5ErkJggg==');
-                background-repeat: no-repeat;
-            }
-        }
-    </style>
+    <!--<link href="https://dhygzobemt712.cloudfront.net/Fonts/VF/WFVisualSansVF.woff2?display=swap" rel="stylesheet" />-->
+    <link rel="stylesheet" href="./styles.css" />
   </head>
-  <body id="particle-slider">
-    <div class="slides">
-        <div id="first-slide" class="slide"></div>
-    </div>
-  	<canvas class="draw"></canvas>
-    
-    <script>
-        var deviceDetector = (function () {
-            var ua = navigator.userAgent.toLowerCase();
-            var detect = (function(s) 	{
-                if (s===undefined) s=ua;
-                else ua = s.toLowerCase();
-                if (/(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk|(puffin(?!.*(IP|AP|WP))))/.test(ua))
-                    return 'tablet';
-                else
-                    if(/(mobi|ipod|phone|blackberry|opera mini|fennec|minimo|symbian|psp|nintendo ds|archos|skyfire|puffin|blazer|bolt|gobrowser|iris|maemo|semc|teashark|uzard)/.test(ua))            
-                        return 'phone';
-                    else return 'desktop';
-            });
+  <body>
+    <div id="viewport-container">
+        <header>
+            <nav class="top-nav page-container">
+                <div class="logo"></div>
+            </nav>
+        </header>
+        <section id="image-atomizer">
+            <canvas class="draw"></canvas>
+            <div class="hover-me"><img alt="Hover mouse over the photo" src="./hover-me-text-with-arrow.png" /></div>
+            <section class="intro">
+                <div class="page-container">
+                    <div class="name">Bryan Elliott</div>
+                    <div class="title">Full Stack Web Application Developer</div>
+                    <div class="description">Crafting creative & intuitive frontend digital experiences.</div>
+                </div>
+            </section>
+        </section>
+    </div>  
+    <section class="about-me">
+        <div class="page-container">
+            <div class="two-col left-text">
+                <div>
+                    <h2>About Me</h2>
+                    <p>👋 Hey there! I’m Bryan Elliott</p>
+
+                    <p>I’m a Frontend Engineer with 15+ years of experience building sleek, scalable, and lightning-fast web apps. I speak fluent JavaScript, dream in React + Next.js, and have a long-standing love affair with TypeScript. Clean code, intuitive UX, and pixel-perfect design? Yes please!</p>
+
+                    <p>For the past 5 years, I was crafting the web at Automattic, working on high-impact projects for WordPress.com and Jetpack. I led complex initiatives like revamping the checkout system used by millions — all while collaborating remotely with brilliant minds across the globe.</p>
+
+                    <p>But I’m not just about the code. I’m a mentor, team player, and process improver, always looking for ways to make engineering more fun, efficient, and human. I’m also super excited about the future of AI-assisted development — tools like ChatGPT and Copilot are a natural extension of my workflow.</p>
+
+                    <p>When I’m not coding, you’ll probably find me out fishing in the Florida sun 🎣 — chasing big snook, tarpon, or jack crevalle (true story: I once made the cover of Waterline Magazine with a 15-pounder 💪).</p>
+
+                    <p>I believe great products are built by curious people who care — about quality, about users, and about the team. If that sounds like you too, let’s connect!</p>
+                </div>
+                <div>
+                    <img src="./elliottprogrammer-working-2-600-600.png" alt="elliottprogrammer cartoon at desk working on computer." />
+                </div>
+            </div>
             
-            return {
-                device:detect(),
-                detect:detect,
-                isMobile:( (detect() != 'desktop') ? true : false ),
-                userAgent:ua
-            };
-        }());
-        var init = function() {
-            var logoImgSrc;
-            switch(deviceDetector.device) {
-                case 'phone':
-                    logoImgSrc = './bryan-elliott-logo_mobile.png';
-                    break;
-                case 'tablet':
-                    logoImgSrc = './bryan-elliott-logo_tablet.png';
-                    break;
-                case 'desktop':
-                    logoImgSrc = './bryan-elliott-logo_desktop.png';
-                    break;
-                default:
-                    logoImgSrc = './bryan-elliott-logo_desktop.png';
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+        </div>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+    <script type="module">
+        import { ImageAtomizer } from './image-atomizer.js';
+        import { Typewriter } from './t-writer.js';
+
+        function debounce(func, delay) {
+            var timer;
+            return function(...args) {
+                clearTimeout(timer);
+                timer = setTimeout( () => {
+                    func.apply(this, args);
+                }, delay)
             }
-            console.log(logoImgSrc);
-            var logoImage = new Image();
-            logoImage.src = logoImgSrc;
+        }
+        function getDeviceType() {
+            const width = window.innerWidth;
+
+            if (width > 1000) {
+                return 'desktop';
+            } else if (width > 700) {
+                return 'tablet';
+            } else {
+                return 'phone';
+            }
+        }
+        const name = document.querySelector('.name');
+        const title = document.querySelector('.title');
+        const description = document.querySelector('.description');
+        gsap.from( '.name', {
+            opacity: 0,
+            y: -70,
+            duration: 1,
+            ease: CustomEase.create("custom", "M0,0 C0.319,0 1,0.745 1,1 "),
+            onStart: () => {
+                name.style.visibility = 'visible';
+            }
+        });
+
+        gsap.from( [title, description], {
+            opacity: 0,
+            y: 70,
+            duration: 1,
+            ease: CustomEase.create("custom", "M0,0 C0.319,0 1,0.745 1,1 "),
+            onStart: () => {
+                title.style.visibility = 'visible';
+                description.style.visibility = 'visible';
+            },
+        })
+
+        gsap.to( '.hover-me img', {
+            delay:3.5,
+            opacity: 1,
+        });
+
+        // HoverMe image shakes every random 1 - 5 seconds
+        var random = () => Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+        function hoverMe() {
+            gsap.to( '.hover-me img', {
+                delay: 3.5,
+                duration: .1,
+                rotationZ: 20,
+                yoyo: true,
+                repeat: 5,
+                ease: "power1.inOut",
+                onComplete() {
+                    const newRandom = random();
+                    gsap.delayedCall(newRandom, hoverMe);
+                },
+            });
+        }
+        hoverMe();
+
+        let writer1;
+
+        function main() {
+            const target = document.querySelector('.logo');
+
+            const options = {
+                typeColor: 'white',
+                animateCursor: false
+            };
             
-            var ps = new ParticleSlider({
-                ptlGap: deviceDetector.device == 'phone' ? 3 : 0,
-                ptlSize: deviceDetector.device == 'phone' ? 3 : 1,
+            writer1 = new Typewriter(target, options);
+            writer1.type("elliottprogrammer.com").start();
+
+            setTimeout( () => {
+                showAtomizer()
+            }, 800)
+        }
+
+        const handleTypewriterRestart = debounce( () => {
+            console.log('handler triggered!');
+            console.log(writer1);
+            writer1.clear().start();
+        }, 200);
+        
+        function showAtomizer() {
+            var logoImgSrc;
+            var deviceType = getDeviceType();
+            switch(deviceType) {
+                // case 'phone':
+                //     logoImgSrc = './bryan-elliott-logo_mobile.png';
+                //     break;
+                // case 'tablet':
+                //     logoImgSrc = './bryan-elliott-logo_tablet.png';
+                //     break;
+                // case 'desktop':
+                //     logoImgSrc = './bryan-elliott-logo_desktop.png';
+                //     break;
+                default:
+                    //logoImgSrc = './bryan-elliott-logo_desktop.png';
+                    logoImgSrc = './bryan-elliott-portfolio-headshot-desktop.png';
+            }
+
+            const navHeight = 58
+            const headingHeight = 229;
+            const viewportHeight = window.innerHeight;
+            const canvasHeight = viewportHeight - navHeight;
+            const canvasCenterHeight = canvasHeight / 2;
+            const adjustedCanvasCenterHeight = ( canvasHeight - headingHeight ) / 2;
+            const offsetY = canvasCenterHeight - adjustedCanvasCenterHeight;
+            
+            var atomizer = new ImageAtomizer(logoImgSrc, {
+                particleGap: 2, //getDeviceType() == 'phone' ? 3 : 0,
+                particleSize: 3, //getDeviceType() == 'phone' ? 3 : 1,
                 width: 1e9,
                 height: 1e9,
-                yOffset: -300,
-                imgs: [logoImage]
+                restless: false,
+                offsetY: offsetY,
             });
-            
-            (window.addEventListener
-            ? window.addEventListener('click', function(){ps.init(true)}, false)
-            : window.onclick = function(){ps.init(true)});
-        }
 
-        var initParticleSlider = function(){
-            var psScript = document.createElement('script');
-            (psScript.addEventListener
-                ? psScript.addEventListener('load', init, false)
-                : psScript.onload = init);
-            psScript.src = './particleSlider.js';
-                psScript.setAttribute('type', 'text/javascript');
-            document.body.appendChild(psScript);
+            //window.addEventListener('resize', handleTypewriterRestart.bind(writer1));
+            
+            window.addEventListener('click', function(){atomizer.init()})
         }
             
         (window.addEventListener
-        ? window.addEventListener('load', initParticleSlider, false)
-        : window.onload = initParticleSlider);
+        ? window.addEventListener('load', main, false)
+        : window.onload = main);
+
 
     </script>
   </body>
