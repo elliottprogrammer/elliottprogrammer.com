@@ -10,7 +10,7 @@ class ImageAtomizer {
         this.offsetY = 0;
         this.monochrome = false;
         this.monochromeColor = "#fff";
-        this.mouseForce = 1000;
+        this.mouseForce = 4000;
         this.restless = false;
         this.onWidthChange = null;
         this.onHeightChange = null;
