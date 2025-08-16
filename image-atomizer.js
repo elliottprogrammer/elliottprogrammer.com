@@ -51,7 +51,6 @@ class ImageAtomizer {
         this.monochromeColorArr = this.parseColor(this.monochromeColor);
         this.mx = -1;
         this.my = -1;
-        this.swipeOffset = 0;
         
         // Canvas dimensions
         this.cw = this.getCw();
@@ -91,7 +90,7 @@ class ImageAtomizer {
             this.my = -1;
         };
         
-        this.$canv.onmousemove = (event) => {
+        this.$canv.onmousemove = this.$canv.ontouchmove = (event) => {
             const getOffset = (element) => {
                 let offsetLeft = 0;
                 let offsetTop = 0;
@@ -163,7 +162,7 @@ class ImageAtomizer {
                 imageAtomizer.swapList(this, imageAtomizer.pxlBuffer, imageAtomizer.recycleBuffer);
                 this.ttl = null;
             } else {
-                const dx = this.gravityX + imageAtomizer.swipeOffset - this.x;
+                const dx = this.gravityX - this.x;
                 const dy = this.gravityY - this.y;
                 const distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
                 const angle = Math.atan2(dy, dx);
@@ -273,7 +272,6 @@ class ImageAtomizer {
     }
     
     nextFrame() {
-        this.swipeOffset = 0;
         
         let particle = this.pxlBuffer.first;
         let nextParticle = null;

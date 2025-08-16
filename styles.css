@@ -22,6 +22,15 @@ html, body {
     position: relative;
 }
 
+figure {
+    margin: 0;
+}
+figcaption {
+    font-size: 12px;
+    text-align: center;
+    margin-top: 4px;
+}
+
 #viewport-container {
     display: flex;
     flex-direction: column;
@@ -42,7 +51,8 @@ header {
 nav.top-nav {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 15px 0;
+    padding-top: 15px;
+    padding-bottom: 15px;
     color: white;
 }
 
@@ -53,10 +63,12 @@ nav.top-nav {
 .page-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    overflow: hidden;
 }
 
-.intro {
+#intro {
     color: white;
     text-align: center;
     position: absolute;
@@ -68,7 +80,7 @@ nav.top-nav {
     pointer-events: none;
 }
 
-.intro * {
+#intro * {
     text-shadow: 1px 1px 2px black;
 }
 
@@ -102,7 +114,7 @@ nav.top-nav {
     font-size: 28px;
 }
 
-section:not(#image-atomizer,.intro) {
+section:not(#image-atomizer,#intro) {
     font-family: 'WF Visual Sans', sans-serif;
     line-height: 1.5;
     font-weight: 300;
@@ -120,9 +132,6 @@ section:not(#image-atomizer,.intro) {
     column-gap: var(--gap);
 }
 
-.two-col.left-text > div {
-}
-
 .two-col.left-text > div:first-child, .two-col.right-text > div:last-child {
     flex: 0 0 calc(60% - (var(--gap) / 2));
 }
@@ -131,8 +140,6 @@ section:not(#image-atomizer,.intro) {
     flex: 0 0 calc(40% - (var(--gap) / 2));
     overflow: visible;
 }
-
-/*.two-col.left-text > div:last-child */
 
 .interactive-image {
     position: relative;
@@ -173,21 +180,65 @@ section:not(#image-atomizer,.intro) {
 }
 
 
-span.glow-light {
+.glow-light {
     display: block;
     position: absolute;
-    background-image: radial-gradient(circle at center, rgba(228, 206, 168, 0.8) 0%, rgba(228, 206, 168, 0) 70%);
+    width: 550px;
+    height: 550px;
+    top: 50%;
+    left: 50%;
+    transform: translate( -15%, -60%);
+    background-image: radial-gradient(circle at center, rgba(228, 206, 168, 0.8) 0%, rgba(255, 254, 253, 0) 85%);
     filter: blur(90px);
     z-index: -1;
-    transition: opacity 0.5s ease;
-    opacity: 1;
+    transition: opacity 0.3s ease;
+    opacity: 0;
 }
 
-#about-me-image span.glow-light {
-    width: 450px;
-    height: 450px;
-    top: -55px;
-    right: -130px;
+#about-me-image.interactive-image {
+    max-width: 600px;
+}
+
+.light-on-container, .coffee-cup-container, img.click-me-img {
+    position: absolute;
+    pointer-events: none;
+}
+
+#about-me-image img.click-me-img {
+    display:block;
+    top: 20%;
+    left: 86%;
+}
+
+.light-on-container {
+    top: 36.6%;
+}
+
+.light-on-container > img {
+    visibility: hidden;
+}
+
+.coffee-cup-container {
+    width: 100%;
+    aspect-ratio: 46000 / 4983;
+    top: 53%;
+}
+
+.coffee-cup-container img {
+    position: absolute;
+    width: 100%;
+}
+.coffee-cup-container img:first-child {
+    visibility: hidden;
+}
+
+#searching-bugs.interactive-image {
+    max-width: 605px;
+}
+
+#searching-bugs img.click-me-img {
+    top: 23%;
+    left: 86%;
 }
 
 #searching-bugs .cone-light-container {
@@ -204,7 +255,8 @@ span.glow-light {
 }
 
 button.light-switch,
-button.fan-switch {
+button.fan-switch,
+button.coffee-cup-btn {
     display: block;
     position: absolute;
     cursor: pointer;
@@ -214,25 +266,32 @@ button.fan-switch {
 }
 
 #about-me-image button.light-switch {
-    width: 20px;
-    height: 15px;
-    top: 27%;
-    left: 85%;
-    transform: rotateZ(-65deg);
+    width: 4%;
+    height: 3%;
+    top: 28%;
+    left: 84.5%;
+    transform: rotateZ(-65deg);  
+}
+
+#about-me-image button.coffee-cup-btn {
+    width: 8%;
+    height: 7.5%;
+    top: 54%;
+    left: 13%;
 }
 
 #searching-bugs button.light-switch {
-    width: 20px;
-    height: 32px;
+    width: 3.9%;
+    height: 5.5%;
     top: 30.9%;
-    left: 81.8%;
+    left: 81.9%;
 }
 
 #searching-bugs button.fan-switch {
-    width: 20px;
-    height: 32px;
+    width: 3.9%;
+    height: 5.5%;
     top: 30.8%;
-    left: 86.5%;
+    left: 86.6%;
 }
 
 .fan-dome-light-container {
@@ -246,7 +305,7 @@ button.fan-switch {
 }
 
 
-img {
+img:not(.click-me-img) {
     width: 100%;
     max-width: 100%;
     height: auto;
@@ -265,22 +324,76 @@ canvas.draw {
 .hover-me img {
     display: block;
     opacity: 0;
-    transform: translate(-229px, -143px) rotateZ(5deg);
+    transform: translate(-309px, -223px) rotateZ(5deg);
     width: 100px;
     height: auto;
 }
 
+@media (max-width: 1766px) {
+    .hover-me img {
+        transform: translate(-229px, -143px) rotateZ(5deg);
+    }
+}
+
+@media (max-width: 645px) {
+    .two-col.left-text > div:last-child, .two-col.right-text > div:first-child {
+        overflow: hidden;
+    }
+}
+
 /* Tablet mode = < 1000px */
-@media (max-width: 1000px) {
-    #particle-slider {
-        height: 700px;
+@media (max-width: 1024px) {
+    .two-col {
+        flex-direction: column;
+    }
+    .two-col.left-text > div:last-child, .two-col.right-text > div:first-child  {
+        order: 1;
     }
 }
 
 /* Mobile mode = < 700px */
 @media (max-width: 700px) {
-    #particle-slider {
-        height: 700px;
+    #intro .name {
+        font-size: 58px;
+    }
+    #intro .title {
+        font-size: 21.5px;
+    }
+    #intro .description {
+        font-size: 18px;
+        max-width: 330px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .hover-me img {
+        transform: translate(-159px, -73px) rotateZ(5deg) scale(0.7);
+    }
+}
+
+@media (max-width: 400px) {
+    #intro .name {
+        font-size: 44px;
+    }
+    #intro .title {
+        font-size: 16px;
+    }
+    #intro .description {
+        font-size: 16px;
+        max-width: 280px;
+        margin-top: 20px;
+    }
+    section:not(#image-atomizer,#intro) {
+        padding: 30px 0 30px;
+        font-size: 16px;
+    }
+    figcaption {
+        font-size: 12px;
+    }
+    .hover-me img {
+        transform: translate(-170px, -88px) rotateZ(5deg) scale(0.7);
+    }
+    img.click-me-img {
+        transform: scale(0.7) translate(-10px, -5px);
     }
 }
 

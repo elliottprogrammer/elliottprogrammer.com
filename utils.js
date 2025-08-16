@@ -1,12 +1,14 @@
 export function getDeviceType() {
     const width = window.innerWidth;
 
-    if (width > 1000) {
+    if (width > 1766) {
         return 'desktop';
     } else if (width > 700) {
         return 'tablet';
+    } else if (width > 420) {
+        return 'mobile';
     } else {
-        return 'phone';
+        return 'phone'
     }
 }
 
