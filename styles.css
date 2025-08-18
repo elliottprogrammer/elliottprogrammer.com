@@ -8,6 +8,7 @@
 
 :root {
     --gap: 40px;
+    --spark-size: 20px;
 }
 
 html, body {
@@ -26,7 +27,7 @@ figure {
     margin: 0;
 }
 figcaption {
-    font-size: 12px;
+    font-size: 14px;
     text-align: center;
     margin-top: 4px;
 }
@@ -65,7 +66,6 @@ nav.top-nav {
     margin: 0 auto;
     padding-left: 15px;
     padding-right: 15px;
-    overflow: hidden;
 }
 
 #intro {
@@ -210,6 +210,12 @@ section:not(#image-atomizer,#intro) {
     left: 86%;
 }
 
+.spark-positioner {
+    position: absolute;
+    top: 15%;
+    left: 81.6%;
+}
+
 .light-on-container {
     top: 36.6%;
 }
@@ -280,6 +286,31 @@ button.coffee-cup-btn {
     left: 13%;
 }
 
+#about-me-image .coffee-found-dialog {
+    box-sizing: border-box;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 7px;
+    font-size: 15px;
+    text-align: center;
+    bottom: 0;
+    left: 0;
+    width: 40%;
+    height: 22%;
+    background: rgba(0, 0, 0, 0.2);
+    /* border: 1px solid #0348fa; */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    /* box-shadow: 1px 1px 1px 0px white */
+    border-radius: 8px;
+    opacity: 0;
+}
+
+#about-me-image .coffee-found-dialog > .line3 {
+    padding-top: 5px;
+}
+
 #searching-bugs button.light-switch {
     width: 3.9%;
     height: 5.5%;
@@ -305,7 +336,7 @@ button.coffee-cup-btn {
 }
 
 
-img:not(.click-me-img) {
+img:not(.click-me-img,.the-bug) {
     width: 100%;
     max-width: 100%;
     height: auto;
@@ -329,19 +360,88 @@ canvas.draw {
     height: auto;
 }
 
+.the-bug {
+    display:block;
+    position: absolute;
+    width: 50px;
+    height: auto;
+    top: 8%;
+    left: 40%;
+}
+
+
+
+.spark {
+    position: absolute;
+    width: calc(var(--spark-size) * 2);
+    height: calc(var(--spark-size) * 2);
+    transform: translate(0, var(--spark-size)) rotate(-105deg);
+}
+
+.spark span {
+    position: absolute;
+    width: 2px;
+    height: var(--spark-size);
+    pointer-events: none;
+    transform-origin: bottom;
+    overflow:hidden;
+    background: transparent;
+    visibility: hidden;
+    opacity: .5;
+}
+
+.spark span::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    background: #000;
+    visibility: hidden;
+}
+
+.spark span::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    background: #fff;
+    visibility: hidden;
+}
+
+.spark.animate span,
+.spark.animate span::before,
+.spark.animate span::after {
+    visibility: visible;
+}
+
+.spark.animate span::after {
+    animation: animate .5s ease-in 3 both;
+}
+
+@keyframes animate {
+    0% {
+        transform: translateY(100%);
+    }
+    100% {
+        transform: translateY(-100%);
+    }
+}
+
+
 @media (max-width: 1766px) {
     .hover-me img {
         transform: translate(-229px, -143px) rotateZ(5deg);
     }
 }
 
-@media (max-width: 645px) {
-    .two-col.left-text > div:last-child, .two-col.right-text > div:first-child {
+@media (max-width: 1245px) {
+    .page-container {
         overflow: hidden;
     }
 }
 
-/* Tablet mode = < 1000px */
+
+
 @media (max-width: 1024px) {
     .two-col {
         flex-direction: column;
@@ -370,6 +470,12 @@ canvas.draw {
     }
 }
 
+@media (max-width: 645px) {
+    .two-col.left-text > div:last-child, .two-col.right-text > div:first-child {
+        overflow: hidden;
+    }
+}
+
 @media (max-width: 400px) {
     #intro .name {
         font-size: 44px;
@@ -394,6 +500,13 @@ canvas.draw {
     }
     img.click-me-img {
         transform: scale(0.7) translate(-10px, -5px);
+    }
+    #about-me-image .coffee-found-dialog {
+        font-size: 11px;
+        padding: 3px 4px;
+    }
+    #about-me-image .coffee-found-dialog .line3 {
+        padding: 0;
     }
 }
 
