@@ -9,6 +9,11 @@
 :root {
     --gap: 40px;
     --spark-size: 20px;
+    --ff-sans: -apple-system, BlinkMacSystemFont, "Segoe UI Adjusted", "Segoe UI", "Liberation Sans", sans-serif;
+    --ff-serif: Georgia, Cambria, "Times New Roman", Times, serif;
+    --ff-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", Menlo, Monaco, Consolas, monospace;
+    --black-200: #424548;
+    --green-400: #6ecf9c;
 }
 
 html, body {
@@ -21,6 +26,14 @@ html, body {
     margin: 0;
     padding: 0;
     position: relative;
+}
+
+.two-col > div > h2 {
+    margin-top: 0;
+}
+
+h2.has-subheadings {
+    margin-bottom: 35px;
 }
 
 figure {
@@ -210,12 +223,6 @@ section:not(#image-atomizer,#intro) {
     left: 86%;
 }
 
-.spark-positioner {
-    position: absolute;
-    top: 15%;
-    left: 81.6%;
-}
-
 .light-on-container {
     top: 36.6%;
 }
@@ -286,7 +293,8 @@ button.coffee-cup-btn {
     left: 13%;
 }
 
-#about-me-image .coffee-found-dialog {
+#about-me-image .coffee-found-dialog,
+#searching-bugs .searching-bugs-found-dialog {
     box-sizing: border-box;
     position: absolute;
     display: flex;
@@ -299,16 +307,22 @@ button.coffee-cup-btn {
     left: 0;
     width: 40%;
     height: 22%;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.65);
     /* border: 1px solid #0348fa; */
     border: 1px solid rgba(255, 255, 255, 0.3);
     /* box-shadow: 1px 1px 1px 0px white */
     border-radius: 8px;
     opacity: 0;
 }
+#searching-bugs .searching-bugs-found-dialog {
+    height: 16%;
+}
 
 #about-me-image .coffee-found-dialog > .line3 {
     padding-top: 5px;
+}
+#searching-bugs .searching-bugs-found-dialog > .line3 {
+    padding-top: 8px;
 }
 
 #searching-bugs button.light-switch {
@@ -363,19 +377,32 @@ canvas.draw {
 .the-bug {
     display:block;
     position: absolute;
-    width: 50px;
+    width: 45px;
     height: auto;
     top: 8%;
-    left: 40%;
+    left: 34%;
+    cursor: pointer;
+    visibility: hidden;
 }
 
+/* img.the-bug {
+    -webkit-filter: drop-shadow(5px 5px 5px #222);
+  filter: drop-shadow(5px 5px 5px #222);
+} */
 
+.spark-positioner {
+    position: absolute;
+    top: 18.5%;
+    left: 82%;
+    height: 48px;
+    width: 48px;
+}
 
 .spark {
     position: absolute;
     width: calc(var(--spark-size) * 2);
     height: calc(var(--spark-size) * 2);
-    transform: translate(0, var(--spark-size)) rotate(-105deg);
+    transform: rotate(-105deg);
 }
 
 .spark span {
@@ -415,8 +442,191 @@ canvas.draw {
 }
 
 .spark.animate span::after {
-    animation: animate .5s ease-in 3 both;
+    animation: animate .5s ease-in 2 both;
 }
+
+img.twinkle {
+    position: absolute;
+    width: 20px;
+    height: auto;
+    top: 53%;
+    left: 18%;
+    transform: scale(0, 0);
+    visibility: hidden;
+}
+
+#stack-overflow-section {
+    font-family: var(--ff-sans);
+    color: #acb3b9;
+}
+.stack-profile-container {
+    
+
+}
+.stack-user-container {
+    display: flex;
+    align-items: flex-start;
+    column-gap: 10px;
+}
+
+.stack-logo-container {
+    padding-bottom: 10px;
+}
+img.stack-logo {
+    max-width: 176px;
+}
+.stack-user-image {
+    max-width: 128px;
+}
+.stack-user-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.stack-user-info h2 {
+    font-size: 24px;
+    margin: 0;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+.stack-user-info h3 {
+    font-size: 18px;
+    margin: 0;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.stack-duration-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    color: #acb3b9;
+    margin: 0;
+    padding: 0;
+}
+.stack-duration-list li {
+    padding: 2px;
+}
+
+.stack-duration-list svg {
+    fill: #acb3b9;
+}
+
+.d-flex {
+    display: flex;
+}
+.fd-column {
+    flex-direction: column;
+}
+.jc-space-between {
+    justify-content: space-between;
+}
+.jc-space-around {
+    justify-content: space-around;
+}
+.duration-item {
+    column-gap: 4px;
+}
+.ps-absolute {
+    position: absolute;
+}
+.stack-reputation-summary-container {
+}
+.stack-reputation-summary-container h3 {
+    font-weight: 400;
+    font-size: 20px;
+    font-weight: 500;
+    margin: 5px 0 3px;
+    padding: 0;
+}
+.reputation-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #424548;
+    border-radius: 7px;
+    padding: 10px;
+}
+.stack-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+}
+.stack-reputation-value {
+    font-size: 30px;
+    font-weight: 700;
+    color: #dedede;
+}
+.stack-reputation-value span.top {
+    font-size: 12px;
+    vertical-align: super;
+    padding-right: 4px;
+}
+.reputation-graph {
+    position: relative;
+    font-size: 12px;
+}
+.profile-cards--graph {
+    position: relative;
+    overflow: hidden;
+    width: 197px;
+    height: 68px;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 13px, var(--black-200) -13px, var(--black-200) 21px);
+    background-position: 0 -4px;
+}
+.reputation-graph ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+#reputationGraph {
+    width: 173px;
+    height: 50px;
+    margin-left: 30px;
+}
+
+.profile-cards--graph .line {
+    stroke: var(--green-400);
+    stroke-width: 2;
+    fill: none;
+}
+.profile-cards--graph .overlay {
+    fill: none;
+    pointer-events: all;
+}
+.stack-profile-links {
+    margin-top:8px;
+    display: flex;
+    gap: 10px 20px;
+}
+
+.stack-profile-links .stack-link-item {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: inherit;
+}
+.stack-profile-links .stack-link-item svg.iconGlyphMd {
+    padding-right: 3px;
+}
+.stack-profile-links .stack-link-item svg.iconShareSm {
+    fill: currentColor;
+    fill: #acb3b9;
+}
+
+.stack-profile-links a {
+    transition: color 0.2s ease-in-out;
+    color: #acb3b9;
+}
+.stack-profile-links a:hover,
+.stack-profile-links a:focus {
+    text-decoration: none;
+    color: #E7700D;
+}
+
 
 @keyframes animate {
     0% {
@@ -449,6 +659,11 @@ canvas.draw {
     .two-col.left-text > div:last-child, .two-col.right-text > div:first-child  {
         order: 1;
     }
+
+    .spark-positioner {
+        top: 21%;
+        left: 83%;
+    }
 }
 
 /* Mobile mode = < 700px */
@@ -474,6 +689,24 @@ canvas.draw {
     .two-col.left-text > div:last-child, .two-col.right-text > div:first-child {
         overflow: hidden;
     }
+    .spark-positioner {
+        top: 20%;
+        left: 82%;
+    }
+}
+
+@media (max-width: 500px) {
+    .spark-positioner {
+        top: 17%;
+        left: 81%;
+    }
+    .stack-reputation-value {
+        font-size: 28px;
+    }
+    .stack-reputation-value span {
+        display: block;
+        line-height: 1;
+    }
 }
 
 @media (max-width: 400px) {
@@ -492,6 +725,11 @@ canvas.draw {
         padding: 30px 0 30px;
         font-size: 16px;
     }
+    .spark-positioner {
+        top: 15.5%;
+        left: 80.5%;
+    }
+
     figcaption {
         font-size: 12px;
     }
@@ -501,12 +739,53 @@ canvas.draw {
     img.click-me-img {
         transform: scale(0.7) translate(-10px, -5px);
     }
-    #about-me-image .coffee-found-dialog {
+    .the-bug {
+        width: 30px;
+    }
+    #about-me-image .coffee-found-dialog,
+    #searching-bugs .searching-bugs-found-dialog {
         font-size: 11px;
         padding: 3px 4px;
     }
-    #about-me-image .coffee-found-dialog .line3 {
+    img.twinkle {
+        top: 52%;
+        left: 17.5%;
+    }
+    .reputation-container {
+        flex-direction: column;
+    }
+    .rank {
+        order: 2;
+    }
+    .rank .stack-label {
+        padding-bottom: 5px;
+    }
+    .stack-duration-list {
+        font-size: 11px;
+    }
+    .duration-item {
+        column-gap: 2px;
+    }
+}
+
+@media (max-width: 350px) {
+    .spark-positioner {
+        top: 14.5%;
+        left: 79.5%;
+    }
+
+    #searching-bugs .searching-bugs-found-dialog {
+        height: 18%;
+    }
+
+    #about-me-image .coffee-found-dialog .line3,
+    #searching-bugs .searching-bugs-found-dialog .line3 {
         padding: 0;
+    }
+
+    img.twinkle {
+        top: 51.5%;
+        left: 17%;
     }
 }
 

@@ -28,3 +28,23 @@ export function getRandomInt(min, max) {
 
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+export function getElementProps(element) {
+    if (!(element instanceof HTMLElement)) {
+      console.warn("Invalid input: Please provide a valid HTML element.");
+      return null;
+    }
+  
+    const rect = element.getBoundingClientRect();
+  
+    return {
+      top: rect.top,
+      right: rect.right,
+      bottom: rect.bottom,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+      x: rect.x, // x and y are often equivalent to left and top, but included for completeness
+      y: rect.y
+    };
+  }
