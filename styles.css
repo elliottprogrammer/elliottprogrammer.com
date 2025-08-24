@@ -859,17 +859,51 @@ img.automattic-org-icon {
     border: var(--borderWidth-thin) solid var(--topicTag-borderColor, transparent);
 }
 
+#git-contribution-slider {
+    position: relative;
+}
+
 #git-contribution-slider button {
     appearance: none;
     -webkit-appearance: none;
     background: none;
     border: none;
+    padding: 0;
+}
+
+
+
+#git-contribution-slider .prev {
+    left: 5px; 
+}
+#git-contribution-slider .next {
+    right: 5px;
+
+}
+
+#git-contribution-slider .prev,
+#git-contribution-slider .next {
+    position: absolute;
+    top: 46%;
+    transform: translate(0, -50%) scale(1);
+    background-color: black;
+    border-radius: 50%;
+    box-shadow: 0 0 4px 1px #000;
+    cursor: pointer;
+    transition: transform 0.16s ease-in-out;
+}
+#git-contribution-slider .prev:hover,
+#git-contribution-slider .next:hover {
+    transform: translate(0, -50%) scale(1.15);
+}
+#git-contribution-slider .play-pause-btns {
+    position: absolute;
 }
 
 .slider-viewport {
     position: relative;
     max-width: 100%;
-    aspect-ratio: 175 / 39;
+    aspect-ratio: 175 / 34.14;
     /* height: 152px; */
     overflow-x: hidden;
 }
@@ -891,9 +925,6 @@ img.automattic-org-icon {
 }
 
 .git-images > .slide > img:not(:last-child) {
-
-    
-    
     height: 100%;
     width: auto;
     max-height: 110.19px;
@@ -906,11 +937,11 @@ img.automattic-org-icon {
     border-left: 1px solid #fff;
 }
 
-.git-images > .slide > span {
+.git-images > .slide > div {
     display: inline-block;
     font-size: 16px;
     font-weight: 700;
-    padding-left: 5px;
+    margin: 0 auto;
 }
 
 .year-caption {
@@ -934,6 +965,22 @@ button.next:disabled {
 .legend {
     max-height: 14px;
     width: auto;
+}
+
+.play-pause-btns {
+    position: relative;
+    width: 25px;
+    height: 25px;
+}
+
+.play-pause-btns button {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.play-pause-btns button.pause {
+    visibility: hidden;
 }
 
 
