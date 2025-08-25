@@ -626,6 +626,7 @@ img.stack-logo {
     text-align: center;
     display: flex;
     align-items: center;
+    justify-content: center;
     column-gap: 4px;
 }
 .stack-label {
@@ -664,6 +665,11 @@ img.stack-logo {
     border-right: 1px solid #424548;
 }
 
+.dialog-style .summary-item-value .action {
+    display: flex;
+    justify-content: center;
+}
+
 .dialog-style .git-btn {
     display: inline-block;
     padding: 3px 12px;
@@ -683,6 +689,7 @@ img.stack-logo {
     transition-property: color, background-color, box-shadow;
     display: flex;
     align-items: center;
+    justify-content: center;
     column-gap: 3px;     
 }
 
@@ -983,6 +990,20 @@ button.next:disabled {
     visibility: hidden;
 }
 
+#referenced-svgs {
+    display: none;
+}
+
+section#footer-top, section#footer-bottom {
+    background: #15171b;
+}
+section#footer-top {
+    border-top: 1px solid #666;
+}
+.copyright {
+    text-align: center;
+    font-size: 14px;
+}
 
 @keyframes animate {
     0% {
@@ -1056,10 +1077,10 @@ button.next:disabled {
         top: 17%;
         left: 81%;
     }
-    .stack-reputation-value {
+    .summary-item-value {
         font-size: 28px;
     }
-    .stack-reputation-value span {
+    .summary-item-value span.top {
         display: block;
         line-height: 1;
     }
@@ -1107,8 +1128,9 @@ button.next:disabled {
         top: 52%;
         left: 17.5%;
     }
-    .reputation-container {
+    .summary-container {
         flex-direction: column;
+        gap: 10px;
     }
     .rank {
         order: 2;
@@ -1116,10 +1138,10 @@ button.next:disabled {
     .rank .stack-label {
         padding-bottom: 5px;
     }
-    .stack-duration-list {
+    .profile-detail-list {
         font-size: 11px;
     }
-    .duration-item {
+    .detail-item {
         column-gap: 2px;
     }
 }
