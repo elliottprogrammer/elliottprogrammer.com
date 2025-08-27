@@ -51,6 +51,9 @@ class ImageAtomizer {
         this.monochromeColorArr = this.parseColor(this.monochromeColor);
         this.mx = -1;
         this.my = -1;
+        // For touch/swipe devices
+        this.touchX = null;
+        this.touchY = null;
         
         // Canvas dimensions
         this.cw = this.getCw();
@@ -71,6 +74,10 @@ class ImageAtomizer {
         // Set canvas dimensions
         this.$canv.width = this.cw;
         this.$canv.height = this.ch;
+
+        this.supportsSwipeEvents = function() {
+            return window && 'ontouchstart' in window;
+        }
         
         // Shuffle function for arrays
         this.shuffle = function() {
@@ -83,6 +90,26 @@ class ImageAtomizer {
             }
         };
         Array.prototype.shuffle = this.shuffle;
+
+        const getOffset = (element) => {
+            let offsetLeft = 0;
+            let offsetTop = 0;
+            let targetElement = typeof element === "string" ? document.getElementById(element) : element;
+            
+            if (targetElement) {
+                offsetLeft = targetElement.offsetLeft;
+                offsetTop = targetElement.offsetTop;
+                const body = document.getElementsByTagName("body")[0];
+                
+                while (targetElement.offsetParent && targetElement !== body) {
+                    offsetLeft += targetElement.offsetParent.offsetLeft;
+                    offsetTop += targetElement.offsetParent.offsetTop;
+                    targetElement = targetElement.offsetParent;
+                }
+            }
+            
+            return { x: offsetLeft + this.offsetX, y: offsetTop + this.offsetY };
+        };
         
         // Mouse event handlers
         this.$canv.onmouseout = () => {
@@ -90,31 +117,31 @@ class ImageAtomizer {
             this.my = -1;
         };
         
-        this.$canv.onmousemove = this.$canv.ontouchmove = (event) => {
-            const getOffset = (element) => {
-                let offsetLeft = 0;
-                let offsetTop = 0;
-                let targetElement = typeof element === "string" ? document.getElementById(element) : element;
-                
-                if (targetElement) {
-                    offsetLeft = targetElement.offsetLeft;
-                    offsetTop = targetElement.offsetTop;
-                    const body = document.getElementsByTagName("body")[0];
-                    
-                    while (targetElement.offsetParent && targetElement !== body) {
-                        offsetLeft += targetElement.offsetParent.offsetLeft;
-                        offsetTop += targetElement.offsetParent.offsetTop;
-                        targetElement = targetElement.offsetParent;
-                    }
-                }
-                
-                return { x: offsetLeft + this.offsetX, y: offsetTop + this.offsetY };
+        if (this.supportsSwipeEvents()) {
+            const trackTouchCoordinates = (x, y) => {
+                console.log(x, y);
+                const offset = getOffset(this.$container);
+                this.mx = x - offset.x + document.body.scrollLeft + document.documentElement.scrollLeft;
+                this.my = y - offset.y + document.body.scrollTop + document.documentElement.scrollTop;
+            }
+            this.$canv.ontouchstart = (event) => {
+                trackTouchCoordinates(event.touches[0].clientX, event.touches[0].clientY);
+            }
+            this.$canv.ontouchmove = (event) => {
+                trackTouchCoordinates(event.touches[0].clientX, event.touches[0].clientY);
+            }
+            this.$canv.ontouchend = (event) => {
+                this.mx = -1;
+                this.my = -1;
+            }
+        } else {
+            this.$canv.onmousemove = (event) => {
+                const offset = getOffset(this.$container);
+                this.mx = event.clientX - offset.x + document.body.scrollLeft + document.documentElement.scrollLeft;
+                this.my = event.clientY - offset.y + document.body.scrollTop + document.documentElement.scrollTop;
             };
-            
-            const offset = getOffset(this.$container);
-            this.mx = event.clientX - offset.x + document.body.scrollLeft + document.documentElement.scrollLeft;
-            this.my = event.clientY - offset.y + document.body.scrollTop + document.documentElement.scrollTop;
-        };
+        }
+        
         
         // Set the image source
         this.image = new Image();

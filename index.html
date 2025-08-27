@@ -14,15 +14,17 @@
             </nav>
         </header>
         <section id="image-atomizer">
-            <canvas class="draw"></canvas>
-            <div class="hover-me"><img alt="Hover mouse over the photo" src="./hover-me-text-with-arrow.png" /></div>
-            <section id="intro">
-                <div class="page-container">
-                    <div class="name">Bryan Elliott</div>
-                    <div class="title">Full Stack Web Application Developer</div>
-                    <div class="description">Crafting creative & intuitive frontend digital experiences.</div>
-                </div>
-            </section>
+            <div class="atomizer-container">
+                <canvas class="draw"></canvas>
+                <div class="hover-me"><img alt="Hover mouse over the photo" src="./hover-me-text-with-arrow.png" /></div>
+                <section id="intro">
+                    <div class="page-container">
+                        <div class="name">Bryan Elliott</div>
+                        <div class="title">Full Stack Web Application Developer</div>
+                        <div class="description">Crafting creative & intuitive frontend digital experiences.</div>
+                    </div>
+                </section>
+            </div>
         </section>
     </div>  
     <section id="about-me">
@@ -77,6 +79,11 @@
                                 <div class="line line2"></div>
                                 <div class="line line3"></div>
                             </div>
+                            <div class="interactive-image-wrapper">
+                                <div class="interactive-image-text">
+                                    <span class="text">Interactive Image</span>
+                                </div>
+                            </div>
                         </div>
                         <figcaption>Hey! Where did I put my coffee cup?<br/>Can you help me find it?<br/>Maybe some light will help... 🤔</figcaption>
                     </figure>
@@ -121,6 +128,11 @@
                                 <div class="line line2"></div>
                                 <div class="line line3"></div>
                             </div>
+                            <div class="interactive-image-wrapper">
+                                <div class="interactive-image-text">
+                                    <span class="text">Interactive Image</span>
+                                </div>
+                            </div>
                         </div>
                         <figcaption>I know there's one more bug here!<br/>Can you help me find it?<br/>Maybe some light and some air movement will help...🤔</figcaption>
                     </figure>
@@ -145,7 +157,7 @@
                 <div>
                     <h3>💡 Stack Overflow Street Cred</h3>
                     <p>Stackoverflow.com is a premiere website where the majority of the world’s programmers regularly attend (although much less, now with the adoption of chatGPT and other LLM's)</p>
-                    <p>In the pre-AI days, I was a regular on Stack Overflow, answering developer questions and helping thousands of engineers untangle tricky problems. My efforts earned me a spot in the <strong>top 9.3%</strong> of contributors worldwide!</p>
+                    <p>In the pre-AI days, I was a regular on Stack Overflow, answering developer questions and helping thousands of engineers untangle tricky problems. My efforts earned me a high reputation score, putting me in the <strong>top 9%</strong> of contributors worldwide!</p>
                     <p>Having a high reputation score demonstrates that you can quickly and accurately solve other programmers' problems and it represents how well the programming community trusts your answers.</p>
                     <p>These days, I answer fewer questions (blame ChatGPT 😉), but I’m still proud of having been part of that global knowledge-sharing engine. The answers I've provided have reached and helped over 280,000 people!</p>
                 </div>
@@ -443,12 +455,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="summary-item dialog-style closed">
+                                        <div class="summary-item dialog-style reviewed">
                                             <div class="summary-item-label">
                                                 <svg fill="#3fb950" width="18px" height="18px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10.3 6.74a.75.75 0 01-.04 1.06l-2.908 2.7 2.908 2.7a.75.75 0 11-1.02 1.1l-3.5-3.25a.75.75 0 010-1.1l3.5-3.25a.75.75 0 011.06.04zm3.44 1.06a.75.75 0 111.02-1.1l3.5 3.25a.75.75 0 010 1.1l-3.5 3.25a.75.75 0 11-1.02-1.1l2.908-2.7-2.908-2.7z"/><path fill-rule="evenodd" d="M1.5 4.25c0-.966.784-1.75 1.75-1.75h17.5c.966 0 1.75.784 1.75 1.75v12.5a1.75 1.75 0 01-1.75 1.75h-9.69l-3.573 3.573A1.457 1.457 0 015 21.043V18.5H3.25a1.75 1.75 0 01-1.75-1.75V4.25zM3.25 4a.25.25 0 00-.25.25v12.5c0 .138.112.25.25.25h2.5a.75.75 0 01.75.75v3.19l3.72-3.72a.75.75 0 01.53-.22h10a.25.25 0 00.25-.25V4.25a.25.25 0 00-.25-.25H3.25z"/></svg>
                                                 PR's reviewed
                                             </div>
-                                            <div id="calyp-closed-val" class="summary-item-value">
+                                            <div id="calyp-reviewed-val" class="summary-item-value">
                                                 <div class="content">342</div>
                                                 <div class="action">
                                                     <a class="git-btn" href="https://github.com/Automattic/wp-calypso/issues?q=is%3Apr+reviewed-by%3Aelliottprogrammer+-linked%3Aissue" target="_blank">
@@ -494,12 +506,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="summary-item dialog-style closed">
+                                        <div class="summary-item dialog-style reviewed">
                                             <div class="summary-item-label">
                                                 <svg fill="#3fb950" width="18px" height="18px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10.3 6.74a.75.75 0 01-.04 1.06l-2.908 2.7 2.908 2.7a.75.75 0 11-1.02 1.1l-3.5-3.25a.75.75 0 010-1.1l3.5-3.25a.75.75 0 011.06.04zm3.44 1.06a.75.75 0 111.02-1.1l3.5 3.25a.75.75 0 010 1.1l-3.5 3.25a.75.75 0 11-1.02-1.1l2.908-2.7-2.908-2.7z"/><path fill-rule="evenodd" d="M1.5 4.25c0-.966.784-1.75 1.75-1.75h17.5c.966 0 1.75.784 1.75 1.75v12.5a1.75 1.75 0 01-1.75 1.75h-9.69l-3.573 3.573A1.457 1.457 0 015 21.043V18.5H3.25a1.75 1.75 0 01-1.75-1.75V4.25zM3.25 4a.25.25 0 00-.25.25v12.5c0 .138.112.25.25.25h2.5a.75.75 0 01.75.75v3.19l3.72-3.72a.75.75 0 01.53-.22h10a.25.25 0 00.25-.25V4.25a.25.25 0 00-.25-.25H3.25z"/></svg>
                                                 PR's reviewied
                                             </div>
-                                            <div id="jetpack-closed-val" class="summary-item-value">
+                                            <div id="jetpack-reviewed-val" class="summary-item-value">
                                                 <div class="content">133</div>
                                                 <div class="action">
                                                     <a class="git-btn" href="https://github.com/Automattic/jetpack/issues?q=is%3Apr%20reviewed-by%3Aelliottprogrammer" target="_blank">
@@ -984,8 +996,29 @@
         }
         hoverMe();
 
-        const aboutMeTextContainer = document.querySelector('.two-col > div:first-child');
-        const aboutMeImageContainer = document.querySelector('.two-col > div:last-child');
+        // Zoom-in atomizer image on scroll.
+        // I'll come back to this, I'm not getting desired results.
+
+        // const heroSection = document.querySelector('.atomizer-container');
+        // gsap.to(heroSection, {
+        //     xPercent: 3,
+        //     yPercent: 9.35,
+        //     z: 1000,
+
+        //     stager: 0.05,
+        //     duration: 10,
+        //     scrollTrigger: {
+        //         trigger: heroSection,
+        //         start: "50px",
+        //         pin: false,
+        //         scrub: true,
+        //         end: '+=700vh',
+        //         markers: true,
+        //     },
+        // })
+
+        const aboutMeTextContainer = document.querySelector('#about-me .two-col > div:first-child');
+        const aboutMeImageContainer = document.querySelector('#about-me .two-col > div:last-child');
         gsap.set([aboutMeTextContainer, aboutMeImageContainer], {
             transform: 'translateY(250px)',
             opacity: 0,
@@ -996,9 +1029,34 @@
             y: 0,
         });
         gsap.to(aboutMeImageContainer, {
-            scrollTrigger: aboutMeImageContainer,
+            scrollTrigger: {
+                trigger: aboutMeImageContainer,
+                start: 'top bottom',
+            },
             opacity: 1,
             y: 0,
+            onComplete: () => {
+                    const textTl = gsap.timeline( {delay: 1.5, ease: "power1.inOut" } );
+                    textTl.to('#about-me-image .interactive-image-text', {
+                        duration: .5,
+                        scaleX: 1,
+                    }).to('#about-me-image .interactive-image-text .text', {
+                        duration: .2,
+                        opacity: 1,
+                    }).to('#about-me-image .interactive-image-text .text', {
+                        delay: .5,
+                        duration: .5,
+                        x: 0,
+                    }, 0).to('#about-me-image .interactive-image-text .text', {
+                        delay: 3,
+                        duration: .5,
+                        x: -250,
+                    }).to('#about-me-image .interactive-image-text', {
+                        duration: .5,
+                        scaleX: 0,
+                    });
+                },
+                    
         });
         const setsMeApartText = document.querySelector('#what-sets-me-apart .two-col > div:first-child');
         const setsMeApartImage = document.querySelector('#what-sets-me-apart .two-col > div:last-child');
@@ -1012,10 +1070,37 @@
             y: 0,
         });
         gsap.to(setsMeApartImage, {
-            scrollTrigger: setsMeApartImage,
+            scrollTrigger: {
+                trigger: setsMeApartImage,
+                start: 'top bottom',
+            },
             opacity: 1,
             y: 0,
+            onComplete: () => {
+                    const textTl = gsap.timeline( {delay: 1.5, ease: "power1.inOut" } );
+                    textTl.to('#searching-bugs .interactive-image-text', {
+                        duration: .5,
+                        scaleX: 1,
+                    }).to('#searching-bugs .interactive-image-text .text', {
+                        duration: .2,
+                        opacity: 1,
+                    }).to('#searching-bugs .interactive-image-text .text', {
+                        delay: .5,
+                        duration: .5,
+                        x: 0,
+                    }, 0).to('#searching-bugs .interactive-image-text .text', {
+                        delay: 3,
+                        duration: .5,
+                        x: -250,
+                    }).to('#searching-bugs .interactive-image-text', {
+                        duration: .5,
+                        scaleX: 0,
+                    });
+                },
+                    
         });
+
+        
 
         const stackOverflowH2 = document.querySelector('#make-impact h2#how-i-make-an-impact');
         const stackOverflowText = document.querySelector('#make-impact .two-col > div:first-child');
@@ -1102,11 +1187,11 @@
         });
 
         const calypShippedVal = document.querySelector('#calyp-shipped-val > div.content');
-        const calypClosedVal = document.querySelector('#calyp-closed-val > div.content');
+        const calypReviewedVal = document.querySelector('#calyp-reviewed-val > div.content');
         const calypOpenVal = document.querySelector('#calyp-open-val > div.content');
         const jetpackShippedVal = document.querySelector('#jetpack-shipped-val > div.content');
-        const jetpackClosedVal = document.querySelector('#jetpack-closed-val > div.content');
-        gsap.set([calypShippedVal, calypClosedVal, calypOpenVal, jetpackShippedVal, jetpackClosedVal], {
+        const jetpackReviewedVal = document.querySelector('#jetpack-reviewed-val > div.content');
+        gsap.set([calypShippedVal, calypReviewedVal, calypOpenVal, jetpackShippedVal, jetpackReviewedVal], {
             innerText: '',
         })
         gsap.to(calypShippedVal, {
@@ -1119,8 +1204,8 @@
                 },
             }
         });
-        gsap.to(calypClosedVal, {
-            scrollTrigger: calypClosedVal,
+        gsap.to(calypReviewedVal, {
+            scrollTrigger: calypReviewedVal,
             innerText: 342,
             snap: { innerText: 1 },
         });
@@ -1130,8 +1215,8 @@
             innerText: 67,
             snap: "innerText",
         });
-        gsap.to(jetpackClosedVal, {
-            scrollTrigger: jetpackClosedVal,
+        gsap.to(jetpackReviewedVal, {
+            scrollTrigger: jetpackReviewedVal,
             innerText: 133,
             snap: { innerText: 1 },
             stagger: {
@@ -1194,6 +1279,7 @@
             const canvasCenterHeight = canvasHeight / 2;
             const adjustedCanvasCenterHeight = ( canvasHeight - headingHeight ) / 2;
             const offsetY = canvasCenterHeight - adjustedCanvasCenterHeight;
+            console.log(offsetY);
             
             var atomizer = new ImageAtomizer(logoImgSrc, {
                 particleGap: 2, //getDeviceType() == 'phone' ? 3 : 0,

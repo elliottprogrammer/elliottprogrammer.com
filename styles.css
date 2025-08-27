@@ -70,6 +70,15 @@ figcaption {
     position: relative;
     width: 100%;
     flex: 1;
+    perspective: 1000px;
+}
+
+.pin-spacer {
+    
+}
+
+.atomizer-container {
+    height: 100%;
 }
 
 header {
@@ -306,6 +315,38 @@ button.coffee-cup-btn {
     height: 7.5%;
     top: 54%;
     left: 13%;
+}
+
+.interactive-image-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+.interactive-image-text {
+    
+    /* background: #ffbb00; */
+    transform: scaleX(0);
+    transform-origin: bottom left;
+    overflow: hidden;
+    background: #FFBB00;
+    background: linear-gradient(90deg,rgba(255, 187, 0, 1) 0%, rgba(255, 187, 0, 0.62) 66%, rgba(255, 187, 0, 0) 100%);
+}
+
+.interactive-image-text .text {
+    display: block;
+    color: #000;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0;
+    padding: 3px 5px;
+    transform: translate(-200px, 0);
+}
+
+.interactive-image-text.white-bg {
+    /* color: #000; */
+    background: #474747;
+    background: linear-gradient(90deg,rgba(71, 71, 71, 1) 0%, rgba(71, 71, 71, 0.62) 66%, rgba(71, 71, 71, 0) 100%);
 }
 
 #about-me-image .coffee-found-dialog,
@@ -638,6 +679,7 @@ img.stack-logo {
     font-size: 30px;
     font-weight: 700;
     color: #dedede;
+    text-align: center;
 }
 .summary-item-value span.top {
     font-size: 12px;
@@ -1132,6 +1174,26 @@ section#footer-top {
         flex-direction: column;
         gap: 10px;
     }
+    .summary-item.dialog-style {
+        width: calc(100% - 1px);
+    }
+    .summary-item.shipped .summary-item-label {
+        border-top-right-radius: 6px;
+        border-right: 1px solid #424548;
+    }
+    .summary-item.shipped .summary-item-value {
+        border-bottom-right-radius: 6px;
+        border-right: 1px solid #424548;
+    }
+    .summary-item.reviewed .summary-item-label {
+        border-top-left-radius: 6px;
+        border-left: 1px solid #424548;
+    }
+    .summary-item.reviewed .summary-item-value {
+        border-bottom-left-radius: 6px;
+        border-left: 1px solid #424548;
+    }
+
     .rank {
         order: 2;
     }
@@ -1147,6 +1209,9 @@ section#footer-top {
 }
 
 @media (max-width: 350px) {
+    .hover-me img {
+        transform: translate(-170px, -120px) rotateZ(5deg) scale(0.7);
+    }
     .spark-positioner {
         top: 14.5%;
         left: 79.5%;
