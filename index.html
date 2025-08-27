@@ -318,8 +318,6 @@
                                             <img src="./git-contrib-images/2020_elliottprogrammer-git-contributions.png" alt=""/>
                                             <div class="year-caption">
                                                 <span>2020</span>
-                                                <svg id="fat-arrow-right" width="17" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 29.26">
-                                                <path d="M14.84.65c.17-.8,1.23-.79,1.77-.35,4.44,4.29,9.45,8.03,13.91,12.28,1.03.98,2.13,1.76,1,3.24l-14.91,13.15c-.46.48-1.77.35-1.77-.35v-5.35s-.25-.27-.27-.27H.85c-.52,0-.6-.77-.63-1.15-.33-3.82-.27-10.41,0-14.27.03-.4.04-1.33.63-1.33h13.72s.27-.25.27-.27c0-1.35-.24-4.22,0-5.35Z" fill="#fcfcfc"/>
                                             </svg>
                                             </div>
                                         </div>
@@ -1036,6 +1034,7 @@
             opacity: 1,
             y: 0,
             onComplete: () => {
+                if ('phone' === getDeviceType()) {
                     const textTl = gsap.timeline( {delay: 1.5, ease: "power1.inOut" } );
                     textTl.to('#about-me-image .interactive-image-text', {
                         duration: .5,
@@ -1055,7 +1054,8 @@
                         duration: .5,
                         scaleX: 0,
                     });
-                },
+                }  
+            },
                     
         });
         const setsMeApartText = document.querySelector('#what-sets-me-apart .two-col > div:first-child');
@@ -1077,6 +1077,7 @@
             opacity: 1,
             y: 0,
             onComplete: () => {
+                if ('phone' === getDeviceType()) {
                     const textTl = gsap.timeline( {delay: 1.5, ease: "power1.inOut" } );
                     textTl.to('#searching-bugs .interactive-image-text', {
                         duration: .5,
@@ -1096,7 +1097,8 @@
                         duration: .5,
                         scaleX: 0,
                     });
-                },
+                }
+            },
                     
         });
 
@@ -1420,7 +1422,7 @@
 
         // Initialize the image slider after DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
-            initImageSlider();
+            //initImageSlider();
             gitSlider = document.querySelector('#git-contribution-slider .slider-viewport');
             sliderTl = gsap.timeline({
                 scrollTrigger: {

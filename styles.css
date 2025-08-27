@@ -1119,6 +1119,10 @@ section#footer-top {
         top: 17%;
         left: 81%;
     }
+    #stack-overflow-profile-section .summary-container {
+        flex-direction: column;
+        gap: 10px;
+    }
     .summary-item-value {
         font-size: 28px;
     }
