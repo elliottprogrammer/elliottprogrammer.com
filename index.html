@@ -600,11 +600,12 @@
         const pauseBtn = slider.querySelector('.pause');
         const frameCycle1 = imageFrameCycler('#about-me-image .frames-container', { shouldReverse: true });
         const frameCycle2 = imageFrameCycler('#searching-bugs .frames-container.searching-eyes-frames', { shouldReverse: true });
+        let blinkTimer;
         function blinkEyesRandomly() {
             const randomDelay = getRandomInt(1000, 6000);
             requestAnimationFrame((timestamp) => frameCycle1.doFrameCycle(timestamp, 0, true, false));
             requestAnimationFrame((timestamp) => frameCycle2.doFrameCycle(timestamp, 0, true, false));
-            setTimeout(blinkEyesRandomly, randomDelay);
+            blinkTimer = setTimeout(blinkEyesRandomly, randomDelay);
         }
         const clickIndicator = document.querySelector('.spark');
         let clickIndicatorTimer;
@@ -932,6 +933,21 @@
             blinkEyesRandomly();
             showClickIndicatorRandomly();
             injectMemberSinceDate();
+
+            // Listen for window blur event
+            window.addEventListener('blur', function() {
+                if (blinkTimer) {
+                    clearTimeout(blinkTimer);
+                    blinkTimer = null;
+                }
+            });
+
+            // Listen for window focus event
+            window.addEventListener('focus', function() {
+                if(!blinkTimer) {
+                    blinkEyesRandomly();
+                }
+            });
         });
 
         
