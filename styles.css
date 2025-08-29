@@ -216,6 +216,29 @@ section:not(#image-atomizer,#intro) {
     visibility: visible;
 }
 
+.challenge-complete-text {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 500;
+    color: #00c903;
+    position: absolute;
+    top: 2%;
+    left: 0.8%;
+    z-index: 1;
+    text-shadow: 1px 1px 2px #000;
+}
+
+#searching-bugs .challenge-complete-text {
+    top: 18.5%;
+}
+
+.challenge-complete-text span {
+    display: inline-block;
+    font-size: 22px;
+    transform-origin: left center;
+}
+.challenge-complete-text span.check {
+    font-size: 28px;
+}
 
 .glow-light {
     display: block;
@@ -363,7 +386,7 @@ button.coffee-cup-btn {
     bottom: 0;
     left: 0;
     width: 40%;
-    height: 22%;
+    min-height: 22%;
     background: rgba(0, 0, 0, 0.65);
     /* border: 1px solid #0348fa; */
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -372,7 +395,7 @@ button.coffee-cup-btn {
     opacity: 0;
 }
 #searching-bugs .searching-bugs-found-dialog {
-    height: 16%;
+    min-height: 16%;
 }
 
 #about-me-image .coffee-found-dialog > .line3 {
@@ -1223,7 +1246,7 @@ section#footer-top {
     }
 
     #searching-bugs .searching-bugs-found-dialog {
-        height: 18%;
+        min-height: 18%;
     }
 
     #about-me-image .coffee-found-dialog .line3,
