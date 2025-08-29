@@ -47,6 +47,7 @@
                 <div>
                     <figure>
                         <div id="about-me-image" class="interactive-image">
+                            <audio id="about-me-click-sound" class="click-sound-elem" src="./click.mp3" preload="auto"></audio>
                             <div class="challenge-complete-text"><span class="word1">Challenge</span> <span class="word2">Completed!</span> <span class="check">&#x2714;</span></div>
                             <div class="glow-light"><span></span></div>
                             <img class="main-image" src="./elliottprogrammer-desk-600-600.png" alt="elliottprogrammer cartoon at desk working on computer." />
@@ -98,6 +99,8 @@
                 <div>
                     <figure>
                         <div id="searching-bugs" class="interactive-image">
+                            <audio id="searching-bugs-click-sound" class="click-sound-elem" src="./click.mp3" preload="auto"></audio>
+                            <audio id="searching-bugs-scuttle-sound" class="click-sound-elem" src="./bug-scuttle2.mp3" preload="auto" loop></audio>
                             <div class="frames-container fan-frames">
                                 <img class="fan-0" src="./elliottprogrammer-searching-bugs-fan-0.png" data-id="0" alt="Ceiling fan frame 0" />
                                 <img class="fan-1" src="./elliottprogrammer-searching-bugs-fan-1.png" data-id="1" alt="Ceiling fan frame 1" />
@@ -673,8 +676,11 @@
         const coffeeCupHidden = document.querySelector('#about-me-image .coffee-cup-container > img[data-id="0"]');
         const coffeeCupVisible = document.querySelector('#about-me-image .coffee-cup-container > img[data-id="1"]');
         const coffeeCupButton = document.querySelector('#about-me-image .coffee-cup-btn');
+        const aboutMeLightClickSound = document.getElementById('about-me-click-sound');
         
         aboutMeLightSwitch.addEventListener('click', (e) => {
+            aboutMeLightClickSound.currentTime = 0;
+            aboutMeLightClickSound.play();
             const computedStyle = window.getComputedStyle(aboutMeLightGlow);
             const lightOpacity = parseFloat(computedStyle.getPropertyValue('opacity'));
             if (lightOpacity > 0) {
@@ -819,6 +825,9 @@
         const bugsCompleteText1 = document.querySelector('#searching-bugs .word1');
         const bugsCompleteText2 = document.querySelector('#searching-bugs .word2');
         const bugsCompleteCheck3 = document.querySelector('#searching-bugs .check');
+        const bugsLightClickSound = document.getElementById('searching-bugs-click-sound');
+        const bugScuttleSound = document.getElementById('searching-bugs-scuttle-sound');
+        bugScuttleSound.volume = 0.15
 
         const bugsCompleteTl = gsap.timeline();
         const bugsComplete = bugsCompleteTl.from(bugsCompleteText1, {
@@ -842,6 +851,8 @@
         bugsComplete.pause();
 
         searchingBugsLightSwitch.addEventListener('click', (e) => {
+            bugsLightClickSound.currentTime = 0;
+            bugsLightClickSound.play();
             imageStatus.isLightOn = !imageStatus.isLightOn;
             setSwitchRecepticle(imageStatus);
             if (imageStatus.isLightOn) {
@@ -857,6 +868,7 @@
         const searchingBugsFanSwitch = document.querySelector('#searching-bugs button.fan-switch');
         const fan = new CeilingFan();
         searchingBugsFanSwitch.addEventListener('click', (e) => {
+            
             imageStatus.isFanOn = !imageStatus.isFanOn;
             setSwitchRecepticle(imageStatus);
             if (imageStatus.isFanOn) {
@@ -888,7 +900,11 @@
                     .to(theBug, {
                         duration: 0.7,
                         ease: "myBounce",
-                        y: height * .52 + 'px'
+                        y: height * .52 + 'px',
+                        onComplete: () => {
+                            bugScuttleSound.currentTime = 0;
+                            //bugScuttleSound.play();
+                        }
                     })
                     // Squash (durung bounce at the same time)
                     .to(theBug, {
@@ -921,6 +937,7 @@
                         yoyo: true,
                         ease: 'none'
                     });
+
                 hasBugDeployed = true;
             }
         }
@@ -930,6 +947,7 @@
                 return false;
             }
             hasFoundBug = true;
+            bugScuttleSound.pause();
             bugTimeline.pause();
             const { width, height } = getElementProps(searchingBugsImage);
             gsap.to(theBug, {

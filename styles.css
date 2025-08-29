@@ -197,6 +197,11 @@ section:not(#image-atomizer,#intro) {
     top: 39.3%;
 }
 
+.click-sound-elem {
+    position: absolute;
+    visibility: hidden;
+}
+
 .light-switch-container, .light-switch-container img {
     position: absolute;
     width: 100%;
