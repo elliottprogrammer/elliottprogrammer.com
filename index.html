@@ -65,7 +65,11 @@
                             <img class="twinkle" src="./star-1.svg" />
                             <button class="light-switch"></button>
                             <button class="coffee-cup-btn" tabindex="-1"></button>
-                            <div class="spark-positioner">
+                            <img class="click-me-twinkle" src="./star-1.svg" />
+                            <!-- <svg class="click-me-circle" width="50" height="50" viewBox="0 0 15 15">
+                                <circle cx="7.5" cy="7.5" r="7.5" fill="#ffffff"/>
+                            </svg> -->
+                            <!-- <div class="spark-positioner">
                                 <div class="spark">
                                     <span></span>
                                     <span></span>
@@ -74,7 +78,7 @@
                                     <span></span>
                                     <span></span>
                                 </div>
-                            </div>
+                            </div> -->
                             <!-- <img class="click-me-img" src="./click-me-1.png" alt="Arrow with 'Click me' text." /> -->
                             <div class="coffee-found-dialog">
                                 <div class="line line1"></div>
@@ -87,7 +91,21 @@
                                 </div>
                             </div>
                         </div>
-                        <figcaption>Hey! Where did I put my coffee cup?<br/>Can you help me find it?<br/>Maybe some light will help... 🤔</figcaption>
+                        <figcaption>
+                            <div class="caption-container">
+                                <div class="caption-icon">
+                                    <div class="caption-arrow-forward">
+                                        <svg class="arrow-forward" data-name="Arrow forward" width="28" height="12" viewBox="0 0 27.02 11.38">
+                                            <polygon points="0 3.55 17.18 3.55 17.18 0 27.02 5.69 17.18 11.38 17.18 8.02 0 8.02 0 3.55" fill="#FFBB00"/>
+                                        </svg>
+                                        <img class="twinkle-shine" src="./star-1.svg" />
+                                    </div>
+                                </div>
+                                <div class="caption-text">
+                                    Hey! Where did I put my coffee cup?<br/>Can you help me find it?<br/>Maybe some light will help... 🤔
+                                </div>
+                            </div>
+                        </figcaption>
                     </figure>
                 </div>
             </div>
@@ -139,7 +157,21 @@
                             </div>
                             <div class="challenge-complete-text"><span class="word1">Challenge</span> <span class="word2">Completed!</span> <span class="check">&#x2714;</span></div>
                         </div>
-                        <figcaption>I know there's one more bug here!<br/>Can you help me find it?<br/>Maybe some light and some air movement will help...🤔</figcaption>
+                        <figcaption>
+                            <div class="caption-container">
+                                <div class="caption-icon">
+                                    <div class="caption-arrow-forward">
+                                        <svg class="arrow-forward" data-name="Arrow forward" width="28" height="12" viewBox="0 0 27.02 11.38">
+                                            <polygon points="0 3.55 17.18 3.55 17.18 0 27.02 5.69 17.18 11.38 17.18 8.02 0 8.02 0 3.55" fill="#FFBB00"/>
+                                        </svg>
+                                        <img class="twinkle-shine" src="./star-1.svg" />
+                                    </div>
+                                </div>
+                                <div class="caption-text">
+                                    I know there's one more bug here!<br/>Can you help me find it?<br/>Maybe some light and some<br/> air movement will help...🤔
+                                </div>
+                            </div>
+                        </figcaption>
                     </figure>
                 </div>
                 <div>
@@ -590,7 +622,6 @@
         import { imageFrameCycler } from './image-frame-cycler.js';
         import { confettea } from './confettea.js';
         import { getDeviceType, getElementProps, getRandomInt, timeSince, numberWithCommas, debounce } from './utils.js';
-        gsap.registerPlugin(ScrollTrigger);
 
         let gitSlider;
         let sliderTl;
@@ -612,16 +643,35 @@
             requestAnimationFrame((timestamp) => frameCycle2.doFrameCycle(timestamp, 0, true, false));
             blinkTimer = setTimeout(blinkEyesRandomly, randomDelay);
         }
-        const clickIndicator = document.querySelector('.spark');
-        let clickIndicatorTimer;
-        function showClickIndicatorRandomly() {
-            const randomDelay = getRandomInt(5000, 7000);
-            clickIndicator.classList.add('animate');
-            setTimeout( () => {
-                clickIndicator.classList.remove('animate');
-            }, 1500);
-            clickIndicatorTimer = setTimeout(showClickIndicatorRandomly, randomDelay);
+        const clickMeTwinkle = document.querySelector('img.click-me-twinkle');
+        let clickMeTwinkleTimer;
+        function showClickMeTwinkleRandom() {
+            const randomWait = getRandomInt(1000, 4000);
+            gsap.to(clickMeTwinkle, {
+                duration: .2,
+                scale: 1,
+                rotation: 180,
+                ease: 'none',
+                repeat: 1,
+                yoyo: true
+            });
+            clickMeTwinkleTimer = setTimeout( showClickMeTwinkleRandom, randomWait );
         }
+        // const clickMeCircle = document.querySelector('svg.click-me-circle');
+        // gsap.fromTo(clickMeCircle, {
+        //         opacity: 0.3,
+        //         scale: 0,
+        //         transformOrigin: "50% 50%"
+        //     }, {
+        //         scale: 1,
+        //         opacity: 0,
+        //         repeat: -1,
+        //         transformOrigin: "50% 50%",
+        //         ease: 'power1.out',
+        //         repeat: -1,
+        //         repeatDelay: 2
+        //     }
+        // );
         const cupTwinkle = document.querySelector('img.twinkle');
         let twinkleTimer;
         function showTwinkleRandomly() {
@@ -636,6 +686,30 @@
             });
             twinkleTimer = setTimeout( showTwinkleRandomly, randomWait );
         }
+
+        const imgCaptionArrow = document.querySelectorAll('.caption-arrow-forward');
+        const arrowTwinkle = document.querySelectorAll('img.twinkle-shine');
+        let arrowTimer;
+        function nudgeArrowRandomly() {
+            const randomWait = getRandomInt(1000, 4000);
+            gsap.to([...arrowTwinkle], {
+                duration: .2,
+                scale: 1,
+                rotation: 180,
+                ease: 'none',
+                repeat: 1,
+                yoyo: true
+            });
+            gsap.to([...imgCaptionArrow], {
+                duration: .2,
+                x: 8,
+                ease: 'none',
+                repeat: 3,
+                yoyo: true
+            });
+            arrowTimer = setTimeout( nudgeArrowRandomly, randomWait );
+        }
+
 
         const frameCycle3 = imageFrameCycler('#searching-bugs .frames-container', { targetFPS: 18 });
         function doFanCycle() {
@@ -681,6 +755,7 @@
         aboutMeLightSwitch.addEventListener('click', (e) => {
             aboutMeLightClickSound.currentTime = 0;
             aboutMeLightClickSound.play();
+            clearTimeout(clickMeTwinkleTimer);
             const computedStyle = window.getComputedStyle(aboutMeLightGlow);
             const lightOpacity = parseFloat(computedStyle.getPropertyValue('opacity'));
             if (lightOpacity > 0) {
@@ -698,7 +773,6 @@
                 coffeeCupHidden.style.visibility = 'hidden';
                 coffeeCupVisible.style.visibility = 'visible';
                 coffeeCupButton.setAttribute('tabindex', '0');
-                clearTimeout(clickIndicatorTimer);
                 cupTwinkle.style.visibility = 'visible';
                 const delay = getRandomInt(500, 2000);
                 setTimeout( showTwinkleRandomly, delay );
@@ -743,13 +817,13 @@
                 return false;
             }
             hasFoundCoffee = true;
+            clearTimeout(clickMeTwinkleTimer);
             const { height } = getElementProps(aboutMeImage);
             gsap.to(aboutMeFoundCoffeeDialog, {
                 y: (height - (height * .35)) * -1 + 'px',
                 opacity: 1,
                 duration: .5,
                 onComplete: function() {
-                    clearTimeout(clickIndicatorTimer);
                     const element = this._targets[0]; // Get the animated element
                     const rect = element.getBoundingClientRect();
                     const xPos = rect.x + (rect.width / 2);
@@ -868,7 +942,8 @@
         const searchingBugsFanSwitch = document.querySelector('#searching-bugs button.fan-switch');
         const fan = new CeilingFan();
         searchingBugsFanSwitch.addEventListener('click', (e) => {
-            
+            bugsLightClickSound.currentTime = 0;
+            bugsLightClickSound.play();
             imageStatus.isFanOn = !imageStatus.isFanOn;
             setSwitchRecepticle(imageStatus);
             if (imageStatus.isFanOn) {
@@ -1005,6 +1080,8 @@
 
 
         document.addEventListener('DOMContentLoaded', function() {
+            gsap.registerPlugin(ScrollTrigger);
+            gsap.registerPlugin(CustomEase);
             const items = document.querySelectorAll('.spark span');
             let rotationAngle = 0;
             for(let item of items) {
@@ -1012,7 +1089,9 @@
                 rotationAngle += 45;
             };
             blinkEyesRandomly();
-            showClickIndicatorRandomly();
+            //showClickIndicatorRandomly();
+            showClickMeTwinkleRandom();
+            nudgeArrowRandomly();
             injectMemberSinceDate();
 
             // Listen for window blur event
