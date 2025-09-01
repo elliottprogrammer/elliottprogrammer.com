@@ -1,3 +1,5 @@
 #### elliottprogrammer.com portfolio website
 
-Currently in development - Coming soon!!
+Currently in development - Work in progress (WIP).
+
+[https://elliottprogrammer.com](https://elliottprogrammer.com)
