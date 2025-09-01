@@ -66,6 +66,7 @@
                             </div>
                             <div class="light-on-container"><img src="./elliottprogrammer-desk-light-on.png" alt="Desk light - On"/></div>
                             <div class="coffee-cup-container">
+                                <img src="./coffee-w-shadow.png" data-id="2" alt="Coffee cup and shadow visible with light on."/>
                                 <img src="./coffee-visible.png" data-id="1" alt="Coffee cup visible with light on."/>
                                 <img src="./coffee-hidden.png" data-id="0" alt="Coffee hidden with light off."/>
                             </div>
@@ -754,6 +755,7 @@
         const aboutMeLightSwitch = document.querySelector('#about-me-image button.light-switch');
         const coffeeCupHidden = document.querySelector('#about-me-image .coffee-cup-container > img[data-id="0"]');
         const coffeeCupVisible = document.querySelector('#about-me-image .coffee-cup-container > img[data-id="1"]');
+        const coffeeCupVisibleWithShadow = document.querySelector('#about-me-image .coffee-cup-container > img[data-id="2"]');
         const coffeeCupButton = document.querySelector('#about-me-image .coffee-cup-btn');
         const clickSound = document.getElementById('click-sound');
         const selectSuccessSound = document.getElementById('select-success-sound');
@@ -761,6 +763,7 @@
         const swooshSound1 = document.getElementById('swoosh-sound1');
         const swooshSound2 = document.getElementById('swoosh-sound2');
         const levelCompleteSound = document.getElementById('level-complete-sound');
+        let isLightOn = false;
         
         aboutMeLightSwitch.addEventListener('click', (e) => {
             clickSound.currentTime = 0;
@@ -768,20 +771,25 @@
             clearTimeout(clickMeTwinkleTimer);
             const computedStyle = window.getComputedStyle(aboutMeLightGlow);
             const lightOpacity = parseFloat(computedStyle.getPropertyValue('opacity'));
+            // If light is ON, turn it OFF.
             if (lightOpacity > 0) {
                 aboutMeLightGlow.style.opacity = 0;
                 aboutMeLampLight.style.visibility = 'hidden';
                 coffeeCupHidden.style.visibility = 'visible';
                 coffeeCupVisible.style.visibility = 'hidden';
+                coffeeCupVisibleWithShadow.style.visibility = 'hidden';
+                isLightOn = false;
                 coffeeCupButton.setAttribute('tabindex', '-1');
                 clearTimeout(twinkleTimer);
                 cupTwinkle.style.visibility = 'hidden';
-                
+            // If light is OFF, turn it ON
             } else {
                 aboutMeLightGlow.style.opacity = 1;
                 aboutMeLampLight.style.visibility = 'visible'; 
                 coffeeCupHidden.style.visibility = 'hidden';
+                coffeeCupVisibleWithShadow.style.visibility = 'visible';
                 coffeeCupVisible.style.visibility = 'visible';
+                isLightOn = true;
                 coffeeCupButton.setAttribute('tabindex', '0');
                 cupTwinkle.style.visibility = 'visible';
                 const delay = getRandomInt(500, 2000);
@@ -834,6 +842,17 @@
         }, 0.8);;
         aboutMeComplete.pause();
 
+        coffeeCupButton.addEventListener('mouseenter', () => {
+            console.log('hovered!')
+            if (isLightOn) {
+                console.log('hovered with light on!');
+                coffeeCupVisible.classList.add('hover');
+            }
+        });
+        coffeeCupButton.addEventListener('mouseleave', () => {
+            console.log('leave hover!')
+            coffeeCupVisible.classList.remove('hover');
+        });
         coffeeCupButton.addEventListener('click', (e) => {
             if (hasFoundCoffee) {
                 return false;
@@ -1059,7 +1078,7 @@
             if (hasFoundBug) {
                 return false;
             }
-            
+            theBug.classList.add('squished');
             hasFoundBug = true;
             bugScuttleSound.pause();
             bugTimeline.pause();

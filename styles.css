@@ -312,8 +312,16 @@ section:not(#image-atomizer,#intro) {
     position: absolute;
     width: 100%;
 }
-.coffee-cup-container img:first-child {
+.coffee-cup-container img[data-id="2"],
+.coffee-cup-container img[data-id="1"] {
     visibility: hidden;
+}
+.coffee-cup-container img[data-id="1"] {
+    transition: filter 0.2s ease-in-out;
+}
+
+.coffee-cup-container img[data-id="1"].hover {
+    filter: drop-shadow(0 0 7px rgba(255, 255, 255, .9));
 }
 
 #searching-bugs.interactive-image {
@@ -486,13 +494,17 @@ canvas.draw {
     top: 8%;
     left: 34%;
     cursor: pointer;
+    transition: filter 0.2s ease-in-out;
     visibility: hidden;
 }
 
-/* img.the-bug {
-    -webkit-filter: drop-shadow(5px 5px 5px #222);
-  filter: drop-shadow(5px 5px 5px #222);
-} */
+.coffee-cup-container img[data-id="1"] {
+    transition: filter 0.2s ease-in-out;
+}
+
+.the-bug:not(.squished):hover {
+    filter: drop-shadow(0 0 7px rgba(255, 255, 255, .9));
+}
  
 img.click-me-twinkle {
     display: block;
