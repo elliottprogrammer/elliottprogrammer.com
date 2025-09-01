@@ -195,6 +195,15 @@ section:not(#image-atomizer,#intro) {
     flex: 0 0 calc(40% - (var(--gap) / 2));
     overflow: visible;
 }
+.grid-row-span-2 {
+    grid-row: span 2;
+}
+.grid-two-col {
+    display: grid;
+    grid-template-columns: calc(60% - (var(--gap) / 2)) calc(40% - (var(--gap) / 2));
+    grid-gap: var(--gap);
+
+}
 
 .interactive-image {
     position: relative;
@@ -379,8 +388,6 @@ button.coffee-cup-btn {
     width: 100%;
 }
 .interactive-image-text {
-    
-    /* background: #ffbb00; */
     transform: scaleX(0);
     transform-origin: bottom left;
     overflow: hidden;
@@ -420,9 +427,7 @@ button.coffee-cup-btn {
     width: 40%;
     min-height: 22%;
     background: rgba(0, 0, 0, 0.65);
-    /* border: 1px solid #0348fa; */
     border: 1px solid rgba(255, 255, 255, 0.3);
-    /* box-shadow: 1px 1px 1px 0px white */
     border-radius: 8px;
     opacity: 0;
 }
@@ -1018,6 +1023,11 @@ img.automattic-org-icon {
     border: var(--borderWidth-thin) solid var(--topicTag-borderColor, transparent);
 }
 
+.git-contribution-container {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
 #git-contribution-slider {
     position: relative;
 }
@@ -1187,6 +1197,18 @@ section#footer-top {
     }
     .two-col.left-text > div:last-child, .two-col.right-text > div:first-child  {
         order: 1;
+    }
+    .two-col.left-text > div:last-child, .two-col.right-text > div:first-child {
+        flex: 1 1 auto;
+        width: 100%;
+        max-width: 600px;
+    }
+    .grid-two-col {
+        grid-template-columns: auto;
+    }
+    .grid-row-span-2 {
+        max-width: 600px;
+        margin: 0 auto;
     }
 
     .spark-positioner {
