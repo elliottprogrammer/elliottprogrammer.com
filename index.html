@@ -531,30 +531,39 @@
                                     <div class="git-images">
                                         <div class="slide">
                                             <img src="./git-contrib-images/2020_elliottprogrammer-git-contributions.png" alt=""/>
-                                            <div class="year-caption">
+                                            <div class="year">
                                                 <span>2020</span>
-                                            </svg>
                                             </div>
                                         </div>
                                         <div class="slide">
                                             <img src="./git-contrib-images/2021_elliottprogrammer-git-contributions.png" alt=""/>
-                                            <div>2021</div>
+                                            <div class="year">
+                                                <span>2021</span>
+                                            </div>
                                         </div>
                                         <div class="slide">
                                             <img src="./git-contrib-images/2022_elliottprogrammer-git-contributions.png" alt=""/>
-                                            <div>2022</div>
+                                            <div class="year">
+                                                <span>2022</span>
+                                            </div>
                                         </div>
                                         <div class="slide">
                                             <img src="./git-contrib-images/2023_elliottprogrammer-git-contributions.png" alt=""/>
-                                            <div>2023</div>
+                                            <div class="year">
+                                                <span>2023</span>
+                                            </div>
                                         </div>
                                         <div class="slide">
                                             <img src="./git-contrib-images/2024_elliottprogrammer-git-contributions.png" alt=""/>
-                                            <div>2024</div>
+                                            <div class="year">
+                                                <span>2024</span>
+                                            </div>
                                         </div>
                                         <div class="slide">
                                             <img src="./git-contrib-images/2025_elliottprogrammer-git-contributions.png" alt=""/>
-                                            <div>2025 </div>
+                                            <div class="year">
+                                                <span>2025</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1539,12 +1548,21 @@
             
             atomizerCanvas.addEventListener('click', function(){atomizer.init()})
         }
+
+        const gitSlides = [
+            { width: 1245, height: 196 },
+            { width: 1270, height: 196 },
+            { width: 1246, height: 196 },
+            { width: 1245, height: 196 },
+            { width: 813, height: 196 },
+        ];
+
+        const sliderViewport = slider.querySelector('.slider-viewport');
+        const sliderContent = slider.querySelector('.slider-content');
+        const slides = slider.querySelectorAll('.slide');
             
         // Image Slider functionality
         function initImageSlider() {
-            const sliderViewport = slider.querySelector('.slider-viewport');
-            const sliderContent = slider.querySelector('.slider-content');
-            const slides = slider.querySelectorAll('.slide');
             
             let currentSlide = 4;
             const totalSlides = slides.length;
@@ -1556,7 +1574,7 @@
             sliderViewport.addEventListener('scroll', (e) => {
                 prevBtn.disabled = sliderViewport.scrollLeft === 0;
                 nextBtn.disabled = sliderViewport.scrollLeft === maxScrollPos;
-                Array.from(slides).reduce((accum, slide, index) => {
+                let reduceVal = Array.from(slides).reduce((accum, slide, index) => {
                     const slideWidth = slide.clientWidth;
                     if (e.target.scrollLeft >= accum && e.target.scrollLeft < accum + slideWidth ) {
                         currentSlide = index;
@@ -1668,10 +1686,11 @@
             gitSlider = document.querySelector('#git-contribution-slider .slider-viewport');
             sliderTl = gsap.timeline({
                 scrollTrigger: {
-                    trigger: document.getElementById('git-contribution-slider'),
+                    trigger: gitSlider,
                     scrub: false,
                     start: "top bottom",
                     end: "top top",
+                    //markers: true,
                     onEnter: ({isActive}) => {
                         isGitSliderPlaying = isActive;
                         playBtn.style.visibility = 'hidden';
@@ -1684,10 +1703,27 @@
                 duration: sliderScrollDuration,
                 repeat: -1,
                 yoyo: true,
-                ease: 'none',
+                ease: 'none',  
             });
-        });
+            
+            [slides[0], slides[1], slides[2], slides[3], slides[4]].forEach((slide, index) => {
+                const year = slide.querySelector('.year');
+                const yearTimeline = gsap.timeline();
+                const leftEnd = sliderViewport.clientWidth - year.clientWidth;
 
+                ScrollTrigger.create({
+                    trigger: year,
+                    toggleClass: 'active',
+                    start: `left left`,
+                    end: `right left+=100`,
+                    horizontal: true,
+                    scroller: sliderViewport,
+                    pin: true,
+                    //markers: true,
+                });
+                ScrollTrigger.normalizeScroll(true);
+            })
+        });
     </script>
   </body>
 </html>
