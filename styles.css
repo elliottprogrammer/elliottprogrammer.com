@@ -1026,11 +1026,43 @@ img.automattic-org-icon {
 
 .git-contribution-container {
     max-width: 700px;
-    margin: 0 auto;
+    margin: 40px auto;
 }
 
 #git-contribution-slider {
+    display: flex;
+    gap: 3px;
+}
+
+.slider {
     position: relative;
+    max-width: 100%;
+    width: 100%;
+}
+
+.slider-viewport {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 179 / 35;
+    width: 100%;
+    height: auto;
+}
+
+.days {
+    font-size: 11px;
+}
+
+.days-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 80px;
+    margin-top: 100%;
+}
+
+.days-container span {
+    display: inline-block;
+    line-height: 1;
 }
 
 #git-contribution-slider button {
@@ -1051,32 +1083,34 @@ img.automattic-org-icon {
 
 }
 
-#git-contribution-slider .prev,
-#git-contribution-slider .next {
+.prev,
+.next {
     position: absolute;
     top: 46%;
     transform: translate(0, -50%) scale(1);
     background-color: black;
     border-radius: 50%;
     box-shadow: 0 0 4px 1px #000;
+    opacity: .8;
     cursor: pointer;
-    transition: transform 0.16s ease-in-out;
+    
 }
-#git-contribution-slider .prev:hover,
-#git-contribution-slider .next:hover {
+.prev:hover,
+.next:hover {
     transform: translate(0, -50%) scale(1.15);
 }
-#git-contribution-slider .play-pause-btns {
-    position: absolute;
-}
 
-.slider-viewport {
-    position: relative;
-    max-width: 100%;
-    aspect-ratio: 175 / 34.14;
-    /* height: 152px; */
-    overflow-x: scroll;
-    min-height: 166px;
+.play-pause-btns {
+    position: absolute;
+    
+}
+.play, .pause {
+    transition: transform 0.16s ease-in-out;
+    opacity: .9;
+}
+.play:hover,
+.pause:hover {
+    transform: scale(1.15);
 }
 
 .slider-content {
@@ -1114,6 +1148,7 @@ img.automattic-org-icon {
 
 
 .year {
+    transition: transform 6ms ease-out;
     /* padding-left: 35px; */
 }
 
@@ -1130,6 +1165,13 @@ button.prev:disabled,
 button.next:disabled {
     pointer-events: none;
     cursor: none;
+    box-shadow: none;
+}
+
+button.prev:disabled > svg,
+button.next:disabled > svg {
+    opacity: .4;
+    /* fill: #888; */
 }
 
 .graph-legend {
@@ -1138,8 +1180,10 @@ button.next:disabled {
     margin-bottom: 8px;
 }
 
-.legend {
+img.legend {
+    aspect-ratio: 67 / 7;
     max-height: 14px;
+    height: 100%;
     width: auto;
 }
 
@@ -1243,6 +1287,7 @@ section#footer-top {
     }
     .slider-viewport {
         aspect-ratio: unset;
+        height: 131.67px;
     }
 }
 
@@ -1360,7 +1405,6 @@ section#footer-top {
         border-bottom-left-radius: 6px;
         border-left: 1px solid #424548;
     }
-
     .rank {
         order: 2;
     }
@@ -1372,6 +1416,9 @@ section#footer-top {
     }
     .detail-item {
         column-gap: 2px;
+    }
+    .pronouns {
+        display: none;
     }
 }
 
@@ -1399,9 +1446,6 @@ section#footer-top {
     }
     .repo-note {
         font-size: 11px;
-    }
-    .pronouns {
-        display: none;
     }
 }
 
