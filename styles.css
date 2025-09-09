@@ -1177,7 +1177,7 @@ img.automattic-org-icon {
 
 
 .year {
-    transition: transform 6ms ease-out;
+    /* transition: transform 6ms ease-out; */
     /* padding-left: 35px; */
 }
 

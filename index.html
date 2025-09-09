@@ -1227,12 +1227,15 @@
 
             // Listen for window blur event
             window.addEventListener('blur', function() {
+                if (hoverMeTimer) {
+                    clearTimeout(hoverMeTimer);
+                    hoverMeTimer = null;
+                }
                 // Stop blinking when window loses focus.
                 if (blinkTimer) {
                     clearTimeout(blinkTimer);
                     blinkTimer = null;
                 }
-                
                 if (arrow2Timer) {
                     clearTimeout(arrow2Timer);
                     arrow2Timer = null;
@@ -1242,6 +1245,9 @@
             // Listen for window focus event
             window.addEventListener('focus', function() {
                 // Start blinking again when window re-focusus.
+                if (!hoverMeTimer) {
+                    hoverMe();
+                }
                 if (!blinkTimer) {
                     blinkEyesRandomly();
                 }
@@ -1263,7 +1269,7 @@
         // Add Lenis's requestAnimationFrame (raf) method to GSAP's ticker
         // This ensures Lenis's smooth scroll animation updates on each GSAP tick
         gsap.ticker.add((time) => {
-        lenis.raf(time * 1000); // Convert time from seconds to milliseconds
+            lenis.raf(time * 1000); // Convert time from seconds to milliseconds
         });
 
         // Disable lag smoothing in GSAP to prevent any delay in scroll animations
@@ -1299,7 +1305,7 @@
         });
 
         // HoverMe image shakes every random 1 - 5 seconds
-        var random = () => Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+        let hoverMeTimer;
         function hoverMe() {
             gsap.to( '.hover-me img', {
                 delay: 3.5,
@@ -1309,8 +1315,8 @@
                 repeat: 5,
                 ease: "power1.inOut",
                 onComplete() {
-                    const newRandom = random();
-                    gsap.delayedCall(newRandom, hoverMe);
+                    const randomWait = getRandomInt(1000, 5000);
+                    hoverMeTimer = setTimeout( hoverMe, randomWait );
                 },
             });
         }
@@ -1640,13 +1646,13 @@
             sliderViewport.addEventListener('scroll', (e) => {
                 prevBtn.disabled = sliderViewport.scrollLeft === 0;
                 nextBtn.disabled = sliderViewport.scrollLeft === maxScrollPos;
-                let reduceVal = Array.from(slides).reduce((accum, slide, index) => {
-                    const slideWidth = slide.clientWidth;
-                    if (e.target.scrollLeft >= accum && e.target.scrollLeft < accum + slideWidth ) {
-                        currentSlide = index;
-                    }
-                    return accum + slideWidth;
-                }, 0);
+                // let reduceVal = Array.from(slides).reduce((accum, slide, index) => {
+                //     const slideWidth = slide.clientWidth;
+                //     if (e.target.scrollLeft >= accum && e.target.scrollLeft < accum + slideWidth ) {
+                //         currentSlide = index;
+                //     }
+                //     return accum + slideWidth;
+                // }, 0);
                 //console.log('scrollLeft: %d', sliderViewport.scrollLeft);
             });
             
@@ -1654,7 +1660,7 @@
             // Event listeners for navigation buttons
             prevBtn.addEventListener('click', () => {
                 if (sliderViewport.scrollLeft > 0) {
-                    if (isGitSliderPlaying && sliderTl) {
+                    if (sliderTl) {
                         sliderTl.pause();
                         isGitSliderPlaying = false;
                         pauseBtn.style.visibility = 'hidden';
@@ -1686,7 +1692,7 @@
             
             nextBtn.addEventListener('click', () => {
                 if (sliderViewport.scrollLeft < maxScrollPos) {
-                    if (isGitSliderPlaying && sliderTl) {
+                    if (sliderTl) {
                         sliderTl.pause();
                         isGitSliderPlaying = false;
                         pauseBtn.style.visibility = 'hidden';
@@ -1696,7 +1702,7 @@
                     let nextSlidePos;
                     Array.from(slides).reduce((accum, slide, index) => {
                         const slideWidth = slide.clientWidth;
-                        if (sliderViewport.scrollLeft >= accum && sliderViewport.scrollLeft < accum + slideWidth ) {
+                        if (sliderViewport.scrollLeft >= accum && sliderViewport.scrollLeft <= accum + slideWidth ) {
                             nextSlidePos = accum + slideWidth;
                         }
                         return accum + slideWidth;
@@ -1710,7 +1716,7 @@
             });
 
             playBtn.addEventListener('click', () => {
-                if (! isGitSliderPlaying && sliderTl) {
+                if (sliderTl) {
                     const scrollPos = sliderViewport.scrollLeft;
                     const scrollAmtPerSecond = maxScrollPos / sliderScrollDuration;
                     const timeAtScrollPos = (maxScrollPos - scrollPos) / scrollAmtPerSecond;
@@ -1727,7 +1733,7 @@
             });
 
             pauseBtn.addEventListener('click', () => {
-                if (isGitSliderPlaying && sliderTl) {
+                if (sliderTl) {
                     sliderDirection = sliderTl.reversed() ? 'reverse' : 'forward';
                     sliderTl.pause();
                     isGitSliderPlaying = false;
@@ -1762,6 +1768,7 @@
                         playBtn.style.visibility = 'hidden';
                         pauseBtn.style.visibility = 'visible';
                     },
+                    toggleActions: 'play pause resume pause',
                 },
             });
             sliderTl.to(gitSlider, {
@@ -1769,7 +1776,7 @@
                 duration: sliderScrollDuration,
                 repeat: -1,
                 yoyo: true,
-                ease: 'none',  
+                ease: 'none',
             });
             
             [slides[0], slides[1], slides[2], slides[3], slides[4]].forEach((slide, index) => {
@@ -1787,7 +1794,6 @@
                     pin: true,
                     //markers: true,
                 });
-                ScrollTrigger.normalizeScroll(true);
             })
         });
     </script>
