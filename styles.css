@@ -136,6 +136,26 @@ nav.top-nav {
     padding-top: 15px;
     padding-bottom: 15px;
     color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.top-nav .nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+}
+.top-nav .nav a {
+    color: #cdcbcb;
+    font-family: var(--ff-sans);
+}
+
+.top-nav .nav a:hover {
+    color: white;
+    text-decoration: none;
 }
 
 .logo {
@@ -552,15 +572,6 @@ img.click-me-twinkle {
     pointer-events: none;
     opacity: 0.7;
 }
-/* .click-me-circle {
-    display: block;
-    position: absolute;
-    top: 22%;
-    left: 82%;
-    width: 50px;
-    height: 50px;
-    transform-origin: center center;
-} */
 
 .spark-positioner {
     position: absolute;
@@ -856,7 +867,8 @@ img.stack-logo {
     justify-content: center;
 }
 
-.dialog-style .git-btn {
+.dialog-style .git-btn,
+.nav .git-btn {
     display: inline-block;
     padding: 3px 12px;
     font-size: 12px;
@@ -880,7 +892,9 @@ img.stack-logo {
 }
 
 .dialog-style .git-btn:hover,
-.dialog-style .git-btn:active {
+.dialog-style .git-btn:active,
+.nav .git-btn:hover,
+.nav .git-btn:active {
     text-decoration: none;
     background-color: #212830;
     box-shadow: 0px 0px 2px 0px transparent;
