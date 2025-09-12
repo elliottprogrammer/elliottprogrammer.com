@@ -536,12 +536,17 @@
         document.addEventListener('DOMContentLoaded', function() {
             gsap.registerPlugin(ScrollTrigger);
             gsap.registerPlugin(CustomEase);
-            const items = document.querySelectorAll('.spark span');
-            let rotationAngle = 0;
-            for(let item of items) {
-                item.style.transform = `rotate(${rotationAngle}deg)`;
-                rotationAngle += 45;
-            };
+            
+            const navMenuButton = document.querySelector('.nav-menu-button');
+            navMenuButton.addEventListener('click', (e) => {
+                const menuBtnElement = e.currentTarget;
+                const classes = menuBtnElement.classList;
+                if (classes.contains('open')) {
+                    menuBtnElement.classList.remove('open');
+                } else {
+                    menuBtnElement.classList.add('open');
+                }
+            });
             blinkEyesRandomly();
             //showClickIndicatorRandomly();
             lightSwitchTwinkler.start();
