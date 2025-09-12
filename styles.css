@@ -457,12 +457,13 @@ button.coffee-cup-btn {
     z-index: 10;
     background: none;
     border: none;
+    padding: 0;
 }
 
 #about-me-image button.light-switch {
-    width: 4%;
-    height: 3%;
-    top: 28%;
+    width: 5%;
+    height: 5%;
+    top: 26.5%;
     left: 84.5%;
     transform: rotateZ(-65deg);  
 }
@@ -537,16 +538,16 @@ button.coffee-cup-btn {
 }
 
 #searching-bugs button.light-switch {
-    width: 3.9%;
-    height: 5.5%;
-    top: 30.9%;
-    left: 81.9%;
+    width: 4.2%;
+    height: 6%;
+    top: 30.5%;
+    left: 81.5%;
 }
 
 #searching-bugs button.fan-switch {
-    width: 3.9%;
-    height: 5.5%;
-    top: 30.8%;
+    width: 4.4%;
+    height: 6%;
+    top: 30.5%;
     left: 86.6%;
 }
 
