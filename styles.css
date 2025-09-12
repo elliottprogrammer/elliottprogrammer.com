@@ -152,6 +152,9 @@ nav.top-nav {
 .top-nav .nav a.nav-menu-link span {
     display: none;
 }
+.top-nav .nav a.nav-menu-link {
+    display: flex;
+}
 .top-nav .nav a {
     color: #f0f6fc;
     font-family: var(--ff-sans);
