@@ -560,6 +560,10 @@
                     clearTimeout(blinkTimer);
                     blinkTimer = null;
                 }
+                if (arrow1Timer) {
+                    clearTimeout(arrow1Timer);
+                    arrow1Timer = null;
+                }
                 if (arrow2Timer) {
                     clearTimeout(arrow2Timer);
                     arrow2Timer = null;
