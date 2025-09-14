@@ -947,7 +947,7 @@
                 offsetY: offsetY,
             });
 
-            const atomizerCanvas = document.querySelector('canvas.draw');
+            const atomizerCanvas = document.querySelector('canvas.atomizer');
             
             atomizerCanvas.addEventListener('click', function(){atomizer.init()})
         }
