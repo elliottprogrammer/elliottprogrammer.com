@@ -547,6 +547,18 @@
                     menuBtnElement.classList.add('open');
                 }
             });
+            const config = {
+                starsCount: 350,
+                starsRotationSpeed: 3,
+                nebulasIntensity: 10,
+                cometFrequence: 60,
+                sunScale: 0,
+                planetsScale: 0,
+                solarSystemOrbite: 0,
+                solarSystemSpeedOrbit: 0,
+            };
+            const element = document.getElementById("nebula-element");
+            new Nebula({ config, element });
             blinkEyesRandomly();
             //showClickIndicatorRandomly();
             lightSwitchTwinkler.start();

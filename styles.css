@@ -82,8 +82,8 @@ body::after {
     max-width: 2560px;
     height: 100%;
     max-height: 1707px;
-    background-image: url("images/space-bg-2560x1707.jpg");
-    background-size: cover;
+    /* background-image: url("images/space-bg-2560x1707.jpg");
+    background-size: cover; */
     z-index: -1;
 }
 
@@ -115,6 +115,19 @@ figcaption {
     width: 100%;
     flex: 1;
     perspective: 1000px;
+}
+
+#nebula-element {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+canvas.atomizer {
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 
 .pin-spacer {
