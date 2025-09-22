@@ -286,6 +286,14 @@ section:not(#image-atomizer,#intro) {
     background: linear-gradient(0deg,rgba(0, 0, 0, 1) 0%, rgba(21, 23, 27, 1) 100%);
 }
 
+section#about-me {
+    box-shadow: 0px -1px 5px 0px #000000;
+}
+
+#nebula-element canvas:last-child {
+    box-shadow: inset 0px 5px 7px 1px #000000;
+}
+
 .two-col {
     display: flex;
     align-items: center;
@@ -687,16 +695,17 @@ img.click-me-twinkle {
     animation: animate .5s ease-in 2 both;
 }
 
-img.twinkle {
+img.cup-twinkle {
+    display: block;
     position: absolute;
     width: 20px;
     height: auto;
     top: 53%;
     left: 18%;
     transform: scale(0, 0);
-    visibility: hidden;
 }
 img.twinkle-shine {
+    display: block;
     position: absolute;
     width: 20px;
     height: auto;
@@ -1553,7 +1562,7 @@ section#footer-top {
     #searching-bugs .challenge-complete-text {
         top: 16.5%;
     }
-    img.twinkle {
+    img.cup-twinkle {
         top: 52%;
         left: 17.5%;
     }
@@ -1615,7 +1624,7 @@ section#footer-top {
         padding: 0;
     }
 
-    img.twinkle {
+    img.cup-twinkle {
         top: 51.5%;
         left: 17%;
     }

@@ -79,7 +79,7 @@
         const lightSwitchTwinkler = new Twinkler(clickMeTwinkle, [1000, 4000]);
 
         // Coffee cup twinkle
-        const cupTwinkle = document.querySelector('img.twinkle');
+        const cupTwinkle = document.querySelector('img.cup-twinkle');
         const cupTwinkler = new Twinkler(cupTwinkle, [3000, 8000]);
 
         // Image caption nudge arrow (w/ twinkle)
@@ -190,8 +190,12 @@
                 coffeeCupButton.setAttribute('tabindex', '0');
                 cupTwinkle.style.visibility = 'visible';
                 const delay = getRandomInt(500, 2000);
-                setTimeout( cupTwinkler.twinkle(), delay );
-                cupTwinkler.start();
+                function twinkleCupThenStartTwinkler() {
+                    cupTwinkler.twinkle();
+                    cupTwinkler.start();
+                }
+                setTimeout( twinkleCupThenStartTwinkler, delay );
+                
             }
         });
         const aboutMeImage = document.querySelector('#about-me-image.interactive-image');
@@ -549,7 +553,7 @@
             });
             const config = {
                 starsCount: 350,
-                starsRotationSpeed: 3,
+                starsRotationSpeed: 6,
                 nebulasIntensity: 10,
                 cometFrequence: 60,
                 sunScale: 0,
