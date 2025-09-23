@@ -948,7 +948,7 @@
                     logoImgSrc = './images/bryan-elliott-portfolio-headshot-desktop.png';
             }
 
-            const navHeight = 58
+            const navHeight = 62;
             const headingHeight = deviceType === 'phone' ? 150: 229;
             const viewportHeight = window.innerHeight;
             const canvasHeight = viewportHeight - navHeight;

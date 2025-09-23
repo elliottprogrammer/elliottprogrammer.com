@@ -119,7 +119,6 @@ class ImageAtomizer {
         
         if (this.supportsSwipeEvents()) {
             const trackTouchCoordinates = (x, y) => {
-                console.log(x, y);
                 const offset = getOffset(this.$container);
                 this.mx = x - offset.x + document.body.scrollLeft + document.documentElement.scrollLeft;
                 this.my = y - offset.y + document.body.scrollTop + document.documentElement.scrollTop;
@@ -201,7 +200,6 @@ class ImageAtomizer {
                 } else if (force < 0.01) {
                     this.x = this.gravityX + 0.25;
                     this.y = this.gravityY + 0.25;
-
                 }
                 
                 let mouseForce = 0;
@@ -393,8 +391,8 @@ class ImageAtomizer {
             
             const pixels = this.getPixelFromImageData(
                 this.srcCtx.getImageData(0, 0, this.$srcCanv.width, this.$srcCanv.height),
-                ~~(this.cw / 2 - this.$srcCanv.width / 2),// + this.offsetX,
-                ~~(this.ch / 2 - this.$srcCanv.height / 2),// + this.offsetY
+                ~~(this.cw / 2 - this.$srcCanv.width / 2),
+                ~~(this.ch / 2 - this.$srcCanv.height / 2),
             );
             
             pixels.shuffle();
