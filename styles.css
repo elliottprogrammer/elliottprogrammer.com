@@ -65,8 +65,6 @@ img.aboutme-bg-3 {
 
 html, body {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    /* background-image: url("./space-bg-2560x1707.jpg");
-    background-position: center center; */
     color: white;
     width: 100%;
     height: 100vh;
@@ -103,7 +101,6 @@ figcaption {
 #image-atomizer {
     position: relative;
     width: 100%;
-    /* //flex: 1; */
     height: calc(var(--viewport-height, 100vh) - var(--navbar-height));
     perspective: 1000px;
 }
@@ -524,13 +521,14 @@ button.coffee-cup-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     padding: 7px;
     font-size: 15px;
     -webkit-text-size-adjust: none;
     text-align: center;
     bottom: 0;
     left: 0;
-    width: 40%;
+    width: 42%;
     min-height: 22%;
     background: #1a1f23;
     border: 5px solid #a36533;
@@ -574,7 +572,7 @@ button.coffee-cup-btn {
 }
 
 
-img:not(.click-me-img,.the-bug,.svg) {
+img.responsive {
     width: 100%;
     max-width: 100%;
     height: auto;
@@ -1232,11 +1230,6 @@ img.automattic-org-icon {
 }
 
 .git-images > .slide > img:not(:last-child) {
-    height: 100%;
-    width: auto;
-    max-height: 110.19px;
-    /* aspect-ratio: 89 / 14; */
-    max-width: none;
     background-color: #000;
 }
 
@@ -1248,19 +1241,11 @@ img.automattic-org-icon {
     border-left: 1px solid #fff;
 }
 
-
-.year {
-    /* transition: transform 6ms ease-out; */
-    /* padding-left: 35px; */
-}
-
 .year span {
     display: block;
     padding: 0 35px;
     font-size: 16px;
     font-weight: 700;
-    /* transform: translateX(-120px) scale(4); */
-    /* opacity: 0; */
 }
 
 button.prev:disabled,
@@ -1273,7 +1258,6 @@ button.next:disabled {
 button.prev:disabled > svg,
 button.next:disabled > svg {
     opacity: .4;
-    /* fill: #888; */
 }
 
 .graph-legend {
@@ -1429,36 +1413,6 @@ section#footer-top {
 }
 
 @media (max-width: 500px) {
-    .spark-positioner {
-        top: 17%;
-        left: 81%;
-    }
-    #stack-overflow-profile-section .summary-container {
-        flex-direction: column;
-        gap: 10px;
-    }
-    .summary-item-value {
-        font-size: 28px;
-    }
-    .summary-item-value span.top {
-        display: block;
-        line-height: 1;
-    }
-    .caption-icon {
-        padding-top: 5px;
-    }
-    .caption-icon > svg {
-        display: inline-block;
-        width: 20px;
-        height: 8px;
-        filter: drop-shadow(0px 0px 7px rgba(255, 255, 255, 0.7));
-    }
-    .grid-two-col {
-        gap: calc(var(--gap) / 2);
-    }
-}
-
-@media (max-width: 400px) {
     .nav-menu-button {
         display: block;
     }
@@ -1507,6 +1461,47 @@ section#footer-top {
         text-decoration: none;
         transition: unset
     }
+    #about-me-image .coffee-found-dialog,
+    #searching-bugs .searching-bugs-found-dialog {
+        font-size: 11px;
+        padding: 3px 4px;
+    }
+    .challenge-complete-text {
+        top: 0;
+    }
+    .challenge-complete-text span {
+        font-size: 18px;
+    }
+    #searching-bugs .challenge-complete-text {
+        top: 16.5%;
+    }
+    #stack-overflow-profile-section .summary-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .summary-item-value {
+        font-size: 28px;
+    }
+    .summary-item-value span.top {
+        display: block;
+        line-height: 1;
+    }
+    .caption-icon {
+        padding-top: 5px;
+    }
+    .caption-icon > svg {
+        display: inline-block;
+        width: 20px;
+        height: 8px;
+        filter: drop-shadow(0px 0px 7px rgba(255, 255, 255, 0.7));
+    }
+    .grid-two-col {
+        gap: calc(var(--gap) / 2);
+    }
+}
+
+@media (max-width: 400px) {
+    
     #intro .name {
         font-size: 44px;
     }
@@ -1522,10 +1517,6 @@ section#footer-top {
         padding: 30px 0 30px;
         font-size: 16px;
     }
-    .spark-positioner {
-        top: 15.5%;
-        left: 80.5%;
-    }
 
     figcaption {
         font-size: 12px;
@@ -1538,20 +1529,6 @@ section#footer-top {
     }
     .the-bug {
         width: 30px;
-    }
-    #about-me-image .coffee-found-dialog,
-    #searching-bugs .searching-bugs-found-dialog {
-        font-size: 11px;
-        padding: 3px 4px;
-    }
-    .challenge-complete-text {
-        top: 0;
-    }
-    .challenge-complete-text span {
-        font-size: 18px;
-    }
-    #searching-bugs .challenge-complete-text {
-        top: 16.5%;
     }
     img.cup-twinkle {
         top: 52%;
