@@ -1,3 +1,5 @@
+import { imageFrameCycler } from './image-frame-cycler.js';
+
 export function getDeviceType() {
     const width = window.innerWidth;
 
@@ -5,7 +7,7 @@ export function getDeviceType() {
         return 'desktop';
     } else if (width > 700) {
         return 'tablet';
-    } else if (width > 420) {
+    } else if (width > 450) {
         return 'mobile';
     } else {
         return 'phone'
@@ -82,3 +84,115 @@ export function timeSince(dateInput, includeDays = false) {
 export function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+// Ceiling fan logic (class)
+export class CeilingFan {
+    constructor( framesSelector = '#searching-bugs .frames-container' ) {
+        this.animationId = null;
+        this.fanCycler = imageFrameCycler(framesSelector, { targetFPS: 18 });
+        this.stopped = false;
+        this.timer = null;
+    }
+
+    doFanCycle = () => {
+        if (! this.stopped) {
+            this.animationId = requestAnimationFrame((timestamp) => { this.fanCycler.doFrameCycle(timestamp, 0, true, false)});
+            this.timer = setTimeout(this.doFanCycle, 222);
+        }
+    }
+
+    start = () => {
+        this.fanCycler.resetCycler();
+        this.stopped = false;
+        this.doFanCycle();
+    }
+
+    stop = () => {
+        this.stopped = true;
+        clearTimeout(this.timer);
+        this.fanCycler.stopCycler();
+    }
+};
+
+// Twinkler logic (class)
+export class Twinkler {
+    constructor(twinkleElem, randomRange) {
+        this.twinkleElement = twinkleElem;
+        this.randomRange = {
+            low: randomRange[0],
+            high: randomRange[1],
+        }
+        this.timer = null;
+        this.hasStarted = false;
+    }
+
+    twinkle() {
+        gsap.to(this.twinkleElement, {
+            duration: .2,
+            scale: 1,
+            rotation: 180,
+            ease: 'none',
+            repeat: 1,
+            yoyo: true
+        });
+    }
+
+    _cycleTwinkler = () => {
+        const randomWait = getRandomInt(this.randomRange.low, this.randomRange.high);
+        this.twinkle();
+        // recursively twinkle with random wait duration.
+        this.timer = setTimeout( this._cycleTwinkler, randomWait);
+    }
+
+    start() {
+        // Don't start the twinkler if it's already been started
+        if (! this.hasStarted ) {
+            this._cycleTwinkler();
+            this.hasStarted = true;
+        }
+    }
+
+    stop() {
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = null;
+            this.hasStarted = false;
+        }
+    }
+}
+
+// Image eyes blinking logic (class)
+class EyesBlinker {
+    constructor(framesSelector, randomRange = [1000, 6000]) {
+        this.blinkCycler = imageFrameCycler(framesSelector, { shouldReverse: true });
+        this.animationId = null;
+        this.randomRange = {
+            low: randomRange[0],
+            high: randomRange[1],
+        };
+        this.timer = null;
+        this.stopped = false;
+    }
+
+    _doBlinkCycle = () => {
+        if (! this.stopped) {
+            const randomWait = getRandomInt(this.randomRange.low, this.randomRange.high);
+            this.animationId = requestAnimationFrame((timestamp) => { this.blinkCycler.doFrameCycle(timestamp, 0, true, false)});
+            this.timer = setTimeout(this._doBlinkCycle, randomWait);
+        }
+    }
+
+    start = () => {
+        this.blinkCycler.resetCycler();
+        this.stopped = false;
+        this._doBlinkCycle();
+    }
+
+    stop = () => {
+        this.stopped = true;
+        clearTimeout(this.timer);
+        this.blinkCycler.stopCycler();
+    }
+}
+
+export { EyesBlinker };
