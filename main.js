@@ -203,7 +203,7 @@
                 opacity: 1,
                 y: 0,
                 onComplete: () => {
-                    if ('phone' === getDeviceType()) {
+                    if ('phone' === getDeviceType() || 'mobile' === getDeviceType()) {
                         const textTl = gsap.timeline( {delay: 1.5, ease: "power1.inOut" } );
                         textTl.to('#about-me-image .interactive-image-text', {
                             duration: .5,
@@ -214,11 +214,11 @@
                         }).to('#about-me-image .interactive-image-text .text', {
                             delay: .5,
                             duration: .5,
-                            x: 0,
+                            x: 225,
                         }, 0).to('#about-me-image .interactive-image-text .text', {
                             delay: 3,
                             duration: .5,
-                            x: -250,
+                            x: 0,
                         }).to('#about-me-image .interactive-image-text', {
                             duration: .5,
                             scaleX: 0,
@@ -257,7 +257,7 @@
                 delay: 1.5,
                 ease: "power1.inOut",
             } );
-            if ('phone' === getDeviceType()) {
+            if ('phone' === getDeviceType() || 'mobile' === getDeviceType()) {
                 interactImgTxtTl.to('#searching-bugs .interactive-image-text', {
                     duration: .5,
                     scaleX: 1,
@@ -267,11 +267,11 @@
                 }).to('#searching-bugs .interactive-image-text .text', {
                     delay: .5,
                     duration: .5,
-                    x: 0,
+                    x: 225,
                 }, 0).to('#searching-bugs .interactive-image-text .text', {
                     delay: 3,
                     duration: .5,
-                    x: -250,
+                    x: 0,
                 }).to('#searching-bugs .interactive-image-text', {
                     duration: .5,
                     scaleX: 0,

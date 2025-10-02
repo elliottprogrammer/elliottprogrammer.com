@@ -1461,6 +1461,9 @@ section#footer-top {
         text-decoration: none;
         transition: unset
     }
+    .hover-me img {
+        transform: translate(-170px, -88px) rotateZ(5deg) scale(0.7);
+    }
     #about-me-image .coffee-found-dialog,
     #searching-bugs .searching-bugs-found-dialog {
         font-size: 11px;
