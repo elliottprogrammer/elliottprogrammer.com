@@ -345,8 +345,11 @@
             const swooshSound2 = document.getElementById('swoosh-sound2');
             const levelCompleteSound = document.getElementById('level-complete-sound');
             let isLightOn = false;
+            let hasLightBeenClicked = false;
+            let hasFoundCoffee = false;
             
             aboutMeLightSwitch.addEventListener('click', (e) => {
+                hasLightBeenClicked = true;
                 clickSound.currentTime = 0;
                 clickSound.play();
                 lightSwitchTwinkler.stop();;
@@ -395,7 +398,6 @@
             const aboutCompleteText1 = document.querySelector('#about-me-image .word1');
             const aboutCompleteText2 = document.querySelector('#about-me-image .word2');
             const aboutCompleteCheck3 = document.querySelector('#about-me-image .check');
-            let hasFoundCoffee = false;
 
             const aboutCompleteTl = gsap.timeline();
             const aboutMeComplete = aboutCompleteTl.from(aboutCompleteText1, {
@@ -490,10 +492,12 @@
                 isFanOn: false,
                 isLightOn: false,
             };
+            let hasSwitchRecepticleBeenClicked = false;
             
             const lightSwitchImageContainer = document.querySelector('.light-switch-container');
             const lightSwitchImages = lightSwitchImageContainer.getElementsByTagName('img');
             function setSwitchRecepticle(imageStatus) {
+                hasSwitchRecepticleBeenClicked = true;
                 clickSound.currentTime = 0;
                 clickSound.play();
                 clearTimeout(arrow2Timer);
@@ -714,11 +718,7 @@
                 })
             });
 
-            
-        
-            // Start
-            
-
+            // Pause & restart animations activity when browser window loses and regains focus.
             // Listen for window blur event
             window.addEventListener('blur', function() {
                 if (hoverMeTimer) {
@@ -737,6 +737,15 @@
                     clearTimeout(arrow2Timer);
                     arrow2Timer = null;
                 }
+                if (lightSwitchTwinkler && lightSwitchTwinkler?.hasStarted) {
+                    lightSwitchTwinkler.stop();
+                }
+                if (cupTwinkler && cupTwinkler?.hasStarted) {
+                    cupTwinkler.stop();
+                }
+                if (fan && !fan?.stopped) {
+                    fan.stop();
+                }
             });
 
             // Listen for window focus event
@@ -745,15 +754,24 @@
                 if (!hoverMeTimer) {
                     hoverMe();
                 }
-
+                // Start blinking eyes again
                 eyesBlinker1.start();
                 eyesBlinker2.start();
 
-                if (!arrow1Timer) {
+                if (!arrow1Timer && !hasLightBeenClicked) {
                     nudgeArrow1Randomly();
                 }
-                if (!arrow2Timer) {
+                if (!arrow2Timer && !hasSwitchRecepticleBeenClicked) {
                     nudgeArrow2Randomly();
+                }
+                if (lightSwitchTwinkler && !lightSwitchTwinkler?.hasStarted && !hasLightBeenClicked) {
+                    lightSwitchTwinkler.start();
+                }
+                if (cupTwinkler && !cupTwinkler?.hasStarted && hasLightBeenClicked && !hasFoundCoffee) {
+                    cupTwinkler.start();
+                }
+                if (fan && fan?.stopped && imageStatus?.isFanOn) {
+                    fan.start();
                 }
             });
 
@@ -1062,24 +1080,18 @@
         };
 
         const gitSliderLastImage = document.querySelector('.git-images .slide:last-child img');
-        console.log(gitSliderLastImage);
         if (gitSliderLastImage.complete) {
-            console.log('loaded in "complete"!');
-                console.log(gitSliderLastImage.width);
                 setTimeout( () => {
                     gitSliderStart();
                 }, 500);
                 
         } else {
             gitSliderLastImage.onload = function() {
-                console.log('loaded in "onload"!');
-                console.log(gitSliderLastImage.width);
-
                 gitSliderStart();
             };
 
-            gitSliderLastImage.onerror = function() {
-                console.log('error');
+            gitSliderLastImage.onerror = function(err) {
+                console.error('GitContributionSlider error: Error loading the image.');
             }
         }
             
