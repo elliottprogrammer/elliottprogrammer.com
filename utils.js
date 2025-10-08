@@ -196,3 +196,48 @@ class EyesBlinker {
 }
 
 export { EyesBlinker };
+
+class TypingHand {
+    constructor(framesSelector, randomRange = [1000, 4000]) {
+        this.typeCycler = imageFrameCycler(framesSelector, { targetFPS: 8 });
+        this.animationId = null;
+        this.randomRange = {
+            low: randomRange[0],
+            high: randomRange[1],
+        };
+        this.timer = null;
+        this.stopped = false;
+        this.cycleWaitTime ;
+        this.numTypeCyclesBeforePause = getRandomInt(6, 15);
+    }
+
+
+    _doTypeCycle = () => {
+        let cycleWaitTime = 444;
+        if (! this.stopped) {
+            const frameCount = this.typeCycler.getFrameCount();
+            if (frameCount >= this.numTypeCyclesBeforePause) {
+               cycleWaitTime = getRandomInt(this.randomRange.low, this.randomRange.high);
+                this.typeCycler.resetFrameCount();
+                this.numTypeCyclesBeforePause = getRandomInt(6, 15);
+            } 
+            
+            this.animationId = requestAnimationFrame((timestamp) => { this.typeCycler.doFrameCycle(timestamp, 0, true, false)});   
+            this.timer = setTimeout(this._doTypeCycle, cycleWaitTime);
+        }
+    }
+
+    start = () => {
+        this.typeCycler.resetCycler();
+        this.stopped = false;
+        this._doTypeCycle();
+    }
+
+    stop = () => {
+        this.stopped = true;
+        clearTimeout(this.timer);
+        this.typeCycler.stopCycler();
+    }
+}
+
+export { TypingHand };

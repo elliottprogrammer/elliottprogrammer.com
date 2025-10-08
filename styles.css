@@ -325,6 +325,9 @@ section#about-me {
 .interactive-image .frames-container.searching-eyes-frames {
     top: 39.3%;
 }
+.interactive-image .frames-container.typing-hands {
+    top: 53.3%;
+}
 
 .click-sound-elem {
     position: absolute;

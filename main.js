@@ -8,6 +8,7 @@
             CeilingFan,
             Twinkler,
             EyesBlinker,
+            TypingHand,
             timeSince,
             numberWithCommas,
             debounce
@@ -279,10 +280,15 @@
             }
 
             // Blinking Eyes on both images
-            const eyesBlinker1 = new EyesBlinker('#about-me-image .frames-container');
+            const eyesBlinker1 = new EyesBlinker('#about-me-image .frames-container.about-eyes-frames');
             const eyesBlinker2 = new EyesBlinker('#searching-bugs .frames-container.searching-eyes-frames');
             eyesBlinker1.start();
             eyesBlinker2.start();
+
+            //typing hands
+            const typingHand = new TypingHand('#about-me-image .frames-container.typing-hands');
+            typingHand.start();
+
             
             // Light switch twinkle
             const clickMeTwinkle = document.querySelector('img.click-me-twinkle');
@@ -467,6 +473,7 @@
                         function showChallengeComplete() {
                             setTimeout(() => {
                                 aboutMeComplete.play();
+                                typingHand.stop();
                             }, 1000);
                         }
                         taDaSound.currentTime = 0;
@@ -728,6 +735,7 @@
                 // Stop blinking when window loses focus.
                 eyesBlinker1.stop();
                 eyesBlinker2.stop();
+                typingHand.stop();
 
                 if (arrow1Timer) {
                     clearTimeout(arrow1Timer);
@@ -757,6 +765,7 @@
                 // Start blinking eyes again
                 eyesBlinker1.start();
                 eyesBlinker2.start();
+                typingHand.start();
 
                 if (!arrow1Timer && !hasLightBeenClicked) {
                     nudgeArrow1Randomly();

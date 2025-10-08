@@ -3,6 +3,7 @@ function imageFrameCycler(imgContainerSelector, userOptions) {
     const defaultOptions = {
         shouldReverse: false,
         targetFPS: 18,
+
     };
     const options = {...defaultOptions, ...userOptions};
     
@@ -11,6 +12,7 @@ function imageFrameCycler(imgContainerSelector, userOptions) {
     const frameInterval = 1000 / options.targetFPS; // Milliseconds per frame
     let stopCycle = false;
     let animationId;
+    let frameNum = 0
 
     return {
         maybeUpdateDOM: function(index, imgFrames) {
@@ -55,6 +57,7 @@ function imageFrameCycler(imgContainerSelector, userOptions) {
             if (timestamp - lastFrameTime >= frameInterval) {
                 lastFrameTime = timestamp;
 
+                frameNum = frameNum + 1;
                 // Get the images (each frame) in the DOM.
                 const imgFrames = imgContainerElement.getElementsByTagName('img');
         
@@ -100,6 +103,13 @@ function imageFrameCycler(imgContainerSelector, userOptions) {
         },
         resetCycler: function() {
             stopCycle = false;
+            frameNum = 0;
+        },
+        resetFrameCount: function() {
+            frameNum = 0;
+        },
+        getFrameCount: function() {
+            return frameNum;
         },
     }
     
