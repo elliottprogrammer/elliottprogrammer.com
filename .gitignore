@@ -1,0 +1,21 @@
+# System Files
+.DS_Store
+Thumbs.db
+#
+# Dependency directories
+node_modules/
+jspm_packages/
+#
+# Optional npm cache directory
+.npm
+#
+# dotenv environment variables file
+.env
+#
+# IDE - VSCode
+.vscode/*
+#
+# compiled output
+/dist
+/tmp
+/out-tsc
