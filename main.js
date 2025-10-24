@@ -2,6 +2,7 @@
         import { Typewriter } from './t-writer.js';
         import { confettea } from './confettea.js';
         import {
+            asciiArtToConsole,
             getDeviceType,
             getElementProps,
             getRandomInt,
@@ -14,6 +15,7 @@
             debounce
         } from './utils.js';
 
+        asciiArtToConsole();
         let gitSlider;
         let sliderTl;
         let isGitSliderPlaying = false;
