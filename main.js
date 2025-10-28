@@ -14,6 +14,7 @@
             numberWithCommas,
             debounce
         } from './utils.js';
+        import { LevelUpGame } from './elliottprogrammer-level-up-game.js';
 
         asciiArtToConsole();
         let gitSlider;
@@ -917,6 +918,11 @@
                     },
                 }
             });
+
+
+            // Initialize and start the Level Up game.
+            const game = new LevelUpGame();
+            game.start();
         });
    
         function gitSliderStart() {   
