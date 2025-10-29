@@ -1,3 +1,4 @@
+import { getDeviceType } from './main.js';
 // Floating Text Effect
 class FloatingText {
     constructor(x, y, text, scale, fontSize = 32) {
@@ -106,7 +107,7 @@ class GameAsset {
         // Using a collision radius around the center
         const collisionRadius = this.size / 2;
         const spriteCenterX = spriteX + spriteWidth / 2;
-        const spriteCenterY = spriteY + spriteHeight / 2 + 50;
+        const spriteCenterY = spriteY + spriteHeight / 2 + (50 * this.scale);
         
         // Calculate distance between sprite center and asset center
         const dx = spriteCenterX - this.x;
@@ -255,6 +256,7 @@ class SpriteAnimation {
 // Main Game Class
 class LevelUpGame {
     constructor() {
+        this.deviceType = getDeviceType();
         this.canvas = document.getElementById('canvas');
         this.ctx = this.canvas.getContext('2d');
         this.aspectRatio = 3 / 2;
@@ -306,6 +308,7 @@ class LevelUpGame {
             { name: 'Project\nManagement', position: 4 },
         ];
         this.collectSound = null; // Sound for collecting assets
+        this.audioLoaded = false;
         this.isLoaded = false;
         this.startButton = null;
         this.stopButton = null;
@@ -318,6 +321,7 @@ class LevelUpGame {
         this.jumpTotalMoveY = this.baseJumpMoveY * this.spriteScale; // Scaled Y movement
         this.jumpMovePerFrameX = this.jumpTotalMoveX / this.jumpMovementFrames; // Scaled per frame X
         this.jumpMovePerFrameY = this.jumpTotalMoveY / this.jumpMovementFrames; // Scaled per frame Y
+        this.jumpCount = 0;
         this.setupEventListeners();
     }
 
@@ -361,16 +365,20 @@ class LevelUpGame {
             this.createOrbAssets();
             
             // Load sound
-            this.collectSound = await this.loadSound('audio/collect-item.mp3');
-            
+            // On mobile, sound only loads after user interaction, so don't load sound here on mobile.
+            // if (this.deviceType !== 'mobile' && this.deviceType !== 'phone') {
+            //     this.collectSound = await this.loadSound('audio/collect-item.mp3');
+            //     this.audioLoaded = true;
+            // }
+            this.collectSound = document.getElementById('collect-sound');
+
             this.isLoaded = true;
             this.render();
             this.updateControlButtons();
             console.log('Assets loaded successfully');
             console.log(`Loaded ${this.spriteData.frames.length} idle sprite frames`);
             console.log(`Loaded ${this.jumpSpriteData.frames.length} jump sprite frames`);
-            console.log(`Created ${this.assets.length} game assets`);
-            
+            console.log(`Created ${this.assets.length} game assets`);   
         } catch (error) {
             console.error('Error loading assets:', error);
         }
@@ -387,9 +395,12 @@ class LevelUpGame {
 
     playSound(sound) {
         if (sound) {
-            const audio = sound.cloneNode();
-            audio.volume = 0.3; // Set volume (0.0 to 1.0)
-            audio.play();
+            sound.currentTime = 0;
+            sound.volume = 0.2;
+            sound.play();
+            // const audio = sound.cloneNode();
+            // audio.volume = 0.3; // Set volume (0.0 to 1.0)
+            // audio.play();
         }
     }
 
@@ -404,11 +415,15 @@ class LevelUpGame {
 
     setupEventListeners() {
         window.addEventListener('resize', () => this.resizeCanvas());
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter' && this.isLoaded) {
-                this.triggerJump();
-            }
-        });
+        const platformButtons = document.querySelectorAll('button.platform-jump');
+        platformButtons.forEach( button => {
+            button.addEventListener('click', (e) => {
+                const platformNum = parseInt(e.target?.dataset?.num, 10);
+                if (this.isLoaded && platformNum === this.jumpCount + 1) {
+                        this.triggerJump();
+                }
+            })
+        })
         
         // Reset button event listener
         const resetButton = document.getElementById('resetButton');
@@ -418,7 +433,9 @@ class LevelUpGame {
 
         this.startButton = document.getElementById('startButton');
         if (this.startButton) {
-            this.startButton.addEventListener('click', () => this.play());
+            this.startButton.addEventListener('click', () => {
+                this.play();
+            });
             this.startButton.disabled = true;
         }
 
@@ -450,6 +467,7 @@ class LevelUpGame {
         this.spriteY = this.currentSpriteY;
         this.baseX = this.spriteX;
         this.baseY = this.spriteY;
+        this.jumpCount = 0;
         
         // Reset animations
         this.currentAnimation = 'idle';
@@ -479,6 +497,7 @@ class LevelUpGame {
         
         this.isRunning = true;
         this.updateControlButtons();
+        console.log('Gameplay is active.');
         this.animationFrameId = requestAnimationFrame((time) => this.gameLoop(time));
     }
 
@@ -491,6 +510,7 @@ class LevelUpGame {
             this.animationFrameId = null;
         }
         this.updateControlButtons();
+        console.log('Gameplay paused.');
     }
 
     update(currentTime) {
@@ -523,6 +543,7 @@ class LevelUpGame {
                 // Update current position to the new final position
                 this.currentSpriteX = this.spriteX;
                 this.currentSpriteY = this.spriteY;
+                this.jumpCount += 1;
                 console.log('Jump animation complete, staying at new position:', this.spriteX, this.spriteY);
             }
         }

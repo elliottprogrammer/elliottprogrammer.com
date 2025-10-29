@@ -282,6 +282,27 @@
                 });
             }
 
+            // Level Up Section - Slide up & fade in
+            const levelUpTextContainer = document.querySelector('#leveling-up .two-col > div:first-child');
+            const levelUpImageContainer = document.querySelector('#leveling-up .two-col > div:last-child');
+            gsap.set([levelUpTextContainer, levelUpImageContainer], {
+                transform: 'translateY(250px)',
+                opacity: 0,
+            })
+            gsap.to(levelUpTextContainer, {
+                scrollTrigger: levelUpTextContainer,
+                opacity: 1,
+                y: 0,
+            });
+            gsap.to(levelUpImageContainer, {
+                scrollTrigger: {
+                    trigger: levelUpImageContainer,
+                    start: 'top bottom',
+                },
+                opacity: 1,
+                y: 0,       
+            });
+
             // Blinking Eyes on both images
             const eyesBlinker1 = new EyesBlinker('#about-me-image .frames-container.about-eyes-frames');
             const eyesBlinker2 = new EyesBlinker('#searching-bugs .frames-container.searching-eyes-frames');
@@ -919,10 +940,28 @@
                 }
             });
 
-
             // Initialize and start the Level Up game.
             const game = new LevelUpGame();
             game.start();
+
+            // Start and Stop the game loop when it enters and leaves the viewport.
+            const levelingUpSection = document.getElementById('leveling-up');
+            ScrollTrigger.create({
+                trigger: levelingUpSection,
+                onEnter: () => {
+                    game.play();
+                },
+                onLeave: () => {
+                    game.pause();
+                },
+                onEnterBack: () => {
+                    game.play();
+                },
+                onLeaveBack: () => {
+                    game.pause();
+                },
+                //markers: true,
+            });
         });
    
         function gitSliderStart() {   
@@ -1111,4 +1150,6 @@
                 console.error('GitContributionSlider error: Error loading the image.');
             }
         }
+
+        export { getDeviceType };
             

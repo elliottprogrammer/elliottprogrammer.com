@@ -289,11 +289,15 @@ section#about-me {
     column-gap: var(--gap);
 }
 
-.two-col.left-text > div:first-child, .two-col.right-text > div:last-child {
+.two-col.left-text > div:first-child,
+.two-col.right-text > div:last-child,
+.two-col.left-text-small > div:last-child {
     flex: 0 0 calc(60% - (var(--gap) / 2));
 }
 
-.two-col.left-text > div:last-child, .two-col.right-text > div:first-child  {
+.two-col.left-text > div:last-child,
+.two-col.right-text > div:first-child,
+.two-col.left-text-small > div:first-child  {
     flex: 0 0 calc(40% - (var(--gap) / 2));
     overflow: visible;
 }
@@ -1307,8 +1311,9 @@ img.legend {
     aspect-ratio: 3 / 2;
 }
 .game-title {
-    width: 20%;
+    width: 36%;
     position: absolute;
+    transform: translateY(-50%);
 
 }
 #canvas {
@@ -1352,6 +1357,37 @@ img.legend {
     position: absolute;
     top: 10px;
     right: 10px;
+}
+.platform-jump {
+    position: absolute;
+    width: 13.5%;
+    height: 5.2%;
+    cursor: pointer;
+    z-index: 10;
+    background: none;
+    border: none;
+    padding: 0;
+}
+.platform-1 {
+    top: 82.6%;
+    left: 67.5%;
+}
+.platform-2 {
+    top: 72.8%;
+    left: 54%;
+}
+.platform-3 {
+    top: 63.1%;
+    left: 40.2%;
+}
+.platform-4 {
+    top: 53.3%;
+    left: 26.5%;
+}
+.platform-5 {
+    top: 43.7%;
+    left: 3.8%;
+    width: 22.5%
 }
 
 /* Footer */
@@ -1423,10 +1459,15 @@ section#footer-top {
     .two-col.left-text > div:last-child, .two-col.right-text > div:first-child  {
         order: 1;
     }
-    .two-col.left-text > div:last-child, .two-col.right-text > div:first-child {
+    .two-col.left-text > div:last-child,
+    .two-col.right-text > div:first-child,
+    .two-col.left-text-small > div:last-child {
         flex: 1 1 auto;
         width: 100%;
         max-width: 600px;
+    }
+    .two-col.left-text-small > div:last-child {
+        max-width: none;
     }
     .grid-two-col {
         grid-template-columns: auto;
@@ -1439,6 +1480,9 @@ section#footer-top {
     .spark-positioner {
         top: 21%;
         left: 83%;
+    }
+    .game-container {
+        margin-top: 50px;
     }
 }
 
@@ -1563,6 +1607,17 @@ section#footer-top {
     }
     .grid-two-col {
         gap: calc(var(--gap) / 2);
+    }
+    .control-button,
+    .reset-button {
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 10px;
+        font-weight: normal;
+    }
+    .control-panel,
+    .reset-button {
+        top: -30px;
     }
 }
 
