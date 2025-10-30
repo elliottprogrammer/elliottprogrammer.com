@@ -72,6 +72,7 @@ html, body {
     margin: 0;
     padding: 0;
     position: relative;
+    overflow-x: hidden;
 }
 
 .two-col > div > h2 {
@@ -1309,6 +1310,7 @@ img.legend {
     width: 100%;
     max-width: 1536px;
     aspect-ratio: 3 / 2;
+    margin-top: 50px;
 }
 .game-title {
     width: 36%;
@@ -1480,9 +1482,6 @@ section#footer-top {
     .spark-positioner {
         top: 21%;
         left: 83%;
-    }
-    .game-container {
-        margin-top: 50px;
     }
 }
 

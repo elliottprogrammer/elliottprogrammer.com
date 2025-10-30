@@ -945,7 +945,7 @@
             game.start();
 
             // Start and Stop the game loop when it enters and leaves the viewport.
-            const levelingUpSection = document.getElementById('leveling-up');
+            const levelingUpSection = document.querySelector('#leveling-up .two-col.left-text-small > div:last-child');
             ScrollTrigger.create({
                 trigger: levelingUpSection,
                 onEnter: () => {
