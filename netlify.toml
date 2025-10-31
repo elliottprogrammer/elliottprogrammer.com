@@ -1,0 +1,4 @@
+[[headers]]
+      for = "/images/*"
+      [headers.values]
+        Access-Control-Allow-Origin = "*"

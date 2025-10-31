@@ -75,6 +75,10 @@ html, body {
     overflow-x: hidden;
 }
 
+h2 {
+    text-shadow: 3px 3px #000;
+}
+
 .two-col > div > h2 {
     margin-top: 0;
 }
@@ -230,7 +234,23 @@ nav.top-nav {
 }
 
 #intro * {
-    text-shadow: 1px 1px 2px black;
+    text-shadow: 3px 3px black;
+}
+section#hero-footer {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    padding: 20px;
+    text-align: center;
+    font-family: 'WF Visual Sans', sans-serif;
+    font-size: 12px;
+}
+
+.view-on-github-link {
+    font-size: 14px;
+    font-weight: 300;
+    color: #ffffffa6;
+    text-decoration: none;
 }
 
 .name {
@@ -263,7 +283,7 @@ nav.top-nav {
     font-size: 28px;
 }
 
-section:not(#image-atomizer,#intro) {
+section:not(#image-atomizer,#intro,#hero-footer) {
     position: relative;
     font-family: 'WF Visual Sans', sans-serif;
     line-height: 1.5;
@@ -276,7 +296,7 @@ section:not(#image-atomizer,#intro) {
 }
 
 section#about-me {
-    box-shadow: 0px -1px 5px 0px #000000;
+    border-top: 4px solid #fff;
 }
 
 #nebula-element canvas:last-child {
@@ -556,17 +576,17 @@ button.coffee-cup-btn {
 }
 
 #searching-bugs button.light-switch {
-    width: 4.2%;
-    height: 6%;
-    top: 30.5%;
-    left: 81.5%;
+    width: 5.5%;
+    height: 7.4%;
+    top: 31%;
+    left: 80.5%;
 }
 
 #searching-bugs button.fan-switch {
-    width: 4.4%;
-    height: 6%;
-    top: 30.5%;
-    left: 86.6%;
+    width: 5.5%;
+    height: 7.4%;
+    top: 31%;
+    left: 87%;
 }
 
 .fan-dome-light-container {
