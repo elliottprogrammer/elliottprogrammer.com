@@ -218,11 +218,11 @@
                         }).to('#about-me-image .interactive-image-text .text', {
                             delay: .5,
                             duration: .5,
-                            x: 225,
+                            x: 0,
                         }, 0).to('#about-me-image .interactive-image-text .text', {
                             delay: 3,
                             duration: .5,
-                            x: 0,
+                            x: -200,
                         }).to('#about-me-image .interactive-image-text', {
                             duration: .5,
                             scaleX: 0,
@@ -271,11 +271,11 @@
                 }).to('#searching-bugs .interactive-image-text .text', {
                     delay: .5,
                     duration: .5,
-                    x: 225,
+                    x: 0,
                 }, 0).to('#searching-bugs .interactive-image-text .text', {
                     delay: 3,
                     duration: .5,
-                    x: 0,
+                    x: -200,
                 }).to('#searching-bugs .interactive-image-text', {
                     duration: .5,
                     scaleX: 0,

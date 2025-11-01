@@ -534,6 +534,7 @@ button.coffee-cup-btn {
     opacity: 0;
     padding: 3px 5px;
     transform: translate(-200px, 0);
+    text-align: center;
 }
 
 .interactive-image-text.white-bg {
