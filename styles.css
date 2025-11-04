@@ -123,10 +123,6 @@ canvas.atomizer {
     top: 0;
 }
 
-.pin-spacer {
-    
-}
-
 .atomizer-container {
     height: 100%;
 }
@@ -237,20 +233,30 @@ nav.top-nav {
     text-shadow: 3px 3px black;
 }
 section#hero-footer {
+    box-sizing: border-box;
     position: absolute;
-    width: 100%;
+    width: 100vw;
     bottom: 0;
     padding: 20px;
     text-align: center;
     font-family: 'WF Visual Sans', sans-serif;
-    font-size: 12px;
+    
 }
 
+.repo-title {
+    font-size: 16px;
+    color: #e6e6e6;
+    text-shadow: 1px 1px 2px #000;
+}
 .view-on-github-link {
-    font-size: 14px;
-    font-weight: 300;
-    color: #ffffffa6;
+    font-size: 15px;
+    font-weight: 400;
+    color: #b1b1b1;
     text-decoration: none;
+    text-shadow: 1px 1px 2px #000;
+}
+.view-on-github-link svg {
+    filter: drop-shadow(1px 1px 2px #000);
 }
 
 .name {
@@ -1643,6 +1649,17 @@ section#footer-top {
     .reset-button {
         top: -30px;
     }
+    section#hero-footer {
+        padding: 15px;
+    }
+    p.repo-title {
+        font-size: 13px;
+        font-weight: 400;
+        margin: 10px;
+    }
+    .view-on-github-link {
+        font-size: 12px;
+    }
 }
 
 @media (max-width: 400px) {
@@ -1658,7 +1675,7 @@ section#footer-top {
         max-width: 280px;
         margin-top: 20px;
     }
-    section:not(#image-atomizer,#intro) {
+    section:not(#image-atomizer,#intro,#hero-footer) {
         padding: 30px 0 30px;
         font-size: 16px;
     }
