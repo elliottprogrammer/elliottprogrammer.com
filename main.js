@@ -10,6 +10,7 @@
             Twinkler,
             EyesBlinker,
             TypingHand,
+            MagnifyArm,
             timeSince,
             numberWithCommas,
             debounce
@@ -312,6 +313,10 @@
             //typing hands
             const typingHand = new TypingHand('#about-me-image .frames-container.typing-hands');
             typingHand.start();
+
+            //magnifying arm
+            const magnifyArm = new MagnifyArm('#searching-bugs .frames-container.magnify-arm-frames');
+            magnifyArm.start();
 
             
             // Light switch twinkle

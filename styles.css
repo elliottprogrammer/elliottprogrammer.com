@@ -354,6 +354,10 @@ section#about-me {
     top: 53.3%;
 }
 
+.interactive-image .frames-container.magnify-arm-frames {
+    top: 37%;
+}
+
 .click-sound-elem {
     position: absolute;
     visibility: hidden;

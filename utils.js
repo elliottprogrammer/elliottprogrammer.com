@@ -242,6 +242,41 @@ class TypingHand {
 
 export { TypingHand };
 
+class MagnifyArm {
+    constructor(framesSelector, randomRange = [4000, 12000]) {
+        this.armCycler = imageFrameCycler(framesSelector, { targetFPS: 20, shouldReverse: true });
+        this.animationId = null;
+        this.randomRange = {
+            low: randomRange[0],
+            high: randomRange[1],
+        };
+        this.timer = null;
+        this.stopped = false;
+    }
+
+    _doFrameCycle = () => {
+        if (! this.stopped) {
+            const randomWait = getRandomInt(this.randomRange.low, this.randomRange.high);
+            this.animationId = requestAnimationFrame((timestamp) => { this.armCycler.doFrameCycle(timestamp, 0, true, false)});
+            this.timer = setTimeout(this._doFrameCycle, randomWait);
+        }
+    }
+
+    start = () => {
+        this.armCycler.resetCycler();
+        this.stopped = false;
+        this._doFrameCycle();
+    }
+
+    stop = () => {
+        this.stopped = true;
+        clearTimeout(this.timer);
+        this.armCycler.stopCycler();
+    }
+}
+
+export { MagnifyArm };
+
 export function asciiArtToConsole() {
 console.log(`
   _____ _ _ _       _   _   ____                                                          
