@@ -1650,12 +1650,12 @@ section#footer-top {
         top: -30px;
     }
     section#hero-footer {
-        padding: 15px;
+        padding: 10px;
     }
     p.repo-title {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 400;
-        margin: 10px;
+        margin: 6px;
     }
     .view-on-github-link {
         font-size: 12px;
