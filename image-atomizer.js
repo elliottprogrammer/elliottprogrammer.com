@@ -107,7 +107,7 @@ class ImageAtomizer {
                     targetElement = targetElement.offsetParent;
                 }
             }
-            
+            console.log('offsetLeft: %d, offsetTop: %d', offsetLeft, offsetTop);
             return { x: offsetLeft + this.offsetX, y: offsetTop + this.offsetY };
         };
         
@@ -120,8 +120,8 @@ class ImageAtomizer {
         if (this.supportsSwipeEvents()) {
             const trackTouchCoordinates = (x, y) => {
                 const offset = getOffset(this.$container);
-                this.mx = x - offset.x + document.body.scrollLeft + document.documentElement.scrollLeft;
-                this.my = y - offset.y + document.body.scrollTop + document.documentElement.scrollTop;
+                this.mx = x - offset.x + window.scrollX;
+                this.my = y - offset.y + window.scrollY;
             }
             this.$canv.ontouchstart = (event) => {
                 trackTouchCoordinates(event.touches[0].clientX, event.touches[0].clientY);
@@ -136,8 +136,8 @@ class ImageAtomizer {
         } else {
             this.$canv.onmousemove = (event) => {
                 const offset = getOffset(this.$container);
-                this.mx = event.clientX - offset.x + document.body.scrollLeft + document.documentElement.scrollLeft;
-                this.my = event.clientY - offset.y + document.body.scrollTop + document.documentElement.scrollTop;
+                this.mx = event.clientX - offset.x + window.scrollX;
+                this.my = event.clientY - offset.y + window.scrollY;
             };
         }
         

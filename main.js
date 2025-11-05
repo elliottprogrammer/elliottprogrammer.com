@@ -980,7 +980,7 @@
                 { width: 940, height: 150 },
             ];
 
-            const newHeight = 110;
+            const newHeight = 113;
 
             const slider = document.getElementById('git-contribution-slider');
             const sliderViewport = slider.querySelector('.slider-viewport');
