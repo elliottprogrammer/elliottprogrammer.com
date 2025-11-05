@@ -1356,7 +1356,7 @@ img.legend {
 }
 .control-panel {
     position: absolute;
-    top: 10px;
+    top: -40px;
     left: 10px;
     display: flex;
     gap: 8px;
@@ -1388,7 +1388,7 @@ img.legend {
 }
 .reset-button {
     position: absolute;
-    top: 10px;
+    top: -40px;
     right: 10px;
 }
 .platform-jump {

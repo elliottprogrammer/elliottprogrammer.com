@@ -294,6 +294,10 @@ class LevelUpGame {
         this.jumpSpriteSheet = null;
         this.jumpSpriteData = null;
         this.jumpAnimation = null;
+        this.celebrateSpriteSheet = null;
+        this.celebrateSpriteData = null;
+        this.celebrateAnimation = null;
+        this.hasCelebrated = false;
         this.spriteX = this.currentSpriteX;
         this.spriteY = this.currentSpriteY;
         this.baseX = this.currentSpriteX; // Store current position for jump calculations
@@ -308,11 +312,12 @@ class LevelUpGame {
             { name: 'Project\nManagement', position: 4 },
         ];
         this.collectSound = null; // Sound for collecting assets
+        this.cheerSound = null;
         this.audioLoaded = false;
         this.isLoaded = false;
         this.startButton = null;
         this.stopButton = null;
-        this.currentAnimation = 'idle'; // 'idle' or 'jump'
+        this.currentAnimation = 'idle'; // 'idle' or 'jump' or 'celebrate'
         this.jumpMovementStartFrame = 22; // Start movement at frame 22
         this.jumpMovementEndFrame = 34; // End movement at frame 40
         this.jumpTotalFrames = 56; // Total jump frames
@@ -355,22 +360,30 @@ class LevelUpGame {
             // Load jump sprite data
             const jumpResponse = await fetch('jump-sprite/spritesheet.json');
             this.jumpSpriteData = await jumpResponse.json();
+
+            // Load celebrate sprite sheet
+            this.celebrateSpriteSheet = await this.loadImage('celebration-sprite/spritesheet.png');
+
+            // Load celebrate sprite data
+            const celebrateResponse = await fetch('celebration-sprite/spritesheet.json');
+            this.celebrateSpriteData = await celebrateResponse.json();
             
             // Create sprite animations
             this.spriteAnimation = new SpriteAnimation(this.spriteSheet, this.spriteData.frames, 30, true); // idle loops
             this.jumpAnimation = new SpriteAnimation(this.jumpSpriteSheet, this.jumpSpriteData.frames, 30, false); // jump plays once
+            this.celebrateAnimation = new SpriteAnimation(this.celebrateSpriteSheet, this.celebrateSpriteData.frames, 30, false); // celebrate plays once
             
             // Create game assets
             // Base positions at max canvas size (reference for scaling)
             this.createOrbAssets();
             
             // Load sound
-            // On mobile, sound only loads after user interaction, so don't load sound here on mobile.
-            // if (this.deviceType !== 'mobile' && this.deviceType !== 'phone') {
-            //     this.collectSound = await this.loadSound('audio/collect-item.mp3');
-            //     this.audioLoaded = true;
-            // }
+            // Note: On mobile, sound only loads after user interaction.
             this.collectSound = document.getElementById('collect-sound');
+            this.cheerSound = document.getElementById('cheer-sound');
+            this.cheerSound.addEventListener('ended', function() {
+                console.log('sound complete!');
+            });
 
             this.isLoaded = true;
             this.render();
@@ -398,9 +411,6 @@ class LevelUpGame {
             sound.currentTime = 0;
             sound.volume = 0.2;
             sound.play();
-            // const audio = sound.cloneNode();
-            // audio.volume = 0.3; // Set volume (0.0 to 1.0)
-            // audio.play();
         }
     }
 
@@ -423,7 +433,7 @@ class LevelUpGame {
                         this.triggerJump();
                 }
             })
-        })
+        });
         
         // Reset button event listener
         const resetButton = document.getElementById('resetButton');
@@ -468,11 +478,13 @@ class LevelUpGame {
         this.baseX = this.spriteX;
         this.baseY = this.spriteY;
         this.jumpCount = 0;
+        this.hasCelebrated = false;
         
         // Reset animations
         this.currentAnimation = 'idle';
         this.spriteAnimation.reset();
         this.jumpAnimation.reset();
+        this.celebrateAnimation.reset();
         
         // Recreate all assets
         this.assets = [];
@@ -538,13 +550,26 @@ class LevelUpGame {
             
             // Check if jump animation is complete
             if (this.jumpAnimation.isFinished()) {
+                if (! this.assets.length && ! this.hasCelebrated) {
+                    this.currentAnimation = 'celebrate';
+                    this.playSound(this.cheerSound);
+                } else {
+                    this.currentAnimation = 'idle';
+                    this.spriteAnimation.reset();
+                    // Update current position to the new final position
+                    this.currentSpriteX = this.spriteX;
+                    this.currentSpriteY = this.spriteY;
+                    this.jumpCount += 1;
+                    console.log('Jump animation complete, staying at new position:', this.spriteX, this.spriteY);
+                }
+            }
+        } else if (this.currentAnimation === 'celebrate') {
+            this.celebrateAnimation.update(currentTime);
+            if (this.celebrateAnimation.isFinished()) {
+                this.hasCelebrated = true;
                 this.currentAnimation = 'idle';
                 this.spriteAnimation.reset();
-                // Update current position to the new final position
-                this.currentSpriteX = this.spriteX;
-                this.currentSpriteY = this.spriteY;
-                this.jumpCount += 1;
-                console.log('Jump animation complete, staying at new position:', this.spriteX, this.spriteY);
+                console.log('Celebrate animation complete, going back to idle', this.spriteX, this.spriteY);
             }
         }
         
@@ -595,6 +620,8 @@ class LevelUpGame {
             this.drawScaledSprite(this.spriteAnimation, this.spriteX, this.spriteY);
         } else if (this.currentAnimation === 'jump' && this.jumpAnimation) {
             this.drawScaledSprite(this.jumpAnimation, this.spriteX, this.spriteY);
+        } else if (this.currentAnimation === 'celebrate' && this.celebrateAnimation) {
+            this.drawScaledSprite(this.celebrateAnimation, this.spriteX, this.spriteY);
         }
         
         // Draw game assets
