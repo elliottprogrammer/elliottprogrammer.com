@@ -972,12 +972,12 @@
         function gitSliderStart() {   
             // Git Contribution Slider
             const gitSlides = [
-                { width: 1245, height: 196 },
-                { width: 1245, height: 196 },
-                { width: 1270, height: 196 },
-                { width: 1246, height: 196 },
-                { width: 1245, height: 196 },
-                { width: 864, height: 196 },
+                { width: 940, height: 150 },
+                { width: 940, height: 150 },
+                { width: 940, height: 150 },
+                { width: 940, height: 150 },
+                { width: 940, height: 150 },
+                { width: 940, height: 150 },
             ];
 
             const newHeight = 110;
