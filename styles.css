@@ -9,6 +9,7 @@
 :root {
     --viewport-height: 100svh;
     --navbar-height: 62px;
+    --atomizerOffsetY: 114.5px;
     --gap: 40px;
     --spark-size: 20px;
     --ff-sans: -apple-system, BlinkMacSystemFont, "Segoe UI Adjusted", "Segoe UI", "Liberation Sans", sans-serif;
@@ -109,6 +110,34 @@ figcaption {
     width: 100%;
     height: calc(var(--viewport-height, 100vh) - var(--navbar-height));
     perspective: 1000px;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.atomizer-loader {
+    width: 48px;
+    height: 48px;
+    position: absolute;
+    top: calc(50% - 24px + var(--atomizerOffsetY));
+    left: calc(50% - 24px);
+    border: 5px solid #FFF;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+
+}
+
+#image-atomizer.has-initialized .atomizer-loader {
+    display: none;
 }
 
 #nebula-element {
@@ -311,8 +340,8 @@ section#about-me {
     font-size: 350px;
     line-height: 1;
     text-transform: uppercase;
-    color: #15171b;
-    -webkit-text-stroke: 3px #191b20;
+    color: #20232b;
+    -webkit-text-stroke: 3px #282c37;
     position: absolute;
     top: 50px;
     transform: translateX(100%);

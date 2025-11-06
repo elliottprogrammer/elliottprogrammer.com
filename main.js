@@ -146,11 +146,15 @@
                 const adjustedCanvasCenterHeight = ( canvasHeight - headingHeight ) / 2;
                 const offsetY = canvasCenterHeight - adjustedCanvasCenterHeight;
                 
+                const atomizerWrapper = document.getElementById('image-atomizer');
                 var atomizer = new ImageAtomizer(logoImgSrc, {
                     particleGap: 2, //getDeviceType() == 'phone' ? 3 : 0,
                     particleSize: 3, //getDeviceType() == 'phone' ? 3 : 1,
                     restless: false,
                     offsetY: offsetY,
+                    onInitialized: () => {
+                        atomizerWrapper.classList.add('has-initialized');
+                    }
                 });
 
                 const atomizerCanvas = document.querySelector('canvas.atomizer');
@@ -196,7 +200,7 @@
                 scrollTrigger: {
                     trigger: aboutMeSection1,
                     scrub: true,
-                    end: 'desktop' === getDeviceType() ? 'bottom top' : 'top top',
+                    end: 'desktop' === getDeviceType() || 'tablet' === getDeviceType() ? 'bottom top' : 'top top',
                     //markers: true,
                 }
             });
@@ -846,7 +850,7 @@
                 scrollTrigger: {
                     trigger: makeImpactSection1,
                     scrub: true,
-                    end: 'desktop' === getDeviceType() ? 'bottom top' : 'top top',
+                    end: 'desktop' === getDeviceType() || 'tablet' === getDeviceType() ? 'bottom top' : 'top top',
                     //markers: true,
                 }
             });

@@ -15,12 +15,14 @@ class ImageAtomizer {
         this.onWidthChange = null;
         this.onHeightChange = null;
         this.onSizeChange = null;
+        this.onInitialized = null;
         
         // Apply custom options
         if (options) {
             const optionKeys = [
-                "elementId", "width", "height", "particleGap", "particleSize", "monochrome", "monochromeColor",
-                "mouseForce", "restless", "onWidthChange", "onHeightChange", "onSizeChange", 'offsetX', 'offsetY'
+                'elementId', 'width', 'height', 'particleGap', 'particleSize', 'monochrome', 'monochromeColor',
+                'mouseForce', 'restless', 'onWidthChange', 'onHeightChange', 'onSizeChange', 'onInitialized',
+                'offsetX', 'offsetY'
             ];
             
             for (let i = 0, len = optionKeys.length; i < len; i++) {
@@ -107,7 +109,6 @@ class ImageAtomizer {
                     targetElement = targetElement.offsetParent;
                 }
             }
-            console.log('offsetLeft: %d, offsetTop: %d', offsetLeft, offsetTop);
             return { x: offsetLeft + this.offsetX, y: offsetTop + this.offsetY };
         };
         
@@ -421,7 +422,11 @@ class ImageAtomizer {
                 particle = particle.next;
             }
         }
+        if (!this.hasInitialized && this.onInitialized) {
+            this.onInitialized();
+        }
         this.hasInitialized = true;
+
     }
     
     getCanvasWidth() {
