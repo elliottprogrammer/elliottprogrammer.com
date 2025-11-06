@@ -573,6 +573,7 @@ button.coffee-cup-btn {
     width: 100%;
 }
 .interactive-image-text {
+    display: block;
     transform: scaleX(0);
     transform-origin: bottom left;
     overflow: hidden;
@@ -582,6 +583,7 @@ button.coffee-cup-btn {
 
 .interactive-image-text .text {
     display: block;
+    width: 100%;
     color: #000;
     font-size: 14px;
     font-weight: 500;

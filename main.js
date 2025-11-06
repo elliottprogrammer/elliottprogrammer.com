@@ -200,7 +200,7 @@
                 scrollTrigger: {
                     trigger: aboutMeSection1,
                     scrub: true,
-                    end: 'desktop' === getDeviceType() || 'tablet' === getDeviceType() ? 'bottom top' : 'top top',
+                    end: 'desktop' === getDeviceType() || 'tablet' === getDeviceType() ? 'bottom top' : 'top+=200 top',
                     //markers: true,
                 }
             });
@@ -239,7 +239,7 @@
                         }, 0).to('#about-me-image .interactive-image-text .text', {
                             delay: 3,
                             duration: .5,
-                            x: -200,
+                            xPercent: -80,
                         }).to('#about-me-image .interactive-image-text', {
                             duration: .5,
                             scaleX: 0,
@@ -292,7 +292,7 @@
                 }, 0).to('#searching-bugs .interactive-image-text .text', {
                     delay: 3,
                     duration: .5,
-                    x: -200,
+                    xPercent: -80,
                 }).to('#searching-bugs .interactive-image-text', {
                     duration: .5,
                     scaleX: 0,
@@ -850,7 +850,7 @@
                 scrollTrigger: {
                     trigger: makeImpactSection1,
                     scrub: true,
-                    end: 'desktop' === getDeviceType() || 'tablet' === getDeviceType() ? 'bottom top' : 'top top',
+                    end: 'desktop' === getDeviceType() || 'tablet' === getDeviceType() ? 'bottom top' : 'top+=200 top',
                     //markers: true,
                 }
             });
