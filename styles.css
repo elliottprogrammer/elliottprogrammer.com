@@ -84,6 +84,7 @@ h2 {
 }
 
 h2.has-subheadings {
+    margin-top: 0;
     margin-bottom: 35px;
 }
 
@@ -303,6 +304,20 @@ section:not(#image-atomizer,#intro,#hero-footer) {
 
 section#about-me {
     border-top: 4px solid #fff;
+}
+
+.bg-text-effect {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 350px;
+    line-height: 1;
+    text-transform: uppercase;
+    color: #15171b;
+    -webkit-text-stroke: 3px #191b20;
+    position: absolute;
+    top: 50px;
+    transform: translateX(100%);
+    white-space: nowrap;
+
 }
 
 #nebula-element canvas:last-child {
@@ -1481,6 +1496,9 @@ section#footer-top {
     .page-container {
         overflow: hidden;
     }
+    .bg-text-effect {
+        font-size: 250px;
+    }
 }
 
 
@@ -1513,6 +1531,9 @@ section#footer-top {
     .spark-positioner {
         top: 21%;
         left: 83%;
+    }
+    .bg-text-effect {
+        font-size: 220px;
     }
 }
 

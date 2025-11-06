@@ -186,9 +186,21 @@
             }, 200);
 
             
-            
-
             // About Me Section - Slide up & fade in
+            const aboutMeSection1 = document.getElementById('about-me');
+            const aboutMeBgText = document.querySelector('#about-me .bg-text-effect');
+
+            gsap.to(aboutMeBgText, {
+                x: aboutMeBgText.offsetWidth * -1,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: aboutMeSection1,
+                    scrub: true,
+                    end: 'desktop' === getDeviceType() ? 'bottom top' : 'top top',
+                    //markers: true,
+                }
+            });
+
             const aboutMeTextContainer = document.querySelector('#about-me .two-col > div:first-child');
             const aboutMeImageContainer = document.querySelector('#about-me .two-col > div:last-child');
             gsap.set([aboutMeTextContainer, aboutMeImageContainer], {
@@ -824,6 +836,20 @@
                 githubYearlyContributionText.innerText = getDeviceType() === 'phone' ? 'this year' : 'in the last year';
             }
             injectMemberSinceDate();
+
+            const makeImpactSection1 = document.getElementById('make-impact');
+            const makeImpactBgText = document.querySelector('#make-impact .bg-text-effect');
+
+            gsap.to(makeImpactBgText, {
+                x: makeImpactBgText.offsetWidth * -1,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: makeImpactSection1,
+                    scrub: true,
+                    end: 'desktop' === getDeviceType() ? 'bottom top' : 'top top',
+                    //markers: true,
+                }
+            });
 
             const stackOverflowH2 = document.querySelector('#make-impact h2#how-i-make-an-impact');
             const stackOverflowText = document.querySelector('#make-impact .two-col > div:first-child');
