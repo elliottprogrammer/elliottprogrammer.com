@@ -18,6 +18,7 @@
         import { LevelUpGame } from './elliottprogrammer-level-up-game.js';
 
         asciiArtToConsole();
+        let deviceType = getDeviceType();
         let gitSlider;
         let sliderTl;
         let isGitSliderPlaying = false;
@@ -114,12 +115,11 @@
                 solarSystemSpeedOrbit: 0,
             };
             const element = document.getElementById("nebula-element");
-            new Nebula({ config, element });
+            const starsNebula = new Nebula({ config, element });
 
             // Image Atomizer
             function showAtomizer() {
                 var logoImgSrc;
-                var deviceType = getDeviceType();
                 switch(deviceType) {
                     case 'phone':
                         logoImgSrc = './images/bryan-elliott-portfolio-headshot-phone.png';
@@ -193,26 +193,31 @@
             // About Me Section - Slide up & fade in
             const aboutMeSection1 = document.getElementById('about-me');
             const aboutMeBgText = document.querySelector('#about-me .bg-text-effect');
-
+            const aboutMeTextContainer = document.querySelector('#about-me .two-col > div:first-child');
+            const aboutMeImageContainer = document.querySelector('#about-me .two-col > div:last-child');
+            console.log('aboutMeBgText.offsetWidth: %d, window.innerWidth: %d, total: %d', aboutMeBgText.offsetWidth, window.innerWidth, (aboutMeBgText.offsetWidth + window.innerWidth) * -1);
             gsap.to(aboutMeBgText, {
                 x: aboutMeBgText.offsetWidth * -1,
                 ease: 'none',
                 scrollTrigger: {
                     trigger: aboutMeSection1,
                     scrub: true,
-                    end: 'desktop' === getDeviceType() || 'tablet' === getDeviceType() ? 'bottom top' : 'top+=200 top',
+                    start: 'top+=250 bottom',
+                    end: 'top+=200 top',
                     //markers: true,
                 }
             });
 
-            const aboutMeTextContainer = document.querySelector('#about-me .two-col > div:first-child');
-            const aboutMeImageContainer = document.querySelector('#about-me .two-col > div:last-child');
             gsap.set([aboutMeTextContainer, aboutMeImageContainer], {
-                transform: 'translateY(250px)',
+                transform: 'translateY(200px)',
                 opacity: 0,
             })
             gsap.to(aboutMeTextContainer, {
-                scrollTrigger: aboutMeTextContainer,
+                scrollTrigger: {
+                    trigger: aboutMeTextContainer,
+                    start: 'top bottom',
+                    //markers: true,
+                },
                 opacity: 1,
                 y: 0,
             });
@@ -224,7 +229,7 @@
                 opacity: 1,
                 y: 0,
                 onComplete: () => {
-                    if ('phone' === getDeviceType() || 'mobile' === getDeviceType()) {
+                    if ('phone' === deviceType || 'mobile' === deviceType) {
                         const textTl = gsap.timeline( {delay: 1.5, ease: "power1.inOut" } );
                         textTl.to('#about-me-image .interactive-image-text', {
                             duration: .5,
@@ -250,10 +255,24 @@
             });
 
             // Sets Me Apart Section - Slide Up & fade in.
+            const setsMeApartSection = document.getElementById('what-sets-me-apart');
+            const setsMeApartBgText = document.querySelector('#what-sets-me-apart .bg-text-effect');
+            gsap.to(setsMeApartBgText, {
+                x: setsMeApartBgText.offsetWidth * -1,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: setsMeApartSection,
+                    scrub: true,
+                    start: 'top+=250 bottom',
+                    end: 'top+=200 top',
+                    //markers: true,
+                }
+            });
+
             const setsMeApartText = document.querySelector('#what-sets-me-apart .two-col > div:first-child');
             const setsMeApartImage = document.querySelector('#what-sets-me-apart .two-col > div:last-child');
             gsap.set([setsMeApartText, setsMeApartImage], {
-                transform: 'translateY(250px)',
+                transform: 'translateY(200px)',
                 opacity: 0,
             })
             gsap.to(setsMeApartText, {
@@ -278,7 +297,7 @@
                 delay: 1.5,
                 ease: "power1.inOut",
             } );
-            if ('phone' === getDeviceType() || 'mobile' === getDeviceType()) {
+            if ('phone' === deviceType || 'mobile' === deviceType) {
                 interactImgTxtTl.to('#searching-bugs .interactive-image-text', {
                     duration: .5,
                     scaleX: 1,
@@ -303,7 +322,7 @@
             const levelUpTextContainer = document.querySelector('#leveling-up .two-col > div:first-child');
             const levelUpImageContainer = document.querySelector('#leveling-up .two-col > div:last-child');
             gsap.set([levelUpTextContainer, levelUpImageContainer], {
-                transform: 'translateY(250px)',
+                transform: 'translateY(200px)',
                 opacity: 0,
             })
             gsap.to(levelUpTextContainer, {
@@ -837,7 +856,7 @@
                 const githubMemberForString = timeSince('February 19, 2013');
                 stackMemberSinceElement.innerHTML = stackMemberForString;
                 githubMemberSinceElement.innerHTML = githubMemberForString;
-                githubYearlyContributionText.innerText = getDeviceType() === 'phone' ? 'this year' : 'in the last year';
+                githubYearlyContributionText.innerText = deviceType === 'phone' ? 'this year' : 'in the last year';
             }
             injectMemberSinceDate();
 
@@ -850,7 +869,8 @@
                 scrollTrigger: {
                     trigger: makeImpactSection1,
                     scrub: true,
-                    end: 'desktop' === getDeviceType() || 'tablet' === getDeviceType() ? 'bottom top' : 'top+=200 top',
+                    start: 'top+=250 bottom',
+                    end: 'top+=200 top',
                     //markers: true,
                 }
             });
@@ -859,7 +879,7 @@
             const stackOverflowText = document.querySelector('#make-impact .two-col > div:first-child');
             const stackOverflowImage = document.querySelector('#make-impact .two-col > div:last-child');
             gsap.set([stackOverflowH2, stackOverflowText, stackOverflowImage], {
-                transform: 'translateY(250px)',
+                transform: 'translateY(200px)',
                 opacity: 0,
             })
             gsap.to(stackOverflowH2, {
@@ -922,10 +942,26 @@
                 }
             });
 
+            // About Me Section - Slide up & fade in
+            const openSourceSection1 = document.getElementById('open-source');
+            const openSourceBgText = document.querySelector('#open-source .bg-text-effect');
+            //console.log((openSourceBgText.offsetWidth + window.innerWidth) * -1);
+            gsap.to(openSourceBgText, {
+                x: openSourceBgText.offsetWidth * -1,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: openSourceSection1,
+                    scrub: true,
+                    start: 'top+=250 bottom',
+                    end: 'top+=200 top',
+                    //markers: true,
+                }
+            });
+
             const gitSectionElements = document.querySelectorAll('#open-source .grid-two-col > div');
             for (let element of gitSectionElements) {
                 gsap.set(element, {
-                    transform: 'translateY(250px)',
+                    transform: 'translateY(200px)',
                     opacity: 0,
                 })
                 gsap.to(element, {
@@ -996,6 +1032,10 @@
                     game.pause();
                 },
                 //markers: true,
+            });
+
+            window.addEventListener('resize', () => {
+                deviceType = getDeviceType();
             });
         });
    

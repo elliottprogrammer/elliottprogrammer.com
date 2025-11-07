@@ -326,7 +326,7 @@ section:not(#image-atomizer,#intro,#hero-footer) {
     font-weight: 300;
     font-size: 18px;
     color: #ececec;
-    padding: 50px 0 60px;
+    padding: 100px 0 120px;
     background: #000000;
     background: linear-gradient(0deg,rgba(0, 0, 0, 1) 0%, rgba(21, 23, 27, 1) 100%);
 }
@@ -336,15 +336,18 @@ section#about-me {
 }
 
 .bg-text-effect {
+    display: inline-block;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-size: 350px;
     line-height: 1;
     text-transform: uppercase;
-    color: #20232b;
-    -webkit-text-stroke: 3px #282c37;
+    color: #20232b3d;
+    -webkit-text-stroke: 3px #282c3782;
     position: absolute;
-    top: 50px;
-    transform: translateX(100%);
+    top: 65px;
+    left: 0;
+    transform-origin: left center;
+    transform: translateX(100vw);
     white-space: nowrap;
 
 }
@@ -1588,6 +1591,11 @@ section#footer-top {
     .slider-viewport {
         aspect-ratio: unset;
         height: 131.67px;
+    }
+    .bg-text-effect {
+        color: #20232b;
+        -webkit-text-stroke: 3px #282c37;
+        font-size: 38vw
     }
 }
 
