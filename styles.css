@@ -1530,9 +1530,6 @@ section#footer-top {
     .page-container {
         overflow: hidden;
     }
-    .bg-text-effect {
-        font-size: 250px;
-    }
 }
 
 
@@ -1566,9 +1563,6 @@ section#footer-top {
         top: 21%;
         left: 83%;
     }
-    .bg-text-effect {
-        font-size: 220px;
-    }
 }
 
 /* Mobile mode = < 700px */
@@ -1595,7 +1589,8 @@ section#footer-top {
     .bg-text-effect {
         color: #20232b;
         -webkit-text-stroke: 3px #282c37;
-        font-size: 38vw
+        font-size: 38vw;
+        top: calc(100px - 5vw);
     }
 }
 
@@ -1610,6 +1605,11 @@ section#footer-top {
 }
 
 @media (max-width: 500px) {
+    section:not(#image-atomizer,#intro,#hero-footer) {
+        padding: 50px 0 60px;
+        font-size: 16px;
+    }
+
     .nav-menu-button {
         display: block;
     }
@@ -1720,6 +1720,9 @@ section#footer-top {
     .view-on-github-link {
         font-size: 12px;
     }
+    .bg-text-effect {
+        top: calc(75px - 5vw);
+    }
 }
 
 @media (max-width: 400px) {
@@ -1734,10 +1737,6 @@ section#footer-top {
         font-size: 16px;
         max-width: 280px;
         margin-top: 20px;
-    }
-    section:not(#image-atomizer,#intro,#hero-footer) {
-        padding: 30px 0 30px;
-        font-size: 16px;
     }
 
     figcaption {
