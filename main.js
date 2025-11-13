@@ -195,7 +195,7 @@
             const aboutMeBgText = document.querySelector('#about-me .bg-text-effect');
             const aboutMeTextContainer = document.querySelector('#about-me .two-col > div:first-child');
             const aboutMeImageContainer = document.querySelector('#about-me .two-col > div:last-child');
-            console.log('aboutMeBgText.offsetWidth: %d, window.innerWidth: %d, total: %d', aboutMeBgText.offsetWidth, window.innerWidth, (aboutMeBgText.offsetWidth + window.innerWidth) * -1);
+
             gsap.to(aboutMeBgText, {
                 x: aboutMeBgText.offsetWidth * -1,
                 ease: 'none',
@@ -408,20 +408,55 @@
             const coffeeCupVisible = document.querySelector('#about-me-image .coffee-cup-container > img[data-id="1"]');
             const coffeeCupVisibleWithShadow = document.querySelector('#about-me-image .coffee-cup-container > img[data-id="2"]');
             const coffeeCupButton = document.querySelector('#about-me-image .coffee-cup-btn');
-            const clickSound = document.getElementById('click-sound');
-            const selectSuccessSound = document.getElementById('select-success-sound');
-            const taDaSound = document.getElementById('ta-da-sound');
-            const swooshSound1 = document.getElementById('swoosh-sound1');
-            const swooshSound2 = document.getElementById('swoosh-sound2');
-            const levelCompleteSound = document.getElementById('level-complete-sound');
+
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            let sounds = {};
+
+            async function loadSound(name, url) {
+                const response = await fetch(url);
+                const arrayBuffer = await response.arrayBuffer();
+                sounds[name] = await audioCtx.decodeAudioData(arrayBuffer);
+            }
+
+            async function initSound(name, url) {
+                try {
+                    await loadSound(name, url);
+                } catch(err) {
+                    console.log('main.js: Error loading sound %s', url);
+                    console.log(err);
+                }
+            }
+
+            async function initAboutMeSounds() {
+                await initSound('clickSound', 'audio/click.mp3');
+                await initSound('selectSuccessSound', 'audio/select-success.mp3');
+                await initSound('taDaSound', 'audio/ta-da.mp3');
+                await initSound('swooshSound', 'audio/swoosh.mp3');
+                await initSound('squishSound', 'audio/squish.mp3');
+                await initSound('levelCompleteSound', 'audio/level-complete.mp3');
+            }
+
+            window.addEventListener("load", async () => {
+                await initAboutMeSounds();
+            });
+
+            function playBuffer(name, time) {
+                const src = audioCtx.createBufferSource();
+                src.buffer = sounds[name];
+                src.connect(audioCtx.destination);
+                src.start(time);
+            }
+
             let isLightOn = false;
             let hasLightBeenClicked = false;
             let hasFoundCoffee = false;
             
-            aboutMeLightSwitch.addEventListener('click', (e) => {
+            aboutMeLightSwitch.addEventListener('click', async (e) => {
                 hasLightBeenClicked = true;
-                clickSound.currentTime = 0;
-                clickSound.play();
+                if (audioCtx.state === "suspended") {
+                    await audioCtx.resume();
+                }
+                playBuffer('clickSound', audioCtx.currentTime);
                 lightSwitchTwinkler.stop();;
                 clearTimeout(arrow1Timer);
                 const computedStyle = window.getComputedStyle(aboutMeLightGlow);
@@ -476,8 +511,7 @@
                 scale: 0,
                 ease: 'elastic.out(.7,0.19)',
                 onStart: () => {
-                    swooshSound1.curentTime = 0;
-                    swooshSound1.play();
+                    playBuffer('swooshSound', audioCtx.currentTime);
                 },
             })
             .from(aboutCompleteText2, {
@@ -486,8 +520,7 @@
                 scale: 0,
                 ease: 'elastic.out(.7,0.19)',
                 onStart: () => {
-                    swooshSound2.curentTime = 0;
-                    swooshSound2.play();
+                    playBuffer('swooshSound', audioCtx.currentTime);
                 },
             }, 0.3)
             .from(aboutCompleteCheck3, {
@@ -496,8 +529,7 @@
                 scale: 0,
                 ease: 'elastic.out(.7,0.19)',
                 onStart: () => {
-                    levelCompleteSound.curentTime = 0;
-                    levelCompleteSound.play();
+                    playBuffer('levelCompleteSound', audioCtx.currentTime);
                 },
             }, 0.8);;
             aboutMeComplete.pause();
@@ -510,13 +542,15 @@
             coffeeCupButton.addEventListener('mouseleave', () => {
                 coffeeCupVisible.classList.remove('hover');
             });
-            coffeeCupButton.addEventListener('click', (e) => {
+            coffeeCupButton.addEventListener('click', async (e) => {
                 if (hasFoundCoffee) {
                     return false;
                 }
                 hasFoundCoffee = true;
-                selectSuccessSound.currentTime = 0;
-                selectSuccessSound.play();
+                if (audioCtx.state === "suspended") {
+                    await audioCtx.resume();
+                }
+                playBuffer('selectSuccessSound', audioCtx.currentTime);
                 cupTwinkler.stop();
                 const { height } = getElementProps(aboutMeImage);
                 gsap.to(aboutMeFoundCoffeeDialog, {
@@ -540,8 +574,7 @@
                                 typingHand.stop();
                             }, 1000);
                         }
-                        taDaSound.currentTime = 0;
-                        taDaSound.play();
+                        playBuffer('taDaSound', audioCtx.currentTime);
                         confettea.burst({
                             particleCount: 80,
                             origin: fettiOrigin
@@ -569,8 +602,7 @@
             const lightSwitchImages = lightSwitchImageContainer.getElementsByTagName('img');
             function setSwitchRecepticle(imageStatus) {
                 hasSwitchRecepticleBeenClicked = true;
-                clickSound.currentTime = 0;
-                clickSound.play();
+                playBuffer('clickSound', audioCtx.currentTime);
                 clearTimeout(arrow2Timer);
                 let imageIdToShow;
                 const { isFanOn, isLightOn } = imageStatus;
@@ -608,9 +640,6 @@
             const bugsCompleteText1 = document.querySelector('#searching-bugs .word1');
             const bugsCompleteText2 = document.querySelector('#searching-bugs .word2');
             const bugsCompleteCheck3 = document.querySelector('#searching-bugs .check');
-            const bugScuttleSound = document.getElementById('bugs-scuttle-sound');
-            bugScuttleSound.volume = 0.15;
-            const bugSquishSound = document.getElementById('bug-squish-sound');
 
             const bugsCompleteTl = gsap.timeline();
             const bugsComplete = bugsCompleteTl.from(bugsCompleteText1, {
@@ -619,8 +648,7 @@
                 scale: 0,
                 ease: 'elastic.out(.7,0.19)',
                 onStart: () => {
-                    swooshSound1.curentTime = 0;
-                    swooshSound1.play();
+                    playBuffer('swooshSound', audioCtx.currentTime);
                 },
             })
             .from(bugsCompleteText2, {
@@ -629,8 +657,7 @@
                 scale: 0,
                 ease: 'elastic.out(.7,0.19)',
                 onStart: () => {
-                    swooshSound2.curentTime = 0;
-                    swooshSound2.play();
+                    playBuffer('swooshSound', audioCtx.currentTime);
                 },
             }, 0.3)
             .from(bugsCompleteCheck3, {
@@ -639,13 +666,15 @@
                 scale: 0,
                 ease: 'elastic.out(.7,0.19)',
                 onStart: () => {
-                    levelCompleteSound.curentTime = 0;
-                    levelCompleteSound.play();
+                    playBuffer('levelCompleteSound', audioCtx.currentTime);
                 },
             }, 0.8);;
             bugsComplete.pause();
 
-            searchingBugsLightSwitch.addEventListener('click', (e) => {
+            searchingBugsLightSwitch.addEventListener('click', async (e) => {
+                if (audioCtx.state === "suspended") {
+                    await audioCtx.resume();
+                }
                 imageStatus.isLightOn = !imageStatus.isLightOn;
                 setSwitchRecepticle(imageStatus);
                 if (imageStatus.isLightOn) {
@@ -694,8 +723,8 @@
                             ease: "myBounce",
                             y: height * .52 + 'px',
                             onComplete: () => {
-                                bugScuttleSound.currentTime = 0;
-                                //bugScuttleSound.play();
+                                // Play bug scuttle sound?
+                                // playBuffer('bugScuttleSound', audioCtx.currentTime);
                             }
                         })
                         // Squash (durung bounce at the same time)
@@ -740,11 +769,9 @@
                 }
                 theBug.classList.add('squished');
                 hasFoundBug = true;
-                bugScuttleSound.pause();
                 bugTimeline.pause();
                 const { width, height } = getElementProps(searchingBugsImage);
-                bugSquishSound.currentTime = 0;
-                bugSquishSound.play();
+                playBuffer('squishSound', audioCtx.currentTime);
                 gsap.to(theBug, {
                     duration: .15,
                     scaleY: .2,
@@ -771,8 +798,7 @@
                                 bugsComplete.play();
                             }, 1000);
                         }
-                        taDaSound.currentTime = 0;
-                        taDaSound.play();
+                        playBuffer('taDaSound', audioCtx.currentTime);
                         confettea.burst({
                             particleCount: 80,
                             origin: fettiOrigin
@@ -945,7 +971,7 @@
             // About Me Section - Slide up & fade in
             const openSourceSection1 = document.getElementById('open-source');
             const openSourceBgText = document.querySelector('#open-source .bg-text-effect');
-            //console.log((openSourceBgText.offsetWidth + window.innerWidth) * -1);
+
             gsap.to(openSourceBgText, {
                 x: openSourceBgText.offsetWidth * -1,
                 ease: 'none',
