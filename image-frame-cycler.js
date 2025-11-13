@@ -15,42 +15,23 @@ function imageFrameCycler(imgContainerSelector, userOptions) {
     let frameNum = 0
 
     return {
-        maybeUpdateDOM: function(index, imgFrames) {
-            // Create a document fragment to batch DOM updates
-            const fragment = document.createDocumentFragment();
-
-            for (const element of imgFrames) {
-                let elementIndex = element.dataset.id;
-                // Perform element updates
-                if (elementIndex == index) {
-                    // Bring index element to front.
-                    element.style.visibility = 'visible';
+        maybeUpdateDOM: function(index, imgFrames, isForwardCycle) {
+            let prevIndex;
+            if (isForwardCycle) {
+                if (index === 0) {
+                    prevIndex = imgFrames.length - 1;
                 } else {
-                    // Otherwise move behind.
-                    element.style.visibility = 'hidden';
+                    prevIndex = index - 1;
                 }
-                //Append the updated element to the fragment
-                fragment.appendChild(element.cloneNode(true)); // Create a copy for the fragment
-            }
-            // Compare with current DOM and update only if different
-            const fragmentChildren = fragment.children;
-            const currentChildren = imgContainerElement.children;
-            let needsUpdate = false;
-
-            for (let i = 0; i < currentChildren.length; i++) {
-                const fragZ = fragmentChildren[i].style.visibility || '';
-                const domZ = currentChildren[i].style.visibility || '';
-                if (fragZ !== domZ) {
-                    needsUpdate = true;
-                    break;
+            } else {
+                if (index === imgFrames.length - 1) {
+                    prevIndex = 0;
+                } else {
+                    prevIndex = index + 1;
                 }
             }
-
-            if (needsUpdate) {
-                imgContainerElement.innerHTML = ''; // Clear existing content
-                imgContainerElement.appendChild(fragment);
-            }
-
+            imgFrames[index].style.visibility = 'visible';
+            imgFrames[prevIndex].style.visibility = 'hidden';
         },
         doFrameCycle: function(timestamp, index, isForwardCycle, frameCycleComplete) {
             // If enough time has passed since the last frame
@@ -61,12 +42,13 @@ function imageFrameCycler(imgContainerSelector, userOptions) {
                 // Get the images (each frame) in the DOM.
                 const imgFrames = imgContainerElement.getElementsByTagName('img');
         
-                this.maybeUpdateDOM(index, imgFrames);
+                this.maybeUpdateDOM(index, imgFrames, isForwardCycle);
     
                 if (options.shouldReverse) {
                     if (isForwardCycle) {
                         if (index === imgFrames.length - 1) {
                             isForwardCycle = false;
+                            //index--;
                         } else {
                             index++;
                         }

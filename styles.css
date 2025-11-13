@@ -431,7 +431,10 @@ section#about-me {
     visibility: hidden;
 }
 
-.interactive-image .frames-container img:last-child {
+.interactive-image .frames-container:not(.fan-frames) img[data-id="0"] {
+    visibility: visible;
+}
+.interactive-image .frames-container.fan-frames img[data-id="2"] {
     visibility: visible;
 }
 
