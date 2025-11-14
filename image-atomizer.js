@@ -71,7 +71,7 @@ class ImageAtomizer {
         
         // Canvas contexts
         this.ctx = this.$canv.getContext("2d");
-        this.srcCtx = this.$srcCanv.getContext("2d");
+        this.srcCtx = this.$srcCanv.getContext("2d", { willReadFrequently: true });
         
         // Set canvas dimensions
         this.$canv.width = this.cw;
@@ -142,29 +142,31 @@ class ImageAtomizer {
             };
         }
         
-        
-        // Set the image source
-        this.image = new Image();
-        this.isImageLoaded = false;
+        this.loadImage = function(imageSource) {
+            // Set the image source
+            this.image = new Image();
+            this.isImageLoaded = false;
 
-        if (imageSrc) {
-            this.image.src = imageSrc;
-            
-            this.image.onload = () => {
-                this.isImageLoaded = true;
-                this.resize();
-                // Start animation
-                this.requestAnimationFrame(() => {
-                    this.nextFrame();
-                });
-            };
-        } else {
-            return console.error('ImageAtomizer: You must provide an image source as the first argument when instanciating a `new ImageAtomizer(imageSrc, options)`.');
-        }
+            if (imageSource) {
+                this.image.src = imageSource;
+                
+                this.image.onload = () => {
+                    this.isImageLoaded = true;
+                    this.resize();
+                    // Start animation
+                    this.requestAnimationFrame(() => {
+                        this.nextFrame();
+                    });
+                };
+            } else {
+                return console.error('ImageAtomizer: You must provide an image source as the first argument when instanciating a `new ImageAtomizer(imageSrc, options)`.');
+            }
 
-        this.image.onerror = () => {
-            return console.error('ImageAtomizer: Failed to load the provided image source (%s). Please check the image exists.', imageSrc);
+            this.image.onerror = () => {
+                return console.error('ImageAtomizer: Failed to load the provided image source (%s). Please check the image exists.', imageSource);
+            }
         }
+        this.loadImage(imageSrc);   
     }
     
     // Particle class as inner class
@@ -312,16 +314,16 @@ class ImageAtomizer {
         this.drawParticles();
         
         if (this.frame++ % 25 === 0 && (this.cw !== this.getCanvasWidth() || this.ch !== this.getCanvasHeight())) {
-            const newHeight = this.getCanvasWidth();
-            const newWidth = this.getCanvasHeight();
+            const newWidth = this.getCanvasWidth();
+            const newHeight = this.getCanvasHeight();
             
-            if (this.ch !== newWidth && typeof this.onWidthChange === "function") {
+            if (this.cw !== newWidth && typeof this.onWidthChange === "function") {
                 this.onWidthChange(this, newWidth);
             }
             if (this.ch !== newHeight && typeof this.onHeightChange === "function") {
                 this.onHeightChange(this, newHeight);
             }
-            if (typeof this.onSizeChange === "function") {
+            if ( (this.cw !== newWidth || this.ch !== newHeight) && typeof this.onSizeChange === "function") {
                 this.onSizeChange(this, newWidth, newHeight);
             }
             this.resize();
@@ -430,11 +432,13 @@ class ImageAtomizer {
     }
     
     getCanvasWidth() {
-        return Math.min(document.body.clientWidth, this.width, this.$container.clientWidth);
+        //return Math.min(document.body.clientWidth, this.width, this.$container.clientWidth);
+        return this.$container.clientWidth;
     }
     
     getCanvasHeight() {
-        return Math.min(document.body.clientHeight, this.height, this.$container.clientHeight);
+        //return Math.min(document.body.clientHeight, this.height, this.$container.clientHeight);
+        return this.$container.clientHeight;
     }
     
     resize() {

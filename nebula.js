@@ -580,7 +580,7 @@ class Nebula {
     this.config = fillConfig(config);
     this.coloration = generateNebulaColoration({
       coloration: this.coloration,
-      ctx: this.bgCanvas.getContext("2d"),
+      ctx: this.bgCanvas.getContext("2d", { willReadFrequently: true }),
       intensity: this.config.nebulasIntensity
     });
     this.stars = generateStars({

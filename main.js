@@ -4,6 +4,7 @@
         import {
             asciiArtToConsole,
             getDeviceType,
+            getAtomizerImageSize,
             getElementProps,
             getRandomInt,
             CeilingFan,
@@ -77,18 +78,20 @@
                     title.style.visibility = 'visible';
                     description.style.visibility = 'visible';
                 },
-            })
-
-            // Hover Me arrow.
-            gsap.to( '.hover-me img', {
-                delay:3.5,
-                opacity: 1,
             });
+
+            function showHoverMe() {
+                // Hover Me arrow.
+               gsap.to( '.hover-me', {
+                   delay:1.5,
+                   opacity: 1,
+               });
+           }
 
             // HoverMe image shakes every random 1 - 5 seconds
             let hoverMeTimer;
             function hoverMe() {
-                gsap.to( '.hover-me img', {
+                gsap.to( '.hover-me', {
                     delay: 3.5,
                     duration: .1,
                     rotationZ: 20,
@@ -117,27 +120,24 @@
             const element = document.getElementById("nebula-element");
             const starsNebula = new Nebula({ config, element });
 
+            function getAtomizerImageSrc(canvasWidth, canvasHeight) {
+                if (canvasWidth > 1766) {
+                    // Desktop
+                    return './images/bryan-elliott-portfolio-headshot-desktop.png';
+                } else if (canvasWidth > 700) {
+                    // Tablet
+                    return './images/bryan-elliott-portfolio-headshot-tablet.png';
+                } else if (canvasWidth > 450) {
+                    // Mobile
+                    return './images/bryan-elliott-portfolio-headshot-mobile.png';
+                } else {
+                    // Phone
+                    return './images/bryan-elliott-portfolio-headshot-phone.png'
+                }
+            }
+
             // Image Atomizer
             function showAtomizer() {
-                var logoImgSrc;
-                switch(deviceType) {
-                    case 'phone':
-                        logoImgSrc = './images/bryan-elliott-portfolio-headshot-phone.png';
-                        break;
-                    case 'mobile':
-                        logoImgSrc = './images/bryan-elliott-portfolio-headshot-mobile.png';
-                        break;
-                    case 'tablet':
-                        logoImgSrc = './images/bryan-elliott-portfolio-headshot-tablet.png';
-                        break;
-                    case 'desktop':
-                        logoImgSrc = './images/bryan-elliott-portfolio-headshot-desktop.png';
-                        break;
-                    default:
-                        logoImgSrc = './images/bryan-elliott-portfolio-headshot-desktop.png';
-                        logoImgSrc = './images/bryan-elliott-portfolio-headshot-desktop.png';
-                }
-
                 const navHeight = 62;
                 const headingHeight = deviceType === 'phone' ? 150: 229;
                 const viewportHeight = window.innerHeight;
@@ -145,8 +145,45 @@
                 const canvasCenterHeight = canvasHeight / 2;
                 const adjustedCanvasCenterHeight = ( canvasHeight - headingHeight ) / 2;
                 const offsetY = canvasCenterHeight - adjustedCanvasCenterHeight;
-                
+                const hoverMeElem = document.querySelector('.hover-me');
+
+                function hoverMeSetPosition(canvasWidth, canvasHeight, imageWidth, imageHeight) {
+                    const yPos = (canvasHeight / 2) + offsetY - (imageHeight / 2) + (imageHeight * .07);
+                    const xPos = (canvasWidth / 2) - (imageWidth / 2) + (imageWidth * .07);
+                    hoverMeElem.style.opacity = 0;
+                    hoverMeElem.style.top = `${yPos}px`;
+                    hoverMeElem.style.left = `${xPos}px`;
+                    showHoverMe();
+                }
+
                 const atomizerWrapper = document.getElementById('image-atomizer');
+                const atomizerCanvas = document.querySelector('canvas.atomizer');
+                let logoImgSrc = getAtomizerImageSrc(atomizerWrapper.clientWidth, atomizerWrapper.clientHeight);
+                
+                function atomizerSizeChange(atomizer, newWidth, newHeight) {
+                    // replace the atomizer image when necessary, on viewport size change.
+                    const newImageSrc = getAtomizerImageSrc(newWidth, newHeight);
+                    if (newImageSrc !== logoImgSrc) {
+                        const newImage = new Image();
+                        newImage.src = newImageSrc;
+                        logoImgSrc = newImageSrc;
+    
+                        newImage.onload = () => {
+                            atomizer.image = newImage;
+                            atomizer.pxlBuffer = { first: null };
+                            atomizer.resize();
+                            hoverMeSetPosition(newWidth, newHeight, newImage.width, newImage.height);
+                        };
+        
+                        newImage.onerror = () => {
+                            return console.error('ImageAtomizer: Failed to load a resized image on atomizer resize: (%s). Please check the image exists.', imageSource);
+                        }
+                    } else {
+                        const {width, height} = getAtomizerImageSize();
+                        hoverMeSetPosition(newWidth, newHeight, width, height); 
+                    }
+                }
+
                 var atomizer = new ImageAtomizer(logoImgSrc, {
                     particleGap: 2, //getDeviceType() == 'phone' ? 3 : 0,
                     particleSize: 3, //getDeviceType() == 'phone' ? 3 : 1,
@@ -154,10 +191,12 @@
                     offsetY: offsetY,
                     onInitialized: () => {
                         atomizerWrapper.classList.add('has-initialized');
-                    }
+                        const {width, height} = getAtomizerImageSize();
+                        hoverMeSetPosition(atomizerWrapper.clientWidth, atomizerWrapper.clientHeight, width, height);
+                        showHoverMe();
+                    },
+                    onSizeChange: atomizerSizeChange,
                 });
-
-                const atomizerCanvas = document.querySelector('canvas.atomizer');
                 
                 atomizerCanvas.addEventListener('click', function(){atomizer.init()})
             }
@@ -445,6 +484,7 @@
                 src.buffer = sounds[name];
                 src.connect(audioCtx.destination);
                 src.start(time);
+                return src;
             }
 
             let isLightOn = false;
@@ -968,7 +1008,7 @@
                 }
             });
 
-            // About Me Section - Slide up & fade in
+            // Open Source Section - Slide up & fade in
             const openSourceSection1 = document.getElementById('open-source');
             const openSourceBgText = document.querySelector('#open-source .bg-text-effect');
 
@@ -1034,6 +1074,22 @@
                     onUpdate: function() {
                         this.targets()[0].innerText = numberWithCommas(Math.ceil(this.targets()[0].innerText));
                     },
+                }
+            });
+
+            // Leveling Up Section - Slide up & fade in
+            const levelUpSection1 = document.getElementById('leveling-up');
+            const levelUpBgText = document.querySelector('#leveling-up .bg-text-effect');
+
+            gsap.to(levelUpBgText, {
+                x: levelUpBgText.offsetWidth * -1,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: levelUpSection1,
+                    scrub: true,
+                    start: 'top+=250 bottom',
+                    end: 'top+=200 top',
+                    //markers: true,
                 }
             });
 

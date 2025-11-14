@@ -260,7 +260,7 @@ nav.top-nav {
 }
 
 #intro * {
-    text-shadow: 3px 3px black;
+    text-shadow: 3px 3px 1px black;
 }
 section#hero-footer {
     box-sizing: border-box;
@@ -677,14 +677,12 @@ canvas.draw {
     position: absolute;
     top: 50%;
     left: 50%;
-}
-
-.hover-me img {
     display: block;
     opacity: 0;
-    transform: translate(-309px, -223px) rotateZ(5deg);
+    transform: translate(-50%, -50%) rotateZ(5deg);
     width: 100px;
     height: auto;
+    transform-origin: center;
 }
 
 .the-bug {
@@ -1524,9 +1522,7 @@ section#footer-top {
 
 
 @media (max-width: 1766px) {
-    .hover-me img {
-        transform: translate(-229px, -143px) rotateZ(5deg);
-    }
+
 }
 
 @media (max-width: 1245px) {
@@ -1582,9 +1578,6 @@ section#footer-top {
         margin-left: auto;
         margin-right: auto;
     }
-    .hover-me img {
-        transform: translate(-159px, -73px) rotateZ(5deg) scale(0.7);
-    }
     .slider-viewport {
         aspect-ratio: unset;
         height: 131.67px;
@@ -1594,6 +1587,9 @@ section#footer-top {
         -webkit-text-stroke: 3px #282c37;
         font-size: 38vw;
         top: calc(100px - 5vw);
+    }
+    .hover-me {
+        width: 80px;
     }
 }
 
@@ -1660,9 +1656,6 @@ section#footer-top {
         box-shadow: none;
         text-decoration: none;
         transition: unset
-    }
-    .hover-me img {
-        transform: translate(-170px, -88px) rotateZ(5deg) scale(0.7);
     }
     #about-me-image .coffee-found-dialog,
     #searching-bugs .searching-bugs-found-dialog {
@@ -1752,9 +1745,6 @@ section#footer-top {
     figcaption {
         font-size: 12px;
     }
-    .hover-me img {
-        transform: translate(-170px, -88px) rotateZ(5deg) scale(0.7);
-    }
     img.click-me-img {
         transform: scale(0.7) translate(-10px, -5px);
     }
@@ -1806,9 +1796,6 @@ section#footer-top {
 }
 
 @media (max-width: 350px) {
-    .hover-me img {
-        transform: translate(-170px, -120px) rotateZ(5deg) scale(0.7);
-    }
     .spark-positioner {
         top: 14.5%;
         left: 79.5%;

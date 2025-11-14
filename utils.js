@@ -14,6 +14,37 @@ export function getDeviceType() {
     }
 }
 
+export function getAtomizerImageSize() {
+    const deviceType = getDeviceType();
+    switch(deviceType) {
+        case 'phone':
+            return {
+                width: 280,
+                height: 278,
+            };
+        case 'mobile':
+            return {
+                width: 320,
+                height: 318,
+            };
+        case 'tablet':
+            return {
+                width: 500,
+                height: 499,
+            };
+        case 'desktop':
+            return {
+                width: 703,
+                height: 699,
+            };
+        default:
+            return {
+                width: 500,
+                height: 499,
+            };
+    }
+}
+
 export function debounce(func, delay) {
     var timer;
     return function(...args) {
