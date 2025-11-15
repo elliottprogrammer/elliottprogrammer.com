@@ -14,3 +14,7 @@
 		for = "/jump-sprite/*"
 		[headers.values]
 		Access-Control-Allow-Origin = "*"
+[[headers]]
+		for = "/celebration-sprite/*"
+		[headers.values]
+		Access-Control-Allow-Origin = "*"
