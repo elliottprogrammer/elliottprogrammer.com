@@ -214,9 +214,7 @@
                 writer1 = new Typewriter(target, options);
                 writer1.type("elliottprogrammer.com").start();
 
-                setTimeout( () => {
-                    showAtomizer();
-                }, 700);
+                showAtomizer();
 
             }
 
