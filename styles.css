@@ -1869,11 +1869,10 @@ section#footer-top {
 
 @media (max-width: 1766px) {
     .scaler {
-        transform: scale(4);
+        transform: scale(3.5);
     }
     .world-container {
-        top: 180px;
-        top: 25%;
+        top: 20%;
     }
 
 }
@@ -1919,7 +1918,6 @@ section#footer-top {
         transform: scale(3.5);
     }
     .world-container {
-        top: 300px;
         top: 25%;
     }
 }
