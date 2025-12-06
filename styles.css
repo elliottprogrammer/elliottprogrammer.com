@@ -80,7 +80,7 @@ html, body {
 
 h2 {
     text-shadow: 3px 3px #000;
-    font-size: 2em;
+    font-size: 1.9em;
     letter-spacing: -0.03em;
 }
 
@@ -962,6 +962,9 @@ img.stack-logo {
 .no-padding {
     padding: 0 !important;
 }
+.no-wrap {
+    white-space: nowrap;
+}
 .ps-absolute {
     position: absolute;
 }
@@ -1528,6 +1531,7 @@ img.legend {
 
 .step-back-text {
     font-size: 27px;
+    padding-top: 15px;
 }
 
 .step-back-text > strong {
