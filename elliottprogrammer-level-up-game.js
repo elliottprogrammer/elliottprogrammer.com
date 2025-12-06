@@ -345,24 +345,24 @@ class LevelUpGame {
     async loadAssets() {
         try {
             // Load background image
-            this.backgroundImage = await this.loadImage('images/elliottprogrammer-level-up-scene.png');
+            this.backgroundImage = await this.loadImage('images/elliottprogrammer-level-up-scene.webp');
             
             // Load idle sprite sheet
-            this.spriteSheet = await this.loadImage('idle-sprite/spritesheet.png');
+            this.spriteSheet = await this.loadImage('idle-sprite/spritesheet.webp');
             
             // Load idle sprite data
             const idleResponse = await fetch('idle-sprite/spritesheet.json');
             this.spriteData = await idleResponse.json();
             
             // Load jump sprite sheet
-            this.jumpSpriteSheet = await this.loadImage('jump-sprite/spritesheet.png');
+            this.jumpSpriteSheet = await this.loadImage('jump-sprite/spritesheet.webp');
             
             // Load jump sprite data
             const jumpResponse = await fetch('jump-sprite/spritesheet.json');
             this.jumpSpriteData = await jumpResponse.json();
 
             // Load celebrate sprite sheet
-            this.celebrateSpriteSheet = await this.loadImage('celebration-sprite/spritesheet.png');
+            this.celebrateSpriteSheet = await this.loadImage('celebration-sprite/spritesheet.webp');
 
             // Load celebrate sprite data
             const celebrateResponse = await fetch('celebration-sprite/spritesheet.json');

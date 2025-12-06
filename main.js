@@ -30,6 +30,7 @@
             // Register GSAP plugins
             gsap.registerPlugin(ScrollTrigger);
             gsap.registerPlugin(CustomEase);
+            gsap.registerPlugin(MotionPathPlugin) 
 
             // Lenis for smooth scrolling
             const lenis = new Lenis();
@@ -123,16 +124,16 @@
             function getAtomizerImageSrc(canvasWidth, canvasHeight) {
                 if (canvasWidth > 1766) {
                     // Desktop
-                    return './images/bryan-elliott-portfolio-headshot-desktop.png';
+                    return './images/bryan-elliott-portfolio-headshot-desktop.webp';
                 } else if (canvasWidth > 700) {
                     // Tablet
-                    return './images/bryan-elliott-portfolio-headshot-tablet.png';
+                    return './images/bryan-elliott-portfolio-headshot-tablet.webp';
                 } else if (canvasWidth > 450) {
                     // Mobile
-                    return './images/bryan-elliott-portfolio-headshot-mobile.png';
+                    return './images/bryan-elliott-portfolio-headshot-mobile.webp';
                 } else {
                     // Phone
-                    return './images/bryan-elliott-portfolio-headshot-phone.png'
+                    return './images/bryan-elliott-portfolio-headshot-phone.webp'
                 }
             }
 
@@ -1078,8 +1079,16 @@
             // Leveling Up Section - Slide up & fade in
             const levelUpSection1 = document.getElementById('leveling-up');
             const levelUpBgText = document.querySelector('#leveling-up .bg-text-effect');
+            const path = document.querySelector('#motion-path .path');
+            const shouldUseMotionPath = (getDeviceType() === 'desktop' || getDeviceType() === 'tablet');
 
             gsap.to(levelUpBgText, {
+                ...(shouldUseMotionPath && { motionPath: {
+                    path: path,
+                    align: path,
+                    alignOrigin: [0.5, 0.5],
+                    autoRotate: 180,
+                }}),
                 x: levelUpBgText.offsetWidth * -1,
                 ease: 'none',
                 scrollTrigger: {
@@ -1113,6 +1122,40 @@
                 },
                 //markers: true,
             });
+
+            const earthTimeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: '#experience-wrapper',
+                    start: 'top top',
+                    end: '+=2000',
+                    scrub: true,
+                    pin: true,
+                    //markers: true,
+                    onUpdate: ({progress}) => {
+                        // console.log(progress);
+                    }
+                },
+                
+            });
+            
+
+            earthTimeline.to('.rotating-element', {
+                rotation: -140,
+                ease: "none",
+                repeat: 0,
+            });
+
+            const spritesheetWidth = 1848;
+            const frameCount = 14;
+            const frameWidth = spritesheetWidth / frameCount;
+
+            earthTimeline.to('.elliott-sprite', {
+                backgroundPosition: `0px 0px`,
+                ease: `steps(${frameCount - 1})`,
+                duration: .03,
+                repeat: 16,
+            }, 0);
+
 
             window.addEventListener('resize', () => {
                 deviceType = getDeviceType();

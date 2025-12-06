@@ -685,7 +685,10 @@
     </div>         
 </section>
 <section id="leveling-up">
-    <div class="bg-text-effect">Level Up</div>
+    <svg id="motion-path" xmlns="http://www.w3.org/2000/svg" width="2764.07" height="504.23" viewBox="0 0 2764.07 504.23">
+        <path class="path" d="M2763.71,503.88C2475.61,201.56,1964.09.5,1381.08.5S288.81,200.68.36,501.88" fill="none" />
+    </svg>
+    <div class="bg-text-effect level-up">Level Up</div>
     <div class="page-container">
             <div class="two-col left-text-small">
                 <div>
@@ -722,24 +725,152 @@
         </div>
     </section>
     <section id="experience">
-        <div class="bg-text-effect">Experience</div>
-        <div class="page-container">
-            <h2>Work Experience</h2>
-            <p>&nbsp;</p>
-            <p>🚧 Currently under construction...👷</p>
-            <p>⚠️ Coming soon...!</p>
+        <div id="experience-wrapper">
+            <div class="page-container">
+                <div class="max-width-520">
+                    <h2>🏢 Work Experience</h2>
+                    <p class="step-back-text p-large">Let's <strong>step back</strong> through my experience, and the places I've worked.</p>
+                </div>
             </div>
+
+            <div class="scroll-container">
+
+                <figure class="world-container">
+                   
+                    <div class="scaler">
+                        <div class="rotate-wrapper">
+                            <div class="rotating-element back-layer">
+                                <!-- Atmosphere -->
+                                <span class="atmosphere"></span>
+
+                                <img src="/images/web-globe-svg.svg" alt="Big round world/globe illustration"  loading="lazy" class="globe-img"/>
+                                <img class="automattic-building" src="images/automattic-building.svg" loading="lazy"/>
+                                
+                                <img class="two-sigma-building" src="images/two-sigma-building.svg" loading="lazy"/>
+                                <img class="facecake-building" src="images/facecake-building.svg" loading="lazy"/>
+                                <img class="fresh-start-building" src="images/narconon-fresh-start-building.svg" loading="lazy"/>
+                            </div>
+                        </div>
+                        <div class="elliott-sprite"></div>
+                        <div class="rotate-wrapper">
+                            <span class="rotating-element front-layer">
+                                <!-- Automattic Building -->
+                                <img class="automattic-building" src="images/automattic-building__front.svg" loading="lazy"/>
+                                <div id="automattic-heading" class="work-name-date">
+                                    <span class="work-date">July 2020 – April 2025</span>
+                                    <span class="work-name">Automattic Inc.</span>
+                                </div>
+                                <div id="automattic-title" class="work-title-tech">
+                                    <span class="work-title">Senior Software Engineer</span>
+                                    <span class="work-tech-text">Core technologies used:</span>
+                                    <div class="work-tech-badges">
+                                        <span class="tech-badge">JavaScript</span>
+                                        <span class="tech-badge">TypeScript</span>
+                                        <span class="tech-badge">React</span>
+                                        <span class="tech-badge">Tailwind CSS</span>
+                                        <span class="tech-badge">Next.js</span>
+                                        <span class="tech-badge">Node.js</span>
+                                        <span class="tech-badge">PHP</span>
+                                        <span class="tech-badge">MySQL</span>
+                                        <span class="tech-badge">Docker</span>
+                                        <span class="tech-badge">AWS (EC2 & S3)</span>
+                                    </div>
+                                </div>
+                                <!-- Two Sigma Building -->
+                                <img class="two-sigma-building" src="images/two-sigma-building__front.svg" loading="lazy"/>
+                                <div id="twosigma-heading" class="work-name-date">
+                                    <span class="work-date">February 2020 – July 2020</span>
+                                    <span class="work-name">Two Sigma Investements</span>
+                                </div>
+                                <div id="twosigma-title" class="work-title-tech">
+                                    <span class="work-title">Senior Frontend Engineer</span>
+                                    <span class="work-tech-text">Core technologies used:</span>
+                                    <div class="work-tech-badges">
+                                        <span class="tech-badge">JavaScript</span>
+                                        <span class="tech-badge">React</span>
+                                        <span class="tech-badge">Webpack</span>
+                                        <span class="tech-badge">WebExt Redux</span>
+                                        <span class="tech-badge">WebExtensions API</span>
+                                        <span class="tech-badge">WebRequest API</span>
+                                        <span class="tech-badge">HTTP headers</span>
+                                        <span class="tech-badge">CORS</span>
+                                        <span class="tech-badge">Cross-Origin Policy</span>
+                                    </div>
+                                </div>
+                                <!-- FaceCake Building -->
+                                <img class="facecake-building" src="images/facecake-building__front.svg" loading="lazy"/>
+                                <div id="facecake-heading" class="work-name-date">
+                                    <span class="work-date">August 2019 – February 2020</span>
+                                    <span class="work-name">FaceCake <span class="work-name__secondary">Marketing Technologies</span></span>
+                                </div>
+                                <div id="facecake-title" class="work-title-tech">
+                                    <span class="work-title">Senior Frontend Engineer</span>
+                                    <span class="work-tech-text">Core technologies used:</span>
+                                    <div class="work-tech-badges">
+                                        <span class="tech-badge">JavaScript</span>
+                                        <span class="tech-badge">React</span>
+                                        <span class="tech-badge">Webpack</span>
+                                        <span class="tech-badge">PHP</span>
+                                        <span class="tech-badge">MySQL</span>
+                                        <span class="tech-badge">C++/WebAssembly(WASM)</span>
+                                        <span class="tech-badge">Canvas/WebGL(Three.js)</span>
+                                        <span class="tech-badge">AWS</span>
+                                    </div>
+                                </div>
+                                <!-- Narconon Fresh Start Building -->
+                                <img class="fresh-start-building" src="images/narconon-fresh-start-building__front.svg" loading="lazy"/>
+                                <div id="freshstart-heading" class="work-name-date">
+                                    <span class="work-date">February 2010 – July 2019</span>
+                                    <span class="work-name">Narconon Fresh Start</span>
+                                </div>
+                                <div id="freshstart-title" class="work-title-tech">
+                                    <span class="work-title">Full-Stack Web Developer</span>
+                                    <span class="work-tech-text">Core technologies used:</span>
+                                    <div class="work-tech-badges">
+                                        <span class="tech-badge">PHP</span>
+                                        <span class="tech-badge">MySQL</span>
+                                        <span class="tech-badge">HTML</span>
+                                        <span class="tech-badge">CSS/SASS</span>
+                                        <span class="tech-badge">JavaScript</span>
+                                        <span class="tech-badge">jQuery</span>
+                                        <span class="tech-badge">Grunt/Gulp</span>
+                                        <span class="tech-badge">Python</span>
+                                        <span class="tech-badge">Linux/Bash</span>
+                                        <span class="tech-badge">Digital Ocean VPS</span>
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </figure>
+            </div>
+        </div>
+    </section>
+    <section id="contact">
+        <!-- <div class="bg-text-effect">Contact</div> -->
+        <div class="page-container">
+            <h2 id="how-i-make-an-impact" class="has-subheadings">💬 Get In Touch!</h2>
+            <div class="two-col left-text">
+                <small>🚧 Currently under construction...👷  &nbsp;&nbsp;&nbsp; Coming soon!</small> 
+            </div>
+            <div>&nbsp;</div>
         </div>
     </section>
     <footer>
         <section id="footer-top">
             <div class="page-container">
-
+                <div class="footer-socials">
+                    <ul>
+                        <li><a href="https://blog.elliottprogrammer.com" class="social-link git-btn"><img src="images/blogger-icon-round.svg" class="svg" height="35" alt=""/><span>Blog</span></a></li>
+                        <li><a href="https://www.linkedin.com/in/bryan-elliott-programmer/" class="social-link" target="_blank"><img src="images/linkedin-logo.svg" class="svg" height="37" alt=""/><span>LinkedIn</span></a></li>
+                        <li><a href="https://github.com/elliottprogrammer" class="social-link" target="_blank"><img src="images/github-logo-white.svg" class="svg" height="38" alt=""/><span>Github</span></a></li>
+                    </ul>
+                </div>
             </div>
         </section>
         <section id="footer-bottom">
             <div class="page-container">
-                <div class="copyright">This site designed and built by Bryan Elliott (@elliottprogrammer) | &copy; 2025 All rights reserved.</div>
+                <div class="copyright">This site designed and developed by Bryan Elliott (@elliottprogrammer) | &copy; 2025 All rights reserved.</div>
             </div>
         </section>
         
@@ -749,6 +880,7 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomBounce.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MotionPathPlugin.min.js"></script>
     <script src="./nebula.js"></script>
     <script src="https://unpkg.com/lenis@1.3.8/dist/lenis.min.js"></script>
     
