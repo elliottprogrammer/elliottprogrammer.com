@@ -1146,7 +1146,7 @@
                 onLeaveBack: () => {
                     game.pause();
                 },
-                markers: true,
+                //markers: true,
             });
 
             const earthTimeline = gsap.timeline({
