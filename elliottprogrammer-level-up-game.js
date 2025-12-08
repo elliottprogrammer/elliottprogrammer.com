@@ -255,7 +255,16 @@ class SpriteAnimation {
 
 // Main Game Class
 class LevelUpGame {
-    constructor() {
+    constructor({onGameComplete, onLevelsComplete, onReset}) {
+        if (onLevelsComplete && typeof onLevelsComplete === 'function' ) {
+            this.onLevelsComplete = onLevelsComplete;
+        }
+        if (onGameComplete && typeof onGameComplete === 'function' ) {
+            this.onGameComplete = onGameComplete;
+        }
+        if (onReset && typeof onReset === 'function' ) {
+            this.onReset = onReset;
+        }
         this.deviceType = getDeviceType();
         this.canvas = document.getElementById('canvas');
         this.ctx = this.canvas.getContext('2d');
@@ -470,6 +479,8 @@ class LevelUpGame {
     }
 
     resetCharacter() {
+        // Call user defined callback (if it's set)
+        this.onReset && this.onReset();
         // Reset character to original starting position
         this.currentSpriteX = this.baseSpriteX * this.spriteScale;
         this.currentSpriteY = this.baseSpriteY * this.spriteScale;
@@ -551,8 +562,11 @@ class LevelUpGame {
             // Check if jump animation is complete
             if (this.jumpAnimation.isFinished()) {
                 if (! this.assets.length && ! this.hasCelebrated) {
+                    // All levels completed. Time to celebrate!
                     this.currentAnimation = 'celebrate';
                     this.playSound(this.cheerSound);
+                    // Call user defined callback, if it exists.
+                    this.onLevelsComplete && this.onLevelsComplete();
                 } else {
                     this.currentAnimation = 'idle';
                     this.spriteAnimation.reset();
@@ -570,6 +584,8 @@ class LevelUpGame {
                 this.currentAnimation = 'idle';
                 this.spriteAnimation.reset();
                 console.log('Celebrate animation complete, going back to idle', this.spriteX, this.spriteY);
+                // Call user defined callback, if it exists.
+                this.onGameComplete && this.onGameComplete();
             }
         }
         

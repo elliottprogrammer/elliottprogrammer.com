@@ -42,7 +42,7 @@
                 lenis.raf(time * 1000); // Convert time from seconds to milliseconds
             });
             // Disable lag smoothing in GSAP to prevent any delay in scroll animations
-            gsap.ticker.lagSmoothing(0);
+            gsap.ticker.lagSmoothing(500, 20);
 
             // Mobile Nav Menu
             const navMenuButton = document.querySelector('.nav-menu-button');
@@ -357,8 +357,8 @@
             }
 
             // Level Up Section - Slide up & fade in
-            const levelUpTextContainer = document.querySelector('#leveling-up .two-col > div:first-child');
-            const levelUpImageContainer = document.querySelector('#leveling-up .two-col > div:last-child');
+            const levelUpTextContainer = document.querySelector('#leveling-up .two-col > div:first-child .content-wrapper');
+            const levelUpImageContainer = document.querySelector('#leveling-up .two-col > div:last-child .content-wrapper');
             gsap.set([levelUpTextContainer, levelUpImageContainer], {
                 transform: 'translateY(200px)',
                 opacity: 0,
@@ -1099,15 +1099,41 @@
                     //markers: true,
                 }
             });
+            const gameCompleteBanner = document.querySelector('#leveling-up .game-container img.game-complete-banner');
+            const gameCallbacks = {
+                onLevelsComplete: function() {
+                    gsap.to(gameCompleteBanner, {
+                        yPercent: -105,
+                        opacity: 1,
+                        duration: 0.6,
+                        delay: .2,
+                        ease: 'power1.inOut',
+                    });
+                },
+                onReset: function() {
+                    gsap.to(gameCompleteBanner, {
+                        opacity: 0,
+                        duration: 0.6,
+                        ease: 'power1.inOut',
+                    });
+                    gsap.to(gameCompleteBanner, {
+                        yPercent: 0,
+                        delay: 1,
+                    });
+                    
+                },
+            }
 
             // Initialize and start the Level Up game.
-            const game = new LevelUpGame();
+            const game = new LevelUpGame(gameCallbacks);
             game.start();
 
             // Start and Stop the game loop when it enters and leaves the viewport.
             const levelingUpSection = document.querySelector('#leveling-up .two-col.left-text-small > div:last-child');
             ScrollTrigger.create({
                 trigger: levelingUpSection,
+                start: 'top bottom',
+                end: 'bottom-=40 top',
                 onEnter: () => {
                     game.play();
                 },
@@ -1120,7 +1146,7 @@
                 onLeaveBack: () => {
                     game.pause();
                 },
-                //markers: true,
+                markers: true,
             });
 
             const earthTimeline = gsap.timeline({
