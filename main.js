@@ -41,8 +41,10 @@
             gsap.ticker.add((time) => {
                 lenis.raf(time * 1000); // Convert time from seconds to milliseconds
             });
-            // Disable lag smoothing in GSAP to prevent any delay in scroll animations
+            // Enable lag smoothing in GSAP to prevent any delay in scroll animations
             gsap.ticker.lagSmoothing(500, 20);
+            // Might need to normalizeScroll for Safari mobile browser?
+            //ScrollTrigger.normalizeScroll(true);
 
             // Mobile Nav Menu
             const navMenuButton = document.querySelector('.nav-menu-button');
@@ -290,6 +292,26 @@
                     }  
                 },
                         
+            });
+
+            const dialog = document.getElementById('waterline-cover-dialog');
+            const showButton = document.querySelector('.dialog-trigger');
+            const closeButton = document.querySelector('.dialog-close-btn');
+
+            // "Show the dialog" button opens the dialog modally
+            showButton.addEventListener("click", () => {
+                dialog.showModal();
+            });
+
+            // "Close" button closes the dialog
+            closeButton.addEventListener("click", () => {
+                dialog.close();
+            });
+
+            dialog.addEventListener('click', (event) => {
+                if (event.target === dialog) {
+                  dialog.close();
+                }
             });
 
             // Sets Me Apart Section - Slide Up & fade in.
@@ -1156,10 +1178,11 @@
                     end: '+=2000',
                     scrub: true,
                     pin: true,
+                    ...(getDeviceType === 'mobile' || getDeviceType() === 'phone') && { anticipatePin: 1 },
                     //markers: true,
-                    onUpdate: ({progress}) => {
-                        // console.log(progress);
-                    }
+                    // onUpdate: ({progress}) => {
+                    //     // console.log(progress);
+                    // }
                 },
                 
             });

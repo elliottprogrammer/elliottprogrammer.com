@@ -655,6 +655,62 @@ button.coffee-cup-btn {
     background: #474747;
     background: linear-gradient(90deg,rgba(71, 71, 71, 1) 0%, rgba(71, 71, 71, 0.62) 66%, rgba(71, 71, 71, 0) 100%);
 }
+.no-button {
+    background-color: transparent;
+    border: none;
+    margin: 0;
+    padding: 0;
+    text-align: inherit;
+    font: inherit;
+    border-radius: 0;
+    appearance: none;
+}
+.text-button {
+    color: #acb3b9;
+    cursor: pointer;
+    text-decoration: underline;
+}
+.text-button small {
+    font-size: 0.8rem;    vertical-align: middle;
+}
+.text-button svg {
+    vertical-align: middle;
+}
+
+#waterline-cover-dialog {
+    padding: 0;
+    max-height: 100%;
+    max-width: 100%;
+    animation: fadeOut 0.5s forwards;
+    transition: display 0.5s allow-discrete, overlay 0.5s allow-discrete;
+}
+#waterline-cover-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.45);
+    animation: backdropFadeOut 0.5s forwards;
+}
+#waterline-cover-dialog[open] {
+    animation: fadeIn 0.5s forwards;
+}
+#waterline-cover-dialog[open]::backdrop {
+    animation: backdropFadeIn 0.5s forwards;
+}
+
+.dialog-content {
+    padding: 35px;
+}
+
+.dialog-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.dialog-photo.landscape {
+    max-height: 80vh;
+    max-width: 80vw;
+}
 
 #about-me-image .coffee-found-dialog,
 #searching-bugs .searching-bugs-found-dialog {
@@ -1797,6 +1853,43 @@ img.legend {
     transform: rotate(117deg); 
 }
 
+.contact-container.summary-container {
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+#contact .summary-item {
+    padding-bottom: 13px;
+}
+
+#contact .summary-item .calendar-icon {
+    display: inline-block;
+    padding: 8px;
+    background-color: #161c24;
+    box-shadow: 0px 0px 2px 0px transparent;
+    border: 1px solid #242932;
+    border-radius: 8px;
+}
+
+#contact .summary-item .book-text {
+    display: block;
+    text-transform: uppercase;
+    font-size: 15px;
+    font-weight: 500;
+    margin-top: 20px;
+}
+
+#contact .summary-value button {
+    color: #b1b1b1 !important;
+    background-color: #161c24;
+    transition: color 200ms ease-in-out;
+}
+
+#contact .summary-value button:active,
+#contact .summary-value button:hover {
+    color: white !important;
+}
+
 /* Footer */
 
 section#footer-top, section#footer-bottom {
@@ -1856,25 +1949,45 @@ section#footer-top {
     animation-duration: 12s;
     animation-iteration-count: infinite;
     transform-origin: center center;
-  }
-  .square-svg rect {
+}
+.square-svg rect {
     animation-name: zoom-in-out;
     animation-duration: 8s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     transform-origin: center center;
-  }
+}
 
-  @keyframes spin {
+@keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
-  }
+}
 
-  @keyframes zoom-in-out {
+@keyframes zoom-in-out {
     0%   {transform: scale(1); opacity: 0; stroke-width: 4 }
     50%  {transform: scale(5); opacity: 1; stroke-width: 7 }
     100% {transform: scale(1); opacity: 0; stroke-width: 4 }
-  }
+}
+
+  /* Keyframes for dialog and popover elements */
+@keyframes fadeIn {
+    from { opacity: 0 }
+    to { opacity: 1 }
+}
+@keyframes fadeOut {
+    from { opacity: 1 }
+    to { opacity: 0 }
+}
+  
+  /* Keyframes for the backdrop pseudo-element */
+@keyframes backdropFadeIn {
+    from { background: hsl(0 0% 0% / 0%) }
+    to { background: hsl(0 0% 0% / 50%) }
+}
+@keyframes backdropFadeOut {
+    from { background: hsl(0 0% 0% / 50%) }
+    to { background: hsl(0 0% 0% / 0%) }
+}
 
 
 @media (max-width: 1766px) {
