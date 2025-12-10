@@ -1,75 +1,69 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 
 exports.handler = async (event, context) => {
     const directoryPath = '../git-contribution-data';
     let contributions = [];
 
-    try {
-        const files = fs.readdirSync(directoryPath);
-    
-        for (const file of files) {
-            const fullPath = path.join(directoryPath, file);
-            const yearMatch = file.match(/contributions-([\d]+)\.json$/);
+    async function processFilesInDirectory(directoryPath) {
+        try {
+          const files = await fs.readdir(directoryPath); // Read directory contents
+      
+          const fileProcessingPromises = files.map(async (filename) => {
+            const filePath = path.join(directoryPath, filename);
+            const yearMatch = filename.match(/contributions-([\d]+)\.json$/);
             const year = yearMatch && yearMatch.length && yearMatch[1];
-    
-            const stats = fs.statSync(fullPath);
-            // Skip the iteration if it's not a file (i.e.- it's a directory)
-            // or if the file doesn't match.
-            if ( !stats.isFile() || !year ) {
-                continue;
+            const stats = await fs.stat(filePath); // Get file stats to check if it's a file
+      
+            if (! stats.isFile() || ! year) {
+                throw new Error('Unexpected filename or directory.');
             }
-            // Read the git contribution "year" file.
-            fs.readFile(fullPath, 'utf8', (err, data) => {
-                if (err) {
-                    return {
-                        status: "error",
-                        statusCode: 500,
-                        error: {
-                            code: "FILE_READ_ERROR",
-                            message: "An unexpected error occurred while attempting to read the file.",
-                            details: err
-                        }
-                      };
+            try {
+                const data = await fs.readFile(filePath, 'utf8'); // Read file content
+                // 'data' contains the file contents (JSON data).
+                const jsonObject = JSON.parse(data);
+                const totalContributions =  jsonObject?.data?.user?.contributionsCollection?.contributionCalendar?.totalContributions;
+                const weeks = jsonObject?.data?.user?.contributionsCollection?.contributionCalendar?.weeks;
+                const contributionObject = {
+                    year: year,
+                    total_contributions: totalContributions,
+                    weeks: weeks,
                 }
-                try {
-                    const jsonObject = JSON.parse(data);
-                    const totalContributions =  jsonObject?.data?.user?.contributionsCollection?.contributionCalendar?.totalContributions;
-                    const weeks = jsonObject?.data?.user?.contributionsCollection?.contributionCalendar?.weeks;
-                    const contributionObject = {
-                        year: year,
-                        total_contributions: totalContributions,
-                        weeks: weeks,
+                contributions.push(contributionObject);
+            } catch (readError) {
+                return {
+                    status: "error",
+                    statusCode: 500,
+                    error: {
+                        code: "FILE_READ_ERROR",
+                        message: `Error reading file ${filename}.`,
+                        details: readError
                     }
-                    contributions.push(contributionObject);
-                } catch (parseError) {
-                    return {
-                        status: "Bad Request",
-                        statusCode: 400,
-                        error: {
-                            code: "INVALID_JSON",
-                            message: "An unexpected error occurred while attempting to parse the JSON.",
-                            details: parseError
-                        }
-                      };
-                }
-            });
-        }
-
-    } catch (parseError) {
-        return {
-            status: "Bad Request",
-            statusCode: 400,
-            error: {
-                code: "INVALID_JSON",
-                message: "An unexpected error occurred while attempting to parse the JSON.",
-                details: parseError
+                };
             }
-          };
+          });
+      
+          await Promise.all(fileProcessingPromises); // Wait for all file processing to complete
+      
+          // All files processed at this point.
+            const response = {
+                statusCode: 200,
+                body: JSON.stringify(contributions),
+            };
+
+            return response;
+        } catch (error) {
+            return {
+                status: "error",
+                statusCode: 500,
+                error: {
+                    code: "FILE_OR_DIRECTORY_READ_ERROR",
+                    message: `Error reading directory path ${directoryPath}.`,
+                    details: error
+                }
+            };
+        }
     }
-  
-    return {
-      statusCode: 200,
-      body: JSON.stringify(contributions),
-    };
+    
+    processFilesInDirectory(directoryPath);  
 };
