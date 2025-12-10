@@ -887,6 +887,7 @@
                 eyesBlinker1.stop();
                 eyesBlinker2.stop();
                 typingHand.stop();
+                magnifyArm.stop();
 
                 if (arrow1Timer) {
                     clearTimeout(arrow1Timer);
@@ -917,6 +918,7 @@
                 eyesBlinker1.start();
                 eyesBlinker2.start();
                 typingHand.start();
+                magnifyArm.start();
 
                 if (!arrow1Timer && !hasLightBeenClicked) {
                     nudgeArrow1Randomly();

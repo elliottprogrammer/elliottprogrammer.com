@@ -1,3 +1,4 @@
+# These headers are for sharing images to CodePen.io
 [[headers]]
 		for = "/images/*"
 		[headers.values]
@@ -18,3 +19,7 @@
 		for = "/celebration-sprite/*"
 		[headers.values]
 		Access-Control-Allow-Origin = "*"
+[functions]
+	included_files = ["git-contribution-data/**.json"]
+[build]
+	functions = "./functions"

@@ -13,9 +13,11 @@ jspm_packages/
 .env
 #
 # IDE - VSCode
-.vscode/*
+.vscode
 #
 # compiled output
 /dist
 /tmp
 /out-tsc
+# Local Netlify folder
+.netlify

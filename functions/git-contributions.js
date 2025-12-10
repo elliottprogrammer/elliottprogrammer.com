@@ -34,8 +34,8 @@ exports.handler = async (event, context) => {
                 }
                 try {
                     const jsonObject = JSON.parse(data);
-                    const totalContributions =  jsonObject.data.user.contributionsCollection.contributionCalendar.totalContributions
-                    const weeks = jsonObject.data.user.contributionsCollection.contributionCalendar.weeks;
+                    const totalContributions =  jsonObject?.data?.user?.contributionsCollection?.contributionCalendar?.totalContributions;
+                    const weeks = jsonObject?.data?.user?.contributionsCollection?.contributionCalendar?.weeks;
                     const contributionObject = {
                         year: year,
                         total_contributions: totalContributions,
