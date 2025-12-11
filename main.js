@@ -1528,13 +1528,13 @@
             return data;
         }
           
-        fetchContributionsWithCache('/.netlify/functions/git-contributions')
-            .then( data => {
-                console.log('Git contributions data (cached or fresh):', data);
-            })
-            .catch( err => {
-                console.error(err);
-            });
+        // fetchContributionsWithCache('/.netlify/functions/git-contributions')
+        //     .then( data => {
+        //         console.log('Git contributions data (cached or fresh):', data);
+        //     })
+        //     .catch( err => {
+        //         console.error(err);
+        //     });
 
         export { getDeviceType };
             
