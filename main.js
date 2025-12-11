@@ -1400,5 +1400,141 @@
             }
         }
 
+        const CONTRIBUTION_DB_NAME = 'git-contributions';
+        const CONTRIBUTION_STORE = 'contributions';
+        const CONTRIBUTION_CACHE_KEY = 'latest';
+        const CONTRIBUTION_DB_VERSION = 1;
+        const CONTRIBUTION_MAX_AGE = 1000 * 60 * 60 * 72; // 72 hours
+
+        function openContributionsDb() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(CONTRIBUTION_DB_NAME, CONTRIBUTION_DB_VERSION);
+
+                request.onupgradeneeded = function(event) {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains(CONTRIBUTION_STORE)) {
+                        db.createObjectStore(CONTRIBUTION_STORE, { keyPath: 'id' });
+                    }
+                };
+
+                request.onsuccess = function() {
+                    resolve(request.result);
+                };
+
+                request.onerror = function() {
+                    reject(request.error);
+                };
+            });
+        }
+
+        async function getCachedContributions() {
+            if (!('indexedDB' in window)) {
+                return null;
+            }
+
+            try {
+                const db = await openContributionsDb();
+
+                return await new Promise((resolve, reject) => {
+                    const transaction = db.transaction(CONTRIBUTION_STORE, 'readonly');
+                    const store = transaction.objectStore(CONTRIBUTION_STORE);
+                    const request = store.get(CONTRIBUTION_CACHE_KEY);
+
+                    transaction.oncomplete = () => {
+                        db.close();
+                    };
+
+                    transaction.onerror = () => {
+                        db.close();
+                    };
+
+                    request.onsuccess = function() {
+                        const record = request.result;
+                        if (!record) {
+                            resolve(null);
+                            return;
+                        }
+
+                        const isFresh = Date.now() - record.timestamp < CONTRIBUTION_MAX_AGE;
+                        resolve(isFresh ? record.data : null);
+                    };
+
+                    request.onerror = function() {
+                        reject(request.error);
+                    };
+                });
+            } catch (error) {
+                console.error('IndexedDB read error (git contributions):', error);
+                return null;
+            }
+        }
+
+        async function setCachedContributions(data) {
+            if (!('indexedDB' in window)) {
+                return;
+            }
+
+            try {
+                const db = await openContributionsDb();
+
+                await new Promise((resolve, reject) => {
+                    const transaction = db.transaction(CONTRIBUTION_STORE, 'readwrite');
+                    const store = transaction.objectStore(CONTRIBUTION_STORE);
+                    const request = store.put({
+                        id: CONTRIBUTION_CACHE_KEY,
+                        data,
+                        timestamp: Date.now(),
+                    });
+
+                    transaction.oncomplete = () => {
+                        db.close();
+                        resolve();
+                    };
+
+                    transaction.onerror = () => {
+                        db.close();
+                    };
+
+                    request.onerror = function() {
+                        reject(request.error);
+                    };
+                });
+            } catch (error) {
+                console.error('IndexedDB write error (git contributions):', error);
+            }
+        }
+
+        async function fetchContributionsWithCache(url) {
+            const cachedData = await getCachedContributions();
+            if (cachedData) {
+                return cachedData;
+            }
+
+            const freshData = await fetchContributions(url);
+            // No need to block on cache writes; best-effort.
+            setCachedContributions(freshData);
+            return freshData;
+        }
+
+        async function fetchContributions(url) {
+            const response = await fetch(url);
+      
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            return data;
+        }
+          
+        fetchContributionsWithCache('/.netlify/functions/git-contributions')
+            .then( data => {
+                console.log('Git contributions data (cached or fresh):', data);
+            })
+            .catch( err => {
+                console.error(err);
+            });
+
         export { getDeviceType };
             
