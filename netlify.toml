@@ -20,6 +20,6 @@
 		[headers.values]
 		Access-Control-Allow-Origin = "*"
 [functions]
-	included_files = ["git-contribution-data/**.json"]
+	included_files = ["git-contribution-data/**"]
 [build]
 	functions = "./functions"
