@@ -24,7 +24,7 @@
         let sliderTl;
         let isGitSliderPlaying = false;
         const sliderScrollDuration = 60;
-        let sliderDirection;
+        let sliderDirection = 'forward';
 
         document.addEventListener('DOMContentLoaded', function() {
             // Register GSAP plugins
@@ -1182,9 +1182,6 @@
                     pin: true,
                     ...(getDeviceType === 'mobile' || getDeviceType() === 'phone') && { anticipatePin: 1 },
                     //markers: true,
-                    // onUpdate: ({progress}) => {
-                    //     // console.log(progress);
-                    // }
                 },
                 
             });
@@ -1215,17 +1212,6 @@
    
         function gitSliderStart() {   
             // Git Contribution Slider
-            const gitSlides = [
-                { width: 940, height: 150 },
-                { width: 940, height: 150 },
-                { width: 940, height: 150 },
-                { width: 940, height: 150 },
-                { width: 940, height: 150 },
-                { width: 940, height: 150 },
-            ];
-
-            const newHeight = 113;
-
             const slider = document.getElementById('git-contribution-slider');
             const sliderViewport = slider.querySelector('.slider-viewport');
             const sliderContent = slider.querySelector('.slider-content');
@@ -1234,21 +1220,15 @@
             const nextBtn = slider.querySelector('.next');
             const playBtn = slider.querySelector('.play');
             const pauseBtn = slider.querySelector('.pause');
-            let totalImagesWidth = 0;
+            let totalSlidesWidth = 0;
 
             // Set slide images manually and count total width
             slides.forEach( (slide, index) => {
-                const imgElem = slide.children[0]?.tagName === 'IMG' ? slide.children[0] : null;
-                const imgDimensions = gitSlides[index];
-                const newWidth = (imgDimensions.width / imgDimensions.height) * newHeight;
-                imgElem.width = newWidth;
-                imgElem.height = newHeight;
-                totalImagesWidth += newWidth;
+                totalSlidesWidth += slide.clientWidth;
             });
-                
+ 
             // Total scroll length
-            const maxScrollPos = totalImagesWidth - sliderViewport.clientWidth;
-            
+            const maxScrollPos = totalSlidesWidth - sliderViewport.clientWidth;
             // Set initial scroll state
             sliderViewport.scrollLeft = maxScrollPos;
 
@@ -1256,7 +1236,6 @@
                 prevBtn.disabled = sliderViewport.scrollLeft === 0;
                 nextBtn.disabled = sliderViewport.scrollLeft === maxScrollPos;
             });
-            
             
             // Event listeners for navigation buttons
             prevBtn.addEventListener('click', () => {
@@ -1284,9 +1263,7 @@
                     // Then gsap animate to that position.
                     gsap.to(sliderViewport, {
                         scrollLeft: prevSlidePos,
-                        onComplete: () => {
-                            sliderViewport.scrollLeft = prevSlidePos;
-                        }
+                        overwrite: 'none',
                     });
                 }
             });
@@ -1312,6 +1289,7 @@
                     // Then gsap animate to that position.
                     gsap.to(sliderViewport, {
                         scrollLeft: nextSlidePos,
+                        overwrite: 'none',
                     });
                 }
             });
@@ -1322,10 +1300,15 @@
                     const scrollAmtPerSecond = maxScrollPos / sliderScrollDuration;
                     const timeAtScrollPos = (maxScrollPos - scrollPos) / scrollAmtPerSecond;
                     sliderTl.seek(timeAtScrollPos);
-                    if (sliderDirection) {
-                        sliderDirection === 'reverse' ? sliderTl.reverse() : sliderTl.play();
+                    if (sliderDirection === 'reverse') {
+                        if (timeAtScrollPos === 0) {
+                            sliderTl.play();
+                            sliderDirection = 'forward';
+                        } else {
+                            sliderTl.reverse();
+                        }
                     } else {
-                        sliderTl.reversed() ? sliderTl.reverse() : sliderTl.play();
+                        sliderTl.play();
                     }
                     isGitSliderPlaying = true;
                     playBtn.style.visibility = 'hidden';
@@ -1335,7 +1318,6 @@
 
             pauseBtn.addEventListener('click', () => {
                 if (sliderTl) {
-                    sliderDirection = sliderTl.reversed() ? 'reverse' : 'forward';
                     sliderTl.pause();
                     isGitSliderPlaying = false;
                     pauseBtn.style.visibility = 'hidden';
@@ -1366,16 +1348,24 @@
                 repeat: -1,
                 yoyo: true,
                 ease: 'none',
+                overwrite: 'none',
+                onRepeat: () => {
+                    sliderDirection = sliderDirection === 'forward' ? 'reverse' : 'forward';
+                },
+                onReverseComplete: () => {
+                    sliderTl.play();
+                    sliderDirection = 'forward';
+                },
             });
             
             [slides[0], slides[1], slides[2], slides[3], slides[4], slides[5]].forEach((slide, index) => {
-                const year = slide.querySelector('.year');
+                const year = slide.querySelector('.year-text');
 
                 ScrollTrigger.create({
                     trigger: year,
                     toggleClass: 'active',
                     start: `left left`,
-                    end: `right left+=100`,
+                    end: `right left+=170`,
                     horizontal: true,
                     scroller: sliderViewport,
                     pin: true,
@@ -1384,21 +1374,11 @@
             })
         };
 
-        const gitSliderLastImage = document.querySelector('.git-images .slide:last-child img');
-        if (gitSliderLastImage.complete) {
-                setTimeout( () => {
-                    gitSliderStart();
-                }, 500);
-                
-        } else {
-            gitSliderLastImage.onload = function() {
+        document.addEventListener('DOMContentLoaded', (event) => {
+            setTimeout( () => {
                 gitSliderStart();
-            };
-
-            gitSliderLastImage.onerror = function(err) {
-                console.error('GitContributionSlider error: Error loading the image.');
-            }
-        }
+            }, 500);
+        });
 
         const CONTRIBUTION_DB_NAME = 'git-contributions';
         const CONTRIBUTION_STORE = 'contributions';
@@ -1528,13 +1508,105 @@
             return data;
         }
           
-        // fetchContributionsWithCache('/.netlify/functions/git-contributions')
-        //     .then( data => {
-        //         console.log('Git contributions data (cached or fresh):', data);
-        //     })
-        //     .catch( err => {
-        //         console.error(err);
-        //     });
+        fetchContributionsWithCache('/.netlify/functions/git-contributions')
+            .then( data => {
+                console.log('Git contributions data (cached or fresh):', data);
+                renderGitContributions(data);
+            })
+            .catch( err => {
+                console.error(err);
+            });
+
+        function getOrdinalSuffix( day ) {
+            if (day > 3 && day < 21) { // Handles 11th, 12th, 13th, etc.
+                return 'th';
+            }
+            switch (day % 10) {
+                case 1:
+                    return 'st';
+                case 2:
+                    return 'nd';
+                case 3:
+                    return 'rd';
+                default:
+                    return 'th';
+            }
+        }
+
+        function generateContributionDayMarkup( gitDay ) {
+            const date = new Date(gitDay.date);
+            const dayOfMonth = date.getDate();
+            const month = date.toLocaleDateString('en-US', {
+                month: 'long',
+            });
+            const suffix = getOrdinalSuffix(dayOfMonth);
+            const title = `${gitDay.contributionCount} contributions on ${month} ${dayOfMonth}${suffix}.`;
+        
+            return `<div class="day activity-${gitDay.contributionCount > 5 ? 5 : gitDay.contributionCount}" title="${title}"></div>
+                                    `;
+        }
+
+        function renderGitContributions(data) {
+            const elementToInsertHtml = document.querySelector('.git-contribution-container .slider .slider-content');
+            // Sort from earliest to latest, i.e.- 2020 -> 2025
+            data.sort((a, b) => a.year - b.year);
+            // Iterate, generate markup, and insert into DOM
+            for (let year of data) {
+                const yearText = year.year;
+                const totalYearContributions =  year.total_contributions
+                const weeks = year.weeks;
+                const firstWeek = weeks[0].contributionDays;
+                const lastWeek = weeks[weeks.length - 1].contributionDays;
+
+                let markup = `
+                        <div class="slide">
+                            <div class="year">
+                                <div class="week">
+                                    `;
+                const firstWeekOffset = 7 - firstWeek.length; //3
+                for(let i = 0; i < firstWeekOffset; i++) {
+                    markup += `<div class="day activity-0"></div>
+                                    `
+                }
+                for(let i = 0; i < firstWeek.length; i++) {
+                    markup += generateContributionDayMarkup(firstWeek[i]);
+                }
+                markup += `</div> <!-- end .week -->
+                                    `;
+    
+                // MIDDLE WEEKS
+                
+                for(let i = 1; i < weeks.length - 2; i++) {
+                    markup += `<div class="week">
+                                    `;
+                    for(let day of weeks[i].contributionDays) {
+                        markup += generateContributionDayMarkup(day);
+                    }
+                    markup += `</div> <!-- end .week -->
+                                ` 
+                }
+    
+                // Last week
+                markup += `<div class="week">
+                                    `;
+                const lastWeekOffset = 7 - lastWeek.length;
+                for(let i = 0; i < lastWeekOffset; i++) {
+                    markup += `<div class="day activity-0"></div>
+                                `
+                }
+                for(let i = 0; i < lastWeek.length; i++) {
+                    markup += generateContributionDayMarkup(lastWeek[i]);
+                }
+                markup += `</div> <!-- end .week -->
+                                `;
+                markup += `</div> <!-- end .year -->
+                            `;
+                markup += `<div class="year-text">${yearText}</div>
+                        `;
+                markup += `</div> <!-- end .slide -->`;
+                elementToInsertHtml.insertAdjacentHTML('beforeend', markup);
+            }    
+        }
 
         export { getDeviceType };
             

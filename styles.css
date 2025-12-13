@@ -1323,6 +1323,8 @@ img.automattic-org-icon {
     border: var(--borderWidth-thin) solid var(--topicTag-borderColor, transparent);
 }
 
+/* Git Contribution Slider */
+
 .git-contribution-container {
     max-width: 700px;
     margin: 40px auto;
@@ -1342,9 +1344,7 @@ img.automattic-org-icon {
 .slider-viewport {
     position: relative;
     overflow: hidden;
-    aspect-ratio: 179 / 35;
     width: 100%;
-    height: auto;
 }
 
 .days {
@@ -1355,8 +1355,8 @@ img.automattic-org-icon {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    height: 80px;
-    margin-top: 100%;
+    height: 85px;
+    margin-top: 5px;
 }
 
 .days-container span {
@@ -1413,37 +1413,26 @@ img.automattic-org-icon {
 }
 
 .slider-content {
-    position: absolute;
-    left: 0;
-    top: 0;
-}
-
-.git-images {
     display: flex;
     align-items: flex-start;
 }
 
-.git-images > .slide {
+.slider-content > .slide {
     display: flex;
     flex-direction: column;
 }
 
-.git-images > .slide > img:not(:last-child) {
-    background-color: #000;
-}
-
-.git-images > .slide > img:last-child {
-
-}
-
-.git-images > .slide:not(:first-child) {
+.slider-content > .slide {
     border-left: 1px solid #fff;
 }
+.slider-content > .slide:first-child {
+    border-left: 1px solid transparent;
+}
 
-.year span {
+.year-text {
     display: block;
-    padding: 0 35px;
-    font-size: 16px;
+    padding: 0 55px;
+    font-size: 24px;
     font-weight: 700;
 }
 
@@ -1462,8 +1451,21 @@ button.next:disabled > svg {
 .graph-legend {
     display: flex;
     justify-content: flex-end;
+    font-size: 11px;
     margin-bottom: 8px;
 }
+
+.graph-legend div {
+    display: flex;
+    align-items: center;
+    column-gap: 2px;
+}
+
+.graph-legend span.less, .graph-legend span.more {
+    display: inline-block;
+    padding: 0 2px;
+}
+
 
 img.legend {
     aspect-ratio: 67 / 7;
@@ -1488,8 +1490,41 @@ img.legend {
     visibility: hidden;
 }
 
-#referenced-svgs {
-    display: none;
+/* Git contribution slide/year */
+.year {
+    display: flex;
+    gap: 2.5px;
+}
+.week {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.day {
+    display: block;
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+    shape-rendering: geometricPrecision;
+}
+
+.activity-0 {
+    background-color: #151b23;
+}
+.activity-1 {
+    background-color: #033a16;
+}
+.activity-2 {
+    background-color: #196c2e;
+}
+.activity-3 {
+    background-color: #196c2e;
+}
+.activity-4 {
+    background-color: #2ea043;
+}
+.activity-5 {
+    background-color: #56d364;
 }
 
  /* Level-up Game */
@@ -1890,6 +1925,8 @@ img.legend {
     color: white !important;
 }
 
+
+
 /* Footer */
 
 section#footer-top, section#footer-bottom {
@@ -1942,20 +1979,6 @@ section#footer-top {
     100% {
         transform: translateY(-100%);
     }
-}
-
-.square-svg {
-    animation-name: spin;
-    animation-duration: 12s;
-    animation-iteration-count: infinite;
-    transform-origin: center center;
-}
-.square-svg rect {
-    animation-name: zoom-in-out;
-    animation-duration: 8s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    transform-origin: center center;
 }
 
 @keyframes spin {
