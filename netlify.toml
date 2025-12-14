@@ -23,3 +23,5 @@
 	included_files = ["git-contribution-data/**"]
 [build]
 	functions = "./functions"
+[functions."fetch-git-contributions-cron"]
+	schedule = "@daily"

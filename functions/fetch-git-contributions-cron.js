@@ -1,0 +1,52 @@
+const fs = require('fs').promises;
+
+export default async (req) => {
+    let query = `
+        query($userName: String!, $from: DateTime!, $to: DateTime!) {
+            user(login: $userName) {
+                contributionsCollection(from: $from, to: $to) {
+                    contributionCalendar {
+                        totalContributions
+                        weeks {
+                            contributionDays {
+                                contributionCount
+                                date
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    `
+    const thisYear = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"})).getFullYear();
+    const fromYear = `${thisYear}`;
+    const toYear = `${thisYear}`;
+    let variables = {
+        userName: "elliottprogrammer",
+        from: `${fromYear}-01-01T00:00:00Z`,
+        to: `${toYear}-12-31T23:59:59Z`,
+    }
+
+    try {
+        const response = await fetch("https://api.github.com/graphql", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${process.env.GITHUB_PAT}`,
+                "User-Agent": "elliottprogrammer"
+            },
+            body: JSON.stringify({
+                query: query,
+                variables: variables,
+            }),
+        });
+
+        const data = await response.json();
+        await fs.writeFile(`git-contribution-data/contributions-${thisYear}.json`, JSON.stringify(data, null, 2));
+
+        console.log(`JSON data saved to contributions-${thisYear}.json`);
+
+    } catch (err) {
+        console.log(`There was an error fetching or writing file: contributions-${thisYear}.json`, err);
+    }
+}
