@@ -19,12 +19,13 @@ export default async (req) => {
         }
     `
     const thisYear = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"})).getFullYear();
+    const now = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"})).toISOString();
     const fromYear = `${thisYear}`;
-    const toYear = `${thisYear}`;
+
     let variables = {
         userName: "elliottprogrammer",
         from: `${fromYear}-01-01T00:00:00Z`,
-        to: `${toYear}-12-31T23:59:59Z`,
+        to: `${now}`,
     }
 
     try {
