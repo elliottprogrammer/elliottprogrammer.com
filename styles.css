@@ -1326,25 +1326,26 @@ img.automattic-org-icon {
 /* Git Contribution Slider */
 
 .git-contribution-container {
+    width: 100%;
     max-width: 700px;
     margin: 40px auto;
 }
 
 #git-contribution-slider {
+    width: 100%;
     display: flex;
     gap: 3px;
 }
 
 .slider {
     position: relative;
-    max-width: 100%;
-    width: 100%;
+    flex: 1;
 }
 
 .slider-viewport {
     position: relative;
     overflow: hidden;
-    width: 100%;
+    height: 130px;
 }
 
 .days {
@@ -1413,6 +1414,7 @@ img.automattic-org-icon {
 }
 
 .slider-content {
+    position: absolute;
     display: flex;
     align-items: flex-start;
 }
@@ -1888,6 +1890,43 @@ img.legend {
     transform: rotate(117deg); 
 }
 
+.mask {
+    mask: url('data:image/svg+xml,%3Csvg%20id%3D%22mask_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20612.23%2096.38%22%3E%3Cpath%20d%3D%22M612.23%2C96.38H0v-1s2.26%2C0%2C2.26%2C0c21.98%2C0%2C43.06-11.13%2C58.6-26.67l50.2-49.2C123.26%2C7.31%2C139.83%2C0%2C157.07%2C0h299.93c17.16%2C0%2C33.63%2C7.28%2C45.76%2C19.41l47.57%2C49.57c15.54%2C15.54%2C36.61%2C26.4%2C58.58%2C26.4h3.32%22%2F%3E%3C%2Fsvg%3E') no-repeat;
+    width: clamp( 360px, calc( 120% - 50vw ), 600px);
+    aspect-ratio: 612 / 96;
+    background: linear-gradient(0deg, rgba(21, 23, 27, 1) 0%, rgb(27 30 35) 100%);
+    position: absolute;
+    top: 1px;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    display: grid;
+    place-items: center;
+    color: #f0f6fc;
+}
+
+.resume-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #ebebeb;
+    /* text-transform: uppercase; */
+    background-color: #243160;
+    padding: 7px 10px;
+    border-radius: 15px;
+    corner-shape: squircle;
+    text-decoration: none;
+    box-shadow: 1px 1px 0 0 #000f25, 1px 2px 2px 0 #061122;
+    transition: box-shadow 150ms ease, background-color 150ms ease, color 150ms ease; 
+}
+.resume-link:active,
+.resume-link:hover {
+    background-color: #202b55;
+    box-shadow: 1px 1px 2px transparent;
+    color: #d0d0d0;
+}
+
 .contact-container.summary-container {
     padding: 20px;
     margin-bottom: 25px;
@@ -2082,10 +2121,10 @@ section#footer-top {
         margin-left: auto;
         margin-right: auto;
     }
-    .slider-viewport {
+    /* .slider-viewport {
         aspect-ratio: unset;
         height: 131.67px;
-    }
+    } */
     .bg-text-effect {
         color: #20232b;
         -webkit-text-stroke: 3px #282c37;

@@ -1374,12 +1374,6 @@
             })
         };
 
-        document.addEventListener('DOMContentLoaded', (event) => {
-            setTimeout( () => {
-                gitSliderStart();
-            }, 500);
-        });
-
         const CONTRIBUTION_DB_NAME = 'git-contributions';
         const CONTRIBUTION_STORE = 'contributions';
         const CONTRIBUTION_CACHE_KEY = 'latest';
@@ -1512,6 +1506,9 @@
             .then( data => {
                 console.log('Git contributions data (cached or fresh):', data);
                 renderGitContributions(data);
+                setTimeout( () => {
+                    gitSliderStart();
+                }, 500);
             })
             .catch( err => {
                 console.error(err);
