@@ -1904,7 +1904,7 @@ img.legend {
     color: #f0f6fc;
 }
 
-.resume-link {
+.site-button {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -1914,17 +1914,17 @@ img.legend {
     /* text-transform: uppercase; */
     background-color: #243160;
     padding: 7px 10px;
-    border-radius: 15px;
-    corner-shape: squircle;
+    border-style: inherit;
+    border-radius: 8px;
     text-decoration: none;
     box-shadow: 1px 1px 0 0 #000f25, 1px 2px 2px 0 #061122;
     transition: box-shadow 150ms ease, background-color 150ms ease, color 150ms ease; 
 }
-.resume-link:active,
-.resume-link:hover {
+.site-button:active,
+.site-button:hover {
     background-color: #202b55;
     box-shadow: 1px 1px 2px transparent;
-    color: #d0d0d0;
+    color: #c5c3c3;
 }
 
 .contact-container.summary-container {
@@ -1936,7 +1936,7 @@ img.legend {
     padding-bottom: 13px;
 }
 
-#contact .summary-item .calendar-icon {
+#contact .summary-item .summary-icon {
     display: inline-block;
     padding: 8px;
     background-color: #161c24;
@@ -1945,24 +1945,102 @@ img.legend {
     border-radius: 8px;
 }
 
-#contact .summary-item .book-text {
+.summary-heading-wrapper {
+    margin: 15px 0;
+}
+
+.summary-heading {
     display: block;
     text-transform: uppercase;
     font-size: 15px;
     font-weight: 500;
-    margin-top: 20px;
+}
+.summary-sub-heading {
+    font-size: 13px;
+    font-weight: 300;
 }
 
-#contact .summary-value button {
+#contact .summary-value button:not([type="submit"]) {
     color: #b1b1b1 !important;
     background-color: #161c24;
     transition: color 200ms ease-in-out;
 }
 
-#contact .summary-value button:active,
-#contact .summary-value button:hover {
+#contact .summary-value button:not([type="submit"]):active,
+#contact .summary-value button:not([type="submit"]):hover {
     color: white !important;
 }
+
+.form-container {
+    background-color: #161c24;
+    border-radius: 8px;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.form-heading {
+    margin: 1em;
+}
+
+.form-container > form {
+    margin: 1em;
+}
+.form-row.flex {
+    display: flex;
+    gap: 20px;
+}
+.form-row.flex > * {
+    flex: 1;
+}
+
+#contact form {
+    font-size: 18px;
+}
+#contact form label {
+    display: inline-block;
+    font-size: 14px;
+    color: #b1b1b1;
+    padding: 3px 3px;
+}
+
+#contact form input,
+#contact form textarea {
+    background: #000;
+    border: none;
+    padding: 7px;
+    width: 100%;
+    font-family: 'WF Visual Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: #b1b1b1;
+    border: 1px solid #010f25;
+    border-radius: 6px;
+}
+
+#contact form button[type="submit"] {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.form-heading h3 {
+    margin-bottom: 6px;
+}
+.form-heading p { margin-top: 0; }
+.form-heading p small {
+    font-size: 13px;
+    color: #b1b1b1
+}
+
+#contact form span.required {
+    font-size: 12px;
+    color: firebrick;
+}
+
+#contact form input:focus-visible,
+#contact form textarea:focus-visible {
+    outline: 1px dotted #f1ab3273;
+}
+
 
 
 
@@ -2009,6 +2087,13 @@ section#footer-top {
 .copyright {
     text-align: center;
     font-size: 14px;
+}
+
+@supports (corner-shape: squircle) {
+    .resume-text, .form-container {
+        border-radius: 18px;
+        corner-shape: squircle;
+    }
 }
 
 @keyframes animate {

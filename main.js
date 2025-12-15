@@ -1204,6 +1204,91 @@
                 repeat: 16,
             }, 0);
 
+            // Show/Hide Dropdown(s)
+            const showHideTriggers = document.querySelectorAll('[data-attr="show-hide"]');
+            const SHOW_HIDE_ANIMATION_MS = 300;
+
+            function matchCase(original, replacement) {
+                if (original === original.toUpperCase()) return replacement.toUpperCase();
+                if (original[0] === original[0].toUpperCase()) {
+                    return replacement.charAt(0).toUpperCase() + replacement.slice(1);
+                }
+                return replacement.toLowerCase();
+            }
+
+            function updateTriggerText(trigger, isExpanded) {
+                const text = trigger.textContent;
+
+                const match = text.match(/(open|show|close|hide)/i);
+                if (!match) return;
+
+                const nextWord = match[1].toLowerCase() === 'open' || match[1].toLowerCase() === 'close'
+                    ? (isExpanded ? 'close' : 'open')
+                    : (isExpanded ? 'hide' : 'show');
+                const replacement = matchCase(match[1], nextWord);
+                trigger.textContent = text.replace(match[0], replacement);
+            }
+
+            function expandSection(section) {
+                section.style.display = 'block';
+                section.style.maxHeight = '0px';
+                requestAnimationFrame(() => {
+                    const targetHeight = section.scrollHeight;
+                    section.style.maxHeight = `${targetHeight}px`;
+                });
+
+                const onEnd = () => {
+                    section.style.maxHeight = 'none';
+                    section.removeEventListener('transitionend', onEnd);
+                };
+
+                section.addEventListener('transitionend', onEnd);
+            }
+
+            function collapseSection(section) {
+                const currentHeight = section.scrollHeight;
+                section.style.maxHeight = `${currentHeight}px`;
+                requestAnimationFrame(() => {
+                    section.style.maxHeight = '0px';
+                });
+
+                const onEnd = () => {
+                    section.style.display = 'none';
+                    section.removeEventListener('transitionend', onEnd);
+                };
+
+                section.addEventListener('transitionend', onEnd);
+            }
+
+            function initShowHideDropdowns() {
+                showHideTriggers.forEach((trigger, index) => {
+                    const content = trigger.nextElementSibling;
+                    if (!content) return;
+
+                    content.style.overflow = 'hidden';
+                    content.style.maxHeight = '0px';
+                    content.style.display = 'none';
+                    content.style.transition = `max-height ${SHOW_HIDE_ANIMATION_MS}ms ease`;
+                    trigger.setAttribute('aria-expanded', 'false');
+                    trigger.setAttribute('aria-controls', `show-hide-panel-${index}`);
+                    content.id = content.id || `show-hide-panel-${index}`;
+
+                    trigger.addEventListener('click', () => {
+                        const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+                        if (isOpen) {
+                            collapseSection(content);
+                        } else {
+                            expandSection(content);
+                        }
+                        trigger.setAttribute('aria-expanded', String(!isOpen));
+                        console.log('!isOpen: ', !isOpen);
+                        updateTriggerText(trigger, !isOpen);
+                    });
+                });
+            }
+
+            initShowHideDropdowns();
+
 
             window.addEventListener('resize', () => {
                 deviceType = getDeviceType();
