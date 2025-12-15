@@ -1,4 +1,5 @@
 const fs = require('fs').promises;
+const path = require('path');
 
 export default async (req) => {
     let query = `
@@ -43,7 +44,9 @@ export default async (req) => {
         });
 
         const data = await response.json();
-        await fs.writeFile(`git-contribution-data/contributions-${thisYear}.json`, JSON.stringify(data, null, 2));
+        const writablePath = path.join('/tmp', `contributions-${thisYear}.json`);
+        const gitContributionDirectory = 'git-contribution-data';
+        await fs.writeFile(writablePath, JSON.stringify(data, null, 2));
 
         console.log(`JSON data saved to contributions-${thisYear}.json`);
 

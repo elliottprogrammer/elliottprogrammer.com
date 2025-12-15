@@ -2144,6 +2144,9 @@ section#footer-top {
         top: 20%;
         left: 82%;
     }
+    .resume-link {
+        transform: translateY(10px);
+    }
 }
 
 @media (max-width: 500px) {

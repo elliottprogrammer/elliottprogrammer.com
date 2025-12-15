@@ -19,9 +19,9 @@
 		for = "/celebration-sprite/*"
 		[headers.values]
 		Access-Control-Allow-Origin = "*"
-[functions]
-	included_files = ["git-contribution-data/**"]
 [build]
 	functions = "./functions"
+[functions]
+	included_files = ["git-contribution-data/**"]
 [functions."fetch-git-contributions-cron"]
 	schedule = "@daily"
