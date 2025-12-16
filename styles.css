@@ -1971,6 +1971,26 @@ img.legend {
     color: white !important;
 }
 
+#contact .summary-value button[data-attr="show-hide"][aria-expanded="false"]::after {
+    content: '';
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-image: url('data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3Csvg%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M5.29289%208.29289C5.68342%207.90237%206.31658%207.90237%206.70711%208.29289L12%2013.5858L17.2929%208.29289C17.6834%207.90237%2018.3166%207.90237%2018.7071%208.29289C19.0976%208.68342%2019.0976%209.31658%2018.7071%209.70711L12.8839%2015.5303C12.3957%2016.0185%2011.6043%2016.0185%2011.1161%2015.5303L5.29289%209.70711C4.90237%209.31658%204.90237%208.68342%205.29289%208.29289Z%22%20fill%3D%22%23b1b1b1%22%2F%3E%3C%2Fsvg%3E');
+    vertical-align: middle;
+    margin-left: 4px;
+
+}
+#contact .summary-value button[data-attr="show-hide"][aria-expanded="true"]::after {
+    content: '';
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-image: url('data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!--%20Uploaded%20to%3A%20SVG%20Repo%2C%20www.svgrepo.com%2C%20Generator%3A%20SVG%20Repo%20Mixer%20Tools%20--%3E%3Csvg%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M11.1161%208.46969C11.6043%207.98154%2012.3957%207.98154%2012.8839%208.46969L18.7071%2014.2929C19.0976%2014.6834%2019.0976%2015.3166%2018.7071%2015.7071C18.3166%2016.0977%2017.6834%2016.0977%2017.2929%2015.7071L12%2010.4142L6.70711%2015.7071C6.31658%2016.0977%205.68342%2016.0977%205.29289%2015.7071C4.90237%2015.3166%204.90237%2014.6834%205.29289%2014.2929L11.1161%208.46969Z%22%20fill%3D%22%23b1b1b1%22%2F%3E%3C%2Fsvg%3E');
+    vertical-align: middle;
+    margin-left: 4px;
+}
+
 .form-container {
     background-color: #161c24;
     border-radius: 8px;
@@ -1979,7 +1999,7 @@ img.legend {
 }
 
 .form-heading {
-    margin: 1em;
+    margin: 1em 1em 2em;
 }
 
 .form-container > form {
@@ -1992,6 +2012,8 @@ img.legend {
 }
 .form-row.flex > * {
     flex: 1;
+    width: 100%;
+    margin-top: 0;
 }
 
 #contact form {
@@ -2022,6 +2044,11 @@ img.legend {
     padding-left: 12px;
     padding-right: 12px;
 }
+#contact form button[type="submit"]:disabled {
+    box-shadow: none;
+    background-color: #293150;
+    color: #5c5d71;
+}
 
 .form-heading h3 {
     margin-bottom: 6px;
@@ -2048,6 +2075,7 @@ img.legend {
 
 .form-row.flex > .submit-action {
     flex: 0;
+    margin: 1em 0 0;;
 }
 #contact form #form-response {
     font-size: 13px;
@@ -2056,16 +2084,19 @@ img.legend {
 #contact form #form-response span {
     display: inline-block;
     padding: 5px 15px;
-    border-width: 1px;
+    border-width: 0;
     border-style: solid;
     border-radius: 4px;
     color: #b1b1b1;
+    transition: opacity 400ms ease;
 }
 
 #contact form #form-response.success span {
+    border-width: 1px;
     border-color: green;
 }
 #contact form #form-response.error span {
+    border-width: 1px;
     border-color: red;
 }
 
@@ -2259,6 +2290,17 @@ section#footer-top {
     }
     .resume-link {
         transform: translateY(10px);
+    }
+
+    .two-col.left-text > .left {
+        width: 100%;
+    }
+
+    .contact-container.summary-container {
+        margin-bottom: 40px;
+    }
+    .form-row.flex.mobile-col-collapse {
+        flex-direction: column;
     }
 }
 

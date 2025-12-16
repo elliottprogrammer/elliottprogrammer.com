@@ -1296,14 +1296,22 @@
 
             const handleSubmit = event => {
                 event.preventDefault();
-                formResponseWrapper.className = '';
-                formResponseContainer.textContent = '';
+                submitButton.disabled = true;
                 submitButtonSendIcon.style.display = 'none';
                 submitButtonSpinnerIcon.style.display = 'inline';
 
               
                 const myForm = event.target;
                 const formData = new FormData(myForm);
+
+                formResponseContainer.addEventListener('transitionend', function(event) {
+                    // Code to execute after the transition is complete
+                    console.log('Transition finished for property: ' + event.propertyName);
+                    formResponseContainer.textContent = '';
+                    formResponseWrapper.className = '';
+                    
+                    formResponseContainer.removeEventListener('transitionend', arguments.callee);
+                });
               
                 fetch("/", {
                   method: "POST",
@@ -1321,6 +1329,11 @@
                 .finally(() => {
                     submitButtonSendIcon.style.display = 'inline';
                     submitButtonSpinnerIcon.style.display = 'none';
+                    myForm.reset();
+                    setTimeout(() => {
+                        submitButton.disabled = false;
+                        formResponseContainer.style.opacity = 0; // Has CSS transition attached. This triggers the transitionend event listener above ⬆.
+                    }, 6000)
                 });
               };
               
