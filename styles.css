@@ -1987,6 +1987,7 @@ img.legend {
 }
 .form-row.flex {
     display: flex;
+    align-items: center;
     gap: 20px;
 }
 .form-row.flex > * {
@@ -2039,6 +2040,33 @@ img.legend {
 #contact form input:focus-visible,
 #contact form textarea:focus-visible {
     outline: 1px dotted #f1ab3273;
+}
+
+.btn-icon.spinner {
+    animation: 1s infinite linear spin;
+}
+
+.form-row.flex > .submit-action {
+    flex: 0;
+}
+#contact form #form-response {
+    font-size: 13px;
+    flex: 1;
+}
+#contact form #form-response span {
+    display: inline-block;
+    padding: 5px 15px;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 4px;
+    color: #b1b1b1;
+}
+
+#contact form #form-response.success span {
+    border-color: green;
+}
+#contact form #form-response.error span {
+    border-color: red;
 }
 
 

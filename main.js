@@ -1281,13 +1281,50 @@
                             expandSection(content);
                         }
                         trigger.setAttribute('aria-expanded', String(!isOpen));
-                        console.log('!isOpen: ', !isOpen);
                         updateTriggerText(trigger, !isOpen);
                     });
                 });
             }
 
             initShowHideDropdowns();
+
+            const submitButton = document.querySelector('#contact .form-container form button[type="submit"]');
+            const submitButtonSendIcon = submitButton.querySelector('span svg.btn-icon.send');
+            const submitButtonSpinnerIcon = submitButton.querySelector('span svg.btn-icon.spinner');
+            const formResponseWrapper = document.querySelector('#contact .form-container form #form-response');
+            const formResponseContainer = document.querySelector('#contact .form-container form #form-response span');
+
+            const handleSubmit = event => {
+                event.preventDefault();
+                formResponseWrapper.className = '';
+                formResponseContainer.textContent = '';
+                submitButtonSendIcon.style.display = 'none';
+                submitButtonSpinnerIcon.style.display = 'inline';
+
+              
+                const myForm = event.target;
+                const formData = new FormData(myForm);
+              
+                fetch("/", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                  body: new URLSearchParams(formData).toString()
+                })
+                .then(() => {
+                    formResponseWrapper.classList.add('success');
+                    formResponseContainer.textContent = "Form successfully submitted!";
+                })
+                .catch(error => {
+                    formResponseWrapper.classList.add('error');
+                    formResponseContainer.textContent = `I'm sorry, there was a problem submitting the form: ${error}`;
+                })
+                .finally(() => {
+                    submitButtonSendIcon.style.display = 'inline';
+                    submitButtonSpinnerIcon.style.display = 'none';
+                });
+              };
+              
+              document.querySelector('#contact .form-container form[name="elliottprogrammer-contact"]').addEventListener("submit", handleSubmit);
 
 
             window.addEventListener('resize', () => {
@@ -1589,7 +1626,6 @@
           
         fetchContributionsWithCache('/.netlify/functions/git-contributions')
             .then( data => {
-                console.log('Git contributions data (cached or fresh):', data);
                 renderGitContributions(data);
                 setTimeout( () => {
                     gitSliderStart();
