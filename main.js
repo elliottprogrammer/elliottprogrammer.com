@@ -1416,7 +1416,12 @@
                     Array.from(slides).reduce((accum, slide, index) => {
                         const slideWidth = slide.clientWidth;
                         if (sliderViewport.scrollLeft >= accum && sliderViewport.scrollLeft <= accum + slideWidth ) {
-                            nextSlidePos = accum + slideWidth;
+                            const nextSlide = accum + slideWidth;
+                            if (nextSlide > maxScrollPos) {
+                                nextSlidePos = maxScrollPos
+                            } else {
+                                nextSlidePos = nextSlide;
+                            }
                         }
                         return accum + slideWidth;
                     }, 0);

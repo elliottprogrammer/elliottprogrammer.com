@@ -194,7 +194,7 @@ export class Twinkler {
 
 // Image eyes blinking logic (class)
 class EyesBlinker {
-    constructor(framesSelector, randomRange = [1000, 6000]) {
+    constructor(framesSelector, randomRange = [1700, 6000]) {
         this.blinkCycler = imageFrameCycler(framesSelector, { shouldReverse: true });
         this.animationId = null;
         this.randomRange = {
@@ -229,7 +229,7 @@ class EyesBlinker {
 export { EyesBlinker };
 
 class TypingHand {
-    constructor(framesSelector, randomRange = [1000, 4000]) {
+    constructor(framesSelector, randomRange = [2000, 5000]) {
         this.typeCycler = imageFrameCycler(framesSelector, { targetFPS: 8 });
         this.animationId = null;
         this.randomRange = {
@@ -248,12 +248,12 @@ class TypingHand {
         if (! this.stopped) {
             const frameCount = this.typeCycler.getFrameCount();
             if (frameCount >= this.numTypeCyclesBeforePause) {
-               cycleWaitTime = getRandomInt(this.randomRange.low, this.randomRange.high);
+                cycleWaitTime = getRandomInt(this.randomRange.low, this.randomRange.high);
                 this.typeCycler.resetFrameCount();
-                this.numTypeCyclesBeforePause = getRandomInt(6, 15);
+                this.numTypeCyclesBeforePause = getRandomInt(5, 17);
             } 
             
-            this.animationId = requestAnimationFrame((timestamp) => { this.typeCycler.doFrameCycle(timestamp, 0, true, false)});   
+            this.animationId = requestAnimationFrame((timestamp) => { this.typeCycler.doFrameCycle(timestamp, 0, true, false)});
             this.timer = setTimeout(this._doTypeCycle, cycleWaitTime);
         }
     }
@@ -274,7 +274,7 @@ class TypingHand {
 export { TypingHand };
 
 class MagnifyArm {
-    constructor(framesSelector, randomRange = [4000, 12000]) {
+    constructor(framesSelector, randomRange = [7000, 16000]) {
         this.armCycler = imageFrameCycler(framesSelector, { targetFPS: 20, shouldReverse: true });
         this.animationId = null;
         this.randomRange = {
