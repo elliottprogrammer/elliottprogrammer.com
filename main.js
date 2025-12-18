@@ -1204,6 +1204,42 @@
                 repeat: 16,
             }, 0);
 
+            gsap.to('.logo-rotation-container img.img-rotate', {
+                rotation: 360,
+                duration: 40,
+                repeat: -1,
+                ease: "linear",
+            });
+
+            const pupils = document.querySelectorAll(".logo-rotation-container .pupil");
+
+            // Add mousemove listener to the whole window
+            window.addEventListener("mousemove", (e) => {
+                pupils.forEach((pupil) => {
+                    // Get the position of the eye relative to the viewport
+                    const rect = pupil.parentElement.getBoundingClientRect();
+                    const eyeCenterX = rect.left + rect.width / 2;
+                    const eyeCenterY = rect.top + rect.height / 2;
+
+                    // Calculate the angle between the eye center and the mouse cursor
+                    // atan2 is used for precise angle calculation
+                    const angle = Math.atan2(e.clientX - eyeCenterX, e.clientY - eyeCenterY);
+
+                    // Limit the pupil movement (e.g., to a radius of 20px)
+                    const maxMove = 4;
+                    // Use sine and cosine of the angle to determine the new x and y positions
+                    const x = Math.sin(angle) * maxMove + "px";
+                    const y = Math.cos(angle) * maxMove + "px";
+
+                    const angleDeg = angle * (180 / Math.PI);
+
+                    // Apply the transform to move the pupil
+                    // Using translate3d can improve performance
+                    pupil.style.transform = `translate3d(-50%, -50%, 0) translate(${x}, ${y})`;
+                    //pupil.style.transform = `rotate(${angleDeg}deg)`;
+                });
+            });
+
             // Show/Hide Dropdown(s)
             const showHideTriggers = document.querySelectorAll('[data-attr="show-hide"]');
             const SHOW_HIDE_ANIMATION_MS = 300;
