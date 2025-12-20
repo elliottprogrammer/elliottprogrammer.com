@@ -1,7 +1,9 @@
 const { getStore } = require('@netlify/blobs');
 
 export default async (req) => {
-    const getYear = req?.queryStringParameters?.year;
+    const url = new URL(req.url);
+    const getYear = url.searchParams.get('year');
+
     let query = `
         query($userName: String!, $from: DateTime!, $to: DateTime!) {
             user(login: $userName) {
