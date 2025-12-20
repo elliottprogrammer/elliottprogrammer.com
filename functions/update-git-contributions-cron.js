@@ -1,5 +1,4 @@
-const fs = require('fs').promises;
-const path = require('path');
+const { getStore } = require('@netlify/blobs');
 
 export default async (req) => {
     let query = `
@@ -44,13 +43,12 @@ export default async (req) => {
         });
 
         const data = await response.json();
-        const writablePath = path.join('/tmp', `contributions-${thisYear}.json`);
-        const gitContributionDirectory = 'git-contribution-data';
-        await fs.writeFile(writablePath, JSON.stringify(data, null, 2));
+        const store = getStore({ name: 'git-contribution-data' });
+        await store.setJSON(`${thisYear}`, data);
 
-        console.log(`JSON data saved to contributions-${thisYear}.json`);
+        console.log(`JSON data saved to blob store git-contribution-data with key ${thisYear}`);
 
     } catch (err) {
-        console.log(`There was an error fetching or writing file: contributions-${thisYear}.json`, err);
+        console.log(`There was an error fetching or writing blob: contributions-${thisYear}`, err);
     }
 }

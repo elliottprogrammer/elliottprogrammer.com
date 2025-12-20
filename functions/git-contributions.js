@@ -1,26 +1,30 @@
-const fs = require('fs').promises;
-const path = require('path');
+const { getStore } = require('@netlify/blobs');
 
 exports.handler = async (event, context) => {
-    const directoryPath = 'git-contribution-data';
+    const storeName = 'git-contribution-data';
     let contributions = [];
 
     try {
-        const files = await fs.readdir(directoryPath); // Read directory contents
-    
-        const fileProcessingPromises = files.map(async (filename) => {
-            const filePath = path.join(directoryPath, filename);
-            const yearMatch = filename.match(/contributions-([\d]+)\.json$/);
-            const year = yearMatch && yearMatch.length && yearMatch[1];
-            const stats = await fs.stat(filePath); // Get file stats to check if it's a file
-        
-            if (! stats.isFile() || ! year) {
-                throw new Error('Unexpected filename or directory.');
+        const store = getStore({ name: storeName });
+        let cursor;
+        const blobKeys = [];
+
+        do {
+            const { blobs = [], cursor: nextCursor } = await store.list({ cursor });
+            blobs.forEach(({ key }) => blobKeys.push(key));
+            cursor = nextCursor;
+        } while (cursor);
+
+        const blobProcessingPromises = blobKeys.map(async (key) => {
+            const yearMatch = key.match(/^([\\d]{4})$/);
+            const year = yearMatch && yearMatch[1];
+
+            if (!year) {
+                throw new Error('Unexpected blob key.');
             }
+
             try {
-                const data = await fs.readFile(filePath, 'utf8'); // Read file content
-                // 'data' contains the file contents (JSON data).
-                const jsonObject = JSON.parse(data);
+                const jsonObject = await store.getJSON(key);
                 const totalContributions =  jsonObject?.data?.user?.contributionsCollection?.contributionCalendar?.totalContributions;
                 const weeks = jsonObject?.data?.user?.contributionsCollection?.contributionCalendar?.weeks;
                 const contributionObject = {
@@ -34,35 +38,31 @@ exports.handler = async (event, context) => {
                     statusCode: 500,
                     body: JSON.stringify({
                         error: {
-                            code: "FILE_READ_ERROR",
-                            message: `Error reading file ${filename}.`,
+                            code: "BLOB_READ_ERROR",
+                            message: `Error reading blob ${key}.`,
                             details: readError
                         },
                     }),
                 };
             }
         });
-    
-        await Promise.all(fileProcessingPromises); // Wait for all file processing to complete
-    
-        // All files processed at this point.
-        const response = {
+
+        await Promise.all(blobProcessingPromises); // Wait for all blob processing to complete
+
+        return {
             statusCode: 200,
             body: JSON.stringify(contributions),
         };
-
-        return response;
     } catch (error) {
         return {
             statusCode: 500,
             body: JSON.stringify({
                 error: {
-                    code: "FILE_OR_DIRECTORY_READ_ERROR",
-                    message: `Error reading directory path ${directoryPath}.`,
+                    code: "BLOB_STORE_READ_ERROR",
+                    message: `Error reading blob store ${storeName}.`,
                     details: error
                 },
             }),
         };
     }
 };
-

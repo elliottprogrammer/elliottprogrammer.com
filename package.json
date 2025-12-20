@@ -1,0 +1,23 @@
+{
+  "name": "elliottprogrammer.com",
+  "version": "1.0.0",
+  "description": "Elliottprogrammer.com - Dev Portfolio Website of Bryan Elliott (elliottprogrammer), Senior Full-stack Software Engineer.",
+  "homepage": "https://github.com/elliottprogrammer/elliottprogrammer.com#readme",
+  "bugs": {
+    "url": "https://github.com/elliottprogrammer/elliottprogrammer.com/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elliottprogrammer/elliottprogrammer.com.git"
+  },
+  "license": "UNLICENSED",
+  "author": "Bryan Elliott <bryan@elliottprogrammer.com>",
+  "type": "commonjs",
+  "main": "index.html",
+  "scripts": {
+    "start": "netlify dev"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^10.5.0"
+  }
+}
