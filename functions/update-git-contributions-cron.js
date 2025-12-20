@@ -1,6 +1,7 @@
 const { getStore } = require('@netlify/blobs');
 
 export default async (req) => {
+    const getYear = req.queryStringParameters.year;
     let query = `
         query($userName: String!, $from: DateTime!, $to: DateTime!) {
             user(login: $userName) {
@@ -18,13 +19,18 @@ export default async (req) => {
             }
         }
     `
-    const thisYear = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"})).getFullYear();
-    const now = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"})).toISOString();
-    const fromYear = `${thisYear}`;
+
+    let thisYear = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"})).getFullYear();
+    let fromYear = `${thisYear}-01-01T00:00:00Z`;
+    let now = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"})).toISOString();
+    if (getYear && /^20\d\d$/.test(getYear)) {
+        fromYear = `${getYear}-01-01T00:00:00Z`;
+        now = `${getYear}-12-31T23:59:59Z`;
+    }
 
     let variables = {
         userName: "elliottprogrammer",
-        from: `${fromYear}-01-01T00:00:00Z`,
+        from: `${fromYear}`,
         to: `${now}`,
     }
 
