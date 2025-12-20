@@ -26,6 +26,7 @@ export default async (req) => {
     let fromYear = `${thisYear}-01-01T00:00:00Z`;
     let now = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"})).toISOString();
     if (getYear && /^20\d\d$/.test(getYear)) {
+        thisYear = getYear;
         fromYear = `${getYear}-01-01T00:00:00Z`;
         now = `${getYear}-12-31T23:59:59Z`;
     }
