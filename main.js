@@ -1678,8 +1678,10 @@
             return data;
         }
           
-        fetchContributionsWithCache('/.netlify/functions/git-contributions')
+        //fetchContributionsWithCache('/.netlify/functions/git-contributions')
+        fetchContributions('/.netlify/functions/git-contributions')
             .then( data => {
+                console.log(data);
                 renderGitContributions(data);
                 setTimeout( () => {
                     gitSliderStart();
