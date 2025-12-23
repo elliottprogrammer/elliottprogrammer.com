@@ -23,5 +23,5 @@
 	functions = "./functions"
 [functions]
 	included_files = ["git-contribution-data/**"]
-[functions."fetch-git-contributions-cron"]
+[functions."update-git-contributions-cron"]
 	schedule = "@daily"
