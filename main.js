@@ -1584,6 +1584,7 @@
             fetchContributions(CONTRIBUTIONS_ENDPOINT)
                 .then( data => {
                     renderGitContributions(data);
+                    invokeTooltipFunctionality();
                     setTimeout( () => {
                         gitSliderStart();
                     }, 500);
@@ -1616,9 +1617,9 @@
                 month: 'long',
             });
             const suffix = getOrdinalSuffix(dayOfMonth);
-            const title = `${gitDay.contributionCount} contributions on ${month} ${dayOfMonth}${suffix}.`;
+            const tooltipText = `${gitDay.contributionCount} contributions on ${month} ${dayOfMonth}${suffix}.`;
         
-            return `<div class="day activity-${gitDay.contributionCount > 5 ? 5 : gitDay.contributionCount}" title="${title}"></div>
+            return `<button class="day day-${gitDay.date} has-tooltip activity-${gitDay.contributionCount > 5 ? 5 : gitDay.contributionCount}" data-tooltip-text="${tooltipText}"></button>
                                     `;
         }
 
@@ -1682,6 +1683,31 @@
                 markup += `</div> <!-- end .slide -->`;
                 elementToInsertHtml.insertAdjacentHTML('beforeend', markup);
             }    
+        }
+
+        function invokeTooltipFunctionality() {
+            function handleTooltipOpen(e) {
+                const tooltipText = e.target.getAttribute('data-tooltip-text');
+                const tooltipSpan = document.createElement('span');
+                tooltipSpan.classList.add('git-tooltip');
+                tooltipSpan.textContent = tooltipText;
+                e.target.appendChild(tooltipSpan);
+                requestAnimationFrame(() => {
+                    tooltipSpan.style.opacity = 1;
+                });
+            }
+            function handleTooltipClose(e) {
+                const tooltipSpan = e.target.querySelector('.git-tooltip');
+                tooltipSpan && tooltipSpan.remove();
+            }
+
+            const gitBoxes = document.querySelectorAll('button.day.has-tooltip');
+            gitBoxes.forEach(gitBox => {
+                gitBox.addEventListener('mouseenter', handleTooltipOpen);
+                //gitBox.addEventListener('focus', handleTooltipOpen);
+                gitBox.addEventListener('mouseleave', handleTooltipClose);
+                //gitBox.addEventListener('blur', handleTooltipClose);
+            });
         }
 
         export { getDeviceType };
