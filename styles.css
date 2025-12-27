@@ -1558,12 +1558,6 @@ img.legend {
     z-index: 100;
 }
 
-.week .day:nth-child(-n+2) .git-tooltip {
-    bottom: unset;
-    top: 0;
-    transform: translate(-50%, 15px);
-}
-
  /* Level-up Game */
  .game-container {
     position: relative;

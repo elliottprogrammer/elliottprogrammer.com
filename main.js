@@ -1686,14 +1686,53 @@
         }
 
         function invokeTooltipFunctionality() {
+            function getMouseXRelativeToParent(event, parentElement) {
+                const parentBounds = parentElement.getBoundingClientRect();
+                const mouseX = event.clientX;
+                const mouseY = event.clientY;
+                return {
+                    relativeX: mouseX - parentBounds.left,
+                    relativeY: mouseY - parentBounds.top,
+                };
+            }
+            function getTooltipInBoundsOffsets(parentElem, targetElem, event) {
+                const xThreshold = targetElem.clientWidth / 2;
+                const yThreshold = 25;
+                const { relativeX, relativeY } = getMouseXRelativeToParent(event, parentElem);
+                const parentWidth = parentElem.offsetWidth;
+                let xOffset = 0;
+                let yOffset = 0;
+                // Check if near the top
+                if (relativeY < yThreshold) {
+                    yOffset = 45;
+                }
+                // Check if near the left side
+                if (relativeX < xThreshold) {
+                    // Move tooltip more to the right (positive amount).
+                    xOffset = (xThreshold - relativeX) + 3;
+                } 
+                // Check if near the right side
+                else if (relativeX > parentWidth - xThreshold) {
+                    // Move tooltip more to the left (negative amount).
+                    xOffset = (xThreshold - ((parentWidth - relativeX) - 3)) * -1;
+                }
+                return {
+                    xOffset,
+                    yOffset,
+                };
+            }
             function handleTooltipOpen(e) {
                 const tooltipText = e.target.getAttribute('data-tooltip-text');
                 const tooltipSpan = document.createElement('span');
                 tooltipSpan.classList.add('git-tooltip');
                 tooltipSpan.textContent = tooltipText;
                 e.target.appendChild(tooltipSpan);
+                const parentDiv = document.querySelector('.slider-viewport');
+                
+                const { xOffset, yOffset } = getTooltipInBoundsOffsets(parentDiv, tooltipSpan, e);
+                tooltipSpan.style.transform = `translate(${(tooltipSpan.clientWidth / 2) * -1 + xOffset}px, ${-10 + yOffset}px)`;
                 requestAnimationFrame(() => {
-                    tooltipSpan.style.opacity = 1;
+                    tooltipSpan.style.opacity = 1; 
                 });
             }
             function handleTooltipClose(e) {
