@@ -159,7 +159,6 @@ figcaption {
     display: inline-block;
     box-sizing: border-box;
     animation: rotation 1s linear infinite;
-
 }
 
 #image-atomizer.has-initialized .atomizer-loader {
@@ -275,6 +274,11 @@ nav.top-nav {
 
 .max-width-520 {
     max-width: 520px;
+    font-size: 1rem;
+}
+
+.max-width-520 > h2 {
+    font-size: 1.9em;
 }
 
 #intro {
@@ -669,7 +673,6 @@ button.coffee-cup-btn {
 }
 
 .interactive-image-text.white-bg {
-    /* color: #000; */
     background: #474747;
     background: linear-gradient(90deg,rgba(71, 71, 71, 1) 0%, rgba(71, 71, 71, 0.62) 66%, rgba(71, 71, 71, 0) 100%);
 }
@@ -786,7 +789,6 @@ button.coffee-cup-btn {
 .fan-dome-light-container img {
     visibility: hidden;
 }
-
 
 img.responsive {
     width: 100%;
@@ -1042,8 +1044,6 @@ img.stack-logo {
 .ps-absolute {
     position: absolute;
 }
-.profile-summary-container {
-}
 .profile-summary-container h3 {
     font-weight: 300;
     font-size: 20px;
@@ -1117,7 +1117,6 @@ img.stack-logo {
 }
 .dialog-style .summary-item-value {
     border-bottom: 1px solid #3d444d;
-    /* //font-size: 12px; */
     font-weight: 300;
     padding: 0 10px 10px;
     display: flex;
@@ -1680,14 +1679,14 @@ img.legend {
 /* Experience section */
 
 .step-back-text {
-    font-size: 27px;
+    font-size: 1.5em;
     padding-top: 15px;
 }
 
 .step-back-text > strong {
     color: dodgerblue;
     font-weight: 600;
-    font-size: 28px;
+    font-size: 1.1em;
 }
 
 .scroll-container {
@@ -1698,15 +1697,11 @@ img.legend {
     overflow: hidden;
 }
 
-/* .scroll-container {
-    height: 3380px;
-} */
-
 .world-container {
     position: absolute;
     width: 1024px;
     height: 1024px;
-    bottom: -10%;
+    top: 19vh;
     left: 50%;
     transform: translateX(-50%);
     
@@ -1722,7 +1717,7 @@ img.legend {
 
 .scaler {
     transform: scale(1);
-    transform: scale(4.5);
+    transform: scale(4.0);
 }
 
 .rotate-wrapper {
@@ -1757,7 +1752,6 @@ img.legend {
     width: 98%;
     height: 98%;
     border-radius: 50%;
-    /* background: radial-gradient(50% 50% at 50% 50%, #628EFF 58.48%, rgba(0, 16, 56, 0) 100%); */
     box-shadow: 0 0 70px 20px rgba(0, 123, 255, 0.5);
 }
 
@@ -2146,61 +2140,24 @@ img.legend {
     border-color: red;
 }
 
-
-
-
-/* Footer */
-
-section#footer-top, section#footer-bottom {
-    background: #15171b;
-}
-section#footer-top {
-    border-top: 1px solid #666;
-    background-color: #181b21;
-}
-.footer-socials {
-    text-align: center;
-}
-.footer-socials ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    column-gap: 30px;
-}
-.footer-socials li {
-
-}
-.footer-socials li a {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    row-gap: 5px;
-    font-size: 12px;
-    color: #b1b1b1;
-    text-decoration: none;
-}
-.footer-socials li a:hover {
-    text-decoration: underline;
-}
-.footer-socials img.svg {
-    display: block;
-}
-.copyright {
-    text-align: center;
-    font-size: 14px;
-}
+/* elliottprogrammer rotating logo */
 
 .logo-rotation-container {
     position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 .logo-rotation-container img.img-rotate {
     position: absolute;
     left: 0;
     top: 0;
+}
+
+.logo-rotation-container img {
+    user-select: none;
+    pointer-events: none;
 }
 
 .logo-rotation-container .eye-wrapper {
@@ -2332,7 +2289,6 @@ small.ai-footnote {
     }
 }
 
-
 .chat-header {
     display: flex;
     align-items: center;
@@ -2397,7 +2353,7 @@ span.chat-title {
 
 .chat-message.user {
     justify-content: flex-end;
-    max-width: 600px;
+    margin-right: 10px;
 }
 .bubble.two-colum {
     display: flex;
@@ -2475,9 +2431,11 @@ span.chat-title {
     cursor: not-allowed;
 }
 
-.chat-form button:not(:disabled):active {
-    transform: translateY(1px);
-    box-shadow: 0 8px 18px rgba(112, 240, 255, 0.25);
+.chat-form button:not(:disabled):active,
+.chat-form button:not(:disabled):hover {
+    transform: translate(1px, 1px);
+    box-shadow: none;
+    background: #609bfb;
 }
 
 .chat-hint {
@@ -2522,12 +2480,49 @@ span.chat-title {
     background-color: #071419;
 }
 
-@media (max-width: 768px) {
-    #elliott-ai {
-        padding: 60px 0;
-    }
+/* Footer */
+
+section#footer-top, section#footer-bottom {
+    background: #15171b;
+}
+section#footer-top {
+    border-top: 1px solid #666;
+    background-color: #181b21;
+}
+.footer-socials {
+    text-align: center;
+}
+.footer-socials ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 30px;
+}
+.footer-socials li a {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    row-gap: 5px;
+    font-size: 12px;
+    color: #b1b1b1;
+    text-decoration: none;
+}
+.footer-socials li a:hover {
+    text-decoration: underline;
+}
+.footer-socials img.svg {
+    display: block;
+}
+.copyright {
+    text-align: center;
+    font-size: 14px;
 }
 
+/* MISC @supports & @keyframes */
 
 @supports (corner-shape: squircle) {
     .resume-text, .form-container {
@@ -2576,23 +2571,13 @@ span.chat-title {
     to { background: hsl(0 0% 0% / 0%) }
 }
 
-
-@media (max-width: 1766px) {
-    .scaler {
-        transform: scale(3.5);
-    }
-    .world-container {
-        bottom: -20%;
-    }
-}
+/* MEDIA QUERIES */
 
 @media (max-width: 1245px) {
     .page-container {
         overflow: hidden;
     }
 }
-
-
 
 @media (max-width: 1024px) {
     .two-col {
@@ -2623,15 +2608,12 @@ span.chat-title {
         top: 21%;
         left: 83%;
     }
-    .scaler {
-        transform: scale(3.5);
-    }
-    .world-container {
-        bottom: -25%;
-    }
     .elliott-ai-grid {
         grid-template-columns: 1fr;
         gap: 60px
+    }
+    #elliott-ai {
+        padding: 60px 0;
     }
 }
 
@@ -2649,10 +2631,6 @@ span.chat-title {
         margin-left: auto;
         margin-right: auto;
     }
-    /* .slider-viewport {
-        aspect-ratio: unset;
-        height: 131.67px;
-    } */
     .bg-text-effect {
         color: #20232b;
         -webkit-text-stroke: 3px #282c37;
@@ -2824,12 +2802,6 @@ span.chat-title {
     .step-back-text > strong {
         font-size: 24px;
     }
-    .scaler {
-        transform: scale(2.2);
-    }
-    .world-container {
-        bottom: -50%;
-    }
 }
 
 @media (max-width: 400px) {
@@ -2920,6 +2892,98 @@ span.chat-title {
     }
     .repo-note {
         font-size: 11px;
+    }
+}
+
+/* Experience Section (rotating world) Media Queries */
+
+@media (max-height: 1090px) {
+    .world-container {
+        top: 17.7vh;
+    }
+}
+
+@media (max-height: 1024px ) {
+    .scaler {
+        transform: scale(3.5);
+    }
+    .world-container {
+        top: 20vh;
+    }
+    .max-width-520 {
+        font-size: .9rem;
+    }
+}
+
+@media (max-height: 900px ) {
+    .scaler {
+        transform: scale(2.9);
+    }
+    .world-container {
+        top: 22vh;
+    }
+    .max-width-520 {
+        font-size: .9rem;
+    }
+}
+
+@media (max-height: 700px ) {
+    .scaler {
+        transform: scale(2);
+    }
+    .world-container {
+        top: 25vh;
+    }
+    .max-width-520 {
+        font-size: .7rem;
+    }
+}
+
+@media (max-height: 400px ) {
+    .scaler {
+        transform: scale(2);
+    }
+    .world-container {
+        top: 25vh;
+    }
+    .max-width-520 {
+        font-size: .7rem;
+    }
+}
+
+@media (orientation: portrait) and (max-height: 1090px) {
+    .scaler {
+        transform: scale(2.8);
+    }
+    .world-container {
+        top: 30vh;
+    }
+    .max-width-520 {
+        font-size: 1rem;
+    }
+}
+
+@media (orientation: portrait) and (max-height: 900px ) {
+    .scaler {
+        transform: scale(2.4);
+    }
+    .world-container {
+        top: 30vh;
+    }
+    .max-width-520 {
+        font-size: .9rem;
+    }
+}
+
+@media (orientation: portrait) and (max-height: 700px ) {
+    .scaler {
+        transform: scale(2);
+    }
+    .world-container {
+        top: 33vh;
+    }
+    .max-width-520 {
+        font-size: .7rem;
     }
 }
 
