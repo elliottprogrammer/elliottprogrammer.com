@@ -2440,7 +2440,6 @@ span.chat-title {
     gap: 10px;
     padding: 14px;
     border-top: 1px solid rgba(255,255,255,0.08);
-    background: rgba(11, 16, 26, 0.9);
 }
 
 .chat-form input {
@@ -2515,6 +2514,12 @@ span.chat-title {
             background: rgba(255, 255, 255, 0.025);
         }
     }
+}
+
+.ai-footer {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #071419;
 }
 
 @media (max-width: 768px) {
