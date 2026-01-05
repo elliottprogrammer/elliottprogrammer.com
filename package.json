@@ -18,6 +18,17 @@
     "start": "netlify dev"
   },
   "dependencies": {
-    "@netlify/blobs": "^10.5.0"
+    "@dqbd/tiktoken": "^1.0.22",
+    "@langchain/openai": "^1.2.0",
+    "@netlify/blobs": "^10.5.0",
+    "@netlify/functions": "^5.1.2",
+    "@supabase/supabase-js": "^2.89.0"
+  },
+  "devDependencies": {
+    "@langchain/classic": "^1.0.7",
+    "@langchain/community": "^1.1.1",
+    "@langchain/core": "^1.1.8",
+    "@langchain/textsplitters": "^1.0.1",
+    "dotenv": "^16.4.5"
   }
 }

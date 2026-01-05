@@ -46,6 +46,8 @@
             // Might need to normalizeScroll for Safari mobile browser?
             //ScrollTrigger.normalizeScroll(true);
 
+            initElliottAIChat();
+
             // Mobile Nav Menu
             const navMenuButton = document.querySelector('.nav-menu-button');
             navMenuButton.addEventListener('click', (e) => {
@@ -1211,36 +1213,106 @@
                 ease: "linear",
             });
 
-            const pupils = document.querySelectorAll(".logo-rotation-container .pupil");
+            const contactSection1 = document.getElementById('contact');
+            const contactBgText = document.querySelector('#contact .bg-text-effect');
 
-            // Add mousemove listener to the whole window
-            window.addEventListener("mousemove", (e) => {
+            gsap.to(contactBgText, {
+                x: contactBgText.offsetWidth * -1,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: contactSection1,
+                    scrub: true,
+                    start: 'top+=100 bottom',
+                    end: 'top top',
+                    //markers: true,
+                }
+            });
+
+            const pupils = document.querySelectorAll(".logo-rotation-container .pupil");
+            const movePupils = (mouseX, mouseY) => {
                 pupils.forEach((pupil) => {
                     // Get the position of the eye relative to the viewport
                     const rect = pupil.parentElement.getBoundingClientRect();
                     const eyeCenterX = rect.left + rect.width / 2;
                     const eyeCenterY = rect.top + rect.height / 2;
 
-                    // Calculate the angle between the eye center and the mouse cursor
                     // atan2 is used for precise angle calculation
-                    const angle = Math.atan2(e.clientX - eyeCenterX, e.clientY - eyeCenterY);
+                    // if mouseX & mouseY == 0, angle is 0.
+                    const angle = mouseX === 0 && mouseY === 0 ? 0 : Math.atan2(mouseX - eyeCenterX, mouseY - eyeCenterY);
 
-                    // Limit the pupil movement (e.g., to a radius of 20px)
+                    // Limit the pupil movement (e.g., to a radius of 4)
                     const maxMove = 4;
                     // Use sine and cosine of the angle to determine the new x and y positions
                     const x = Math.sin(angle) * maxMove + "px";
-                    const y = Math.cos(angle) * maxMove + "px";
+                    const y = angle === 0 ? '0px' : Math.cos(angle) * maxMove + "px";
 
-                    const angleDeg = angle * (180 / Math.PI);
-
-                    // Apply the transform to move the pupil
+                    // Apply the transform
                     // Using translate3d can improve performance
                     pupil.style.transform = `translate3d(-50%, -50%, 0) translate(${x}, ${y})`;
-                    //pupil.style.transform = `rotate(${angleDeg}deg)`;
                 });
+            };
+            const supportsSwipeEvents = function() {
+                return window && 'ontouchstart' in window;
+            }
+            const handleMovePupils = (e) => {
+                if (supportsSwipeEvents()) {
+                    movePupils(e.touches[0].clientX, e.touches[0].clientY);
+                } else {
+                    movePupils(e.clientX, e.clientY)
+                }
+            }
+            const handleResetPupils = (e) => {
+                movePupils(0, 0);
+            }
+
+            /**
+             * Add movePupils eventListeners only when Contact section is in view.
+             * And remove eventListeners when its scrolled out of view.
+             * 
+             * Only "onEnter" and "onLeaveBack" are currently being used (because the
+             * Contact section is so close to the end of the web page)
+             */ 
+            ScrollTrigger.create({
+                trigger: '#contact',
+                start: 'top bottom',
+                end: 'bottom top',
+                onEnter: (self) => {
+                    // When section enters viewport from the bottom (when scrolling down the page)
+                    if (supportsSwipeEvents()) {
+                        // Mobile touch events
+                        window.addEventListener("touchstart", handleMovePupils);
+                        window.addEventListener("touchmove", handleMovePupils);
+                        window.addEventListener("touchend", handleResetPupils);
+                    } else {
+                        // Mouse event
+                        window.addEventListener("mousemove", handleMovePupils);
+                    }
+                },
+                onEnterBack: (self) => {
+                    // When section enters the viewport from the top (when scrolling back up to the top)
+                    // Not currenty in use. 
+                    window.addEventListener("mousemove", handleMovePupils);
+                },
+                onLeaveBack: (self) => {
+                    // When section leaves the viewport from the bottom (when scrolling back up to the top)
+                    if (supportsSwipeEvents()) {
+                        // Mobile touch events
+                        window.removeEventListener("touchstart", handleMovePupils);
+                        window.removeEventListener("touchmove", handleMovePupils);
+                        window.removeEventListener("touchend", handleResetPupils);
+                    } else {
+                        // Mouse event
+                        window.removeEventListener("mousemove", handleMovePupils);
+                    } 
+                },
+                onLeave: (self) => {
+                    // When section leaves the viewport from the top (when scrolling down the page)
+                    // Not currently in use.
+                    window.removeEventListener("mousemove", handleMovePupils);
+                }
             });
 
-            // Show/Hide Dropdown(s)
+            // Show/Hide Dropdown(s) - Contact section in this case.
             const showHideTriggers = document.querySelectorAll('[data-attr="show-hide"]');
             const SHOW_HIDE_ANIMATION_MS = 300;
 
@@ -1399,7 +1471,7 @@
             });
  
             // Total scroll length
-            const maxScrollPos = totalSlidesWidth - sliderViewport.clientWidth;
+            const maxScrollPos = totalSlidesWidth - sliderViewport.clientWidth + 4;
             // Set initial scroll state
             sliderViewport.scrollLeft = maxScrollPos;
 
@@ -1746,6 +1818,116 @@
                 //gitBox.addEventListener('focus', handleTooltipOpen);
                 gitBox.addEventListener('mouseleave', handleTooltipClose);
                 //gitBox.addEventListener('blur', handleTooltipClose);
+            });
+        }
+
+        function initElliottAIChat() {
+            const form = document.getElementById('elliott-ai-form');
+            const input = document.getElementById('elliott-ai-input');
+            const exampleQuestions = document.querySelectorAll('#ai-example-questions button')
+            const log = document.getElementById('elliott-ai-log');
+            const submit = document.getElementById('elliott-ai-submit');
+
+            if (!form || !input || !log || !submit) {
+                return;
+            }
+
+            const decoder = new TextDecoder();
+
+            const scrollToBottom = () => {
+                log.scrollTop = log.scrollHeight;
+            };
+
+            const appendMessage = (role, text = '') => {
+                const wrapper = document.createElement('div');
+                wrapper.className = `chat-message ${role}`;
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.textContent = text;
+                wrapper.appendChild(bubble);
+                log.appendChild(wrapper);
+                scrollToBottom();
+                return bubble;
+            };
+
+            const setLoading = (isLoading) => {
+                submit.disabled = isLoading;
+                input.disabled = isLoading;
+                submit.textContent = isLoading ? 'Thinking…' : 'Ask';
+            };
+
+            async function streamQuestion(question) {
+                const assistantBubble = appendMessage('assistant', '');
+                let answer = '';
+                let buffer = '';
+
+                try {
+                    const response = await fetch('/.netlify/functions/elliott-ai', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ question }),
+                    });
+
+                    if (!response.ok || !response.body) {
+                        throw new Error(`Request failed (${response.status})`);
+                    }
+
+                    const reader = response.body.getReader();
+                    while (true) {
+                        const { value, done } = await reader.read();
+                        if (done) break;
+                        buffer += decoder.decode(value, { stream: true });
+                        const events = buffer.split('\n\n');
+                        buffer = events.pop();
+                        for (const raw of events) {
+                            const line = raw.trim();
+                            if (!line.startsWith('data:')) continue;
+                            const payload = line.replace(/^data:\s*/, '');
+                            if (!payload) continue;
+                            let parsed;
+                            try {
+                                parsed = JSON.parse(payload);
+                            } catch (err) {
+                                continue;
+                            }
+
+                            if (parsed.type === 'token') {
+                                answer += parsed.token;
+                                assistantBubble.textContent = answer;
+                                scrollToBottom();
+                            } else if (parsed.type === 'error') {
+                                throw new Error(parsed.message || 'Unknown error');
+                            }
+                        }
+                    }
+                } catch (err) {
+                    assistantBubble.textContent = `Sorry, something went wrong: ${err.message}`;
+                } finally {
+                    setLoading(false);
+                }
+            }
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const question = input.value.trim();
+                if (!question) return;
+
+                appendMessage('user', question);
+                input.value = '';
+                setLoading(true);
+                streamQuestion(question);
+            });
+            exampleQuestions.forEach(questionEl => {
+                const question = questionEl?.dataset?.question;
+                if (!question) return;
+
+                questionEl.addEventListener('click', () => {
+                    appendMessage('user', question);
+                    setLoading(true);
+                    streamQuestion(question);
+                });
             });
         }
 
