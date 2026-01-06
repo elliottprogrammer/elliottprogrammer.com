@@ -1844,6 +1844,12 @@
                 const bubble = document.createElement('div');
                 bubble.className = 'bubble';
                 bubble.textContent = text;
+                if (role === 'assistant') {
+                    const loadingSpan = document.createElement('span');
+                    loadingSpan.className = 'loading';
+                    loadingSpan.textContent = 'Thinking';
+                    bubble.appendChild(loadingSpan);
+                }
                 wrapper.appendChild(bubble);
                 log.appendChild(wrapper);
                 scrollToBottom();
