@@ -45,6 +45,7 @@
             gsap.ticker.lagSmoothing(500, 20);
             // Might need to normalizeScroll for Safari mobile browser?
             //ScrollTrigger.normalizeScroll(true);
+            const shouldUseTextMotionPath = (getDeviceType() === 'desktop' || getDeviceType() === 'tablet');
 
             initElliottAIChat();
 
@@ -953,8 +954,16 @@
 
             const makeImpactSection1 = document.getElementById('make-impact');
             const makeImpactBgText = document.querySelector('#make-impact .bg-text-effect');
+            const makeImpactBgTextPath = document.querySelector('#make-impact .text-motion-path .path');
+            
 
             gsap.to(makeImpactBgText, {
+                ...(shouldUseTextMotionPath && { motionPath: {
+                    path: makeImpactBgTextPath,
+                    align: makeImpactBgTextPath,
+                    alignOrigin: [0.5, 0.5],
+                    autoRotate: 180,
+                }}),
                 x: makeImpactBgText.offsetWidth * -1,
                 ease: 'none',
                 scrollTrigger: {
@@ -965,6 +974,18 @@
                     //markers: true,
                 }
             });
+
+            // gsap.to(makeImpactBgText, {
+            //     x: makeImpactBgText.offsetWidth * -1,
+            //     ease: 'none',
+            //     scrollTrigger: {
+            //         trigger: makeImpactSection1,
+            //         scrub: true,
+            //         start: 'top+=250 bottom',
+            //         end: 'top+=200 top',
+            //         //markers: true,
+            //     }
+            // });
 
             const stackOverflowH2 = document.querySelector('#make-impact h2#how-i-make-an-impact');
             const stackOverflowText = document.querySelector('#make-impact .two-col > div:first-child');
@@ -1036,8 +1057,16 @@
             // Open Source Section - Slide up & fade in
             const openSourceSection1 = document.getElementById('open-source');
             const openSourceBgText = document.querySelector('#open-source .bg-text-effect');
+            const openSourceBgTextPath = document.querySelector('#open-source .text-motion-path .path');
+            const shouldUseOSMotionPath = (getDeviceType() === 'desktop' || getDeviceType() === 'tablet');
 
             gsap.to(openSourceBgText, {
+                ...(shouldUseOSMotionPath && { motionPath: {
+                    path: openSourceBgTextPath,
+                    align: openSourceBgTextPath,
+                    alignOrigin: [0.5, 0.5],
+                    // autoRotate: 180,
+                }}),
                 x: openSourceBgText.offsetWidth * -1,
                 ease: 'none',
                 scrollTrigger: {
@@ -1048,6 +1077,18 @@
                     //markers: true,
                 }
             });
+
+            // gsap.to(openSourceBgText, {
+            //     x: openSourceBgText.offsetWidth * -1,
+            //     ease: 'none',
+            //     scrollTrigger: {
+            //         trigger: openSourceSection1,
+            //         scrub: true,
+            //         start: 'top+=250 bottom',
+            //         end: 'top+=200 top',
+            //         //markers: true,
+            //     }
+            // });
 
             const gitSectionElements = document.querySelectorAll('#open-source .grid-two-col > div');
             for (let element of gitSectionElements) {
@@ -1215,18 +1256,37 @@
 
             const contactSection1 = document.getElementById('contact');
             const contactBgText = document.querySelector('#contact .bg-text-effect');
+            const contactBgPath = document.querySelector('#contact .path');
 
             gsap.to(contactBgText, {
-                x: contactBgText.offsetWidth * -1,
+                ...(shouldUseTextMotionPath && { motionPath: {
+                    path: contactBgPath,
+                    align: contactBgPath,
+                    alignOrigin: [0.5, 0.5],
+                    autoRotate: 180,
+                }}),
+                x: levelUpBgText.offsetWidth * -1,
                 ease: 'none',
                 scrollTrigger: {
                     trigger: contactSection1,
                     scrub: true,
-                    start: 'top+=100 bottom',
-                    end: 'top top',
+                    start: 'top+=250 bottom',
+                    end: 'top+=200 top',
                     //markers: true,
                 }
             });
+
+            // gsap.to(contactBgText, {
+            //     x: contactBgText.offsetWidth * -1,
+            //     ease: 'none',
+            //     scrollTrigger: {
+            //         trigger: contactSection1,
+            //         scrub: true,
+            //         start: 'top+=100 bottom',
+            //         end: 'top top',
+            //         //markers: true,
+            //     }
+            // });
 
             const pupils = document.querySelectorAll(".logo-rotation-container .pupil");
             const movePupils = (mouseX, mouseY) => {
@@ -1251,6 +1311,41 @@
                     pupil.style.transform = `translate3d(-50%, -50%, 0) translate(${x}, ${y})`;
                 });
             };
+
+            const tiltElliottProgrammer = (mouseX, mouseY) => {
+                console.log(`mouseX: ${mouseX}, mouseY: ${mouseY}`);
+                const elliottProgrammer = document.querySelector(".logo-rotation-container");
+                const rect = elliottProgrammer.getBoundingClientRect();
+                console.log(`rect:`, rect);
+                const centerX = rect.left + (rect.width / 2);
+                const centerY = rect.top + (rect.height / 2);
+                console.log(`centerX: ${centerX}, centerY: ${centerY}`);
+
+                const dx = mouseX - centerX;
+                const dy = mouseY - centerY;
+                let maxX, maxY;
+                if (mouseX >= centerX) {
+                    maxX = window.innerWidth - centerX;
+                } else {
+                    maxX = centerX;
+                }
+                if (mouseY >= centerY) {
+                    maxY = window.innerHeight - centerY;
+                } else {
+                    maxY = centerY;
+                }
+
+                const normalizedX = dx / maxX; 
+                const normalizedY = dy / maxY;
+
+                const offsetX = mouseX === 0 ? 0 : normalizedX * 25;
+                const offsetY = mouseY === 0 ? 0 : normalizedY * 25 * -1;
+                console.log(`offsetX: ${offsetX}, offsetY: ${offsetY}`);
+
+                elliottProgrammer.style.setProperty('--rotateX', `${offsetY}deg`);
+                elliottProgrammer.style.setProperty('--rotateY', `${offsetX}deg`);
+            }
+
             const supportsSwipeEvents = function() {
                 return window && 'ontouchstart' in window;
             }
@@ -1258,11 +1353,21 @@
                 if (supportsSwipeEvents()) {
                     movePupils(e.touches[0].clientX, e.touches[0].clientY);
                 } else {
-                    movePupils(e.clientX, e.clientY)
+                    movePupils(e.clientX, e.clientY);
                 }
             }
             const handleResetPupils = (e) => {
                 movePupils(0, 0);
+            }
+            const handleTiltElliottProgrammer = (e) => {
+                if (supportsSwipeEvents()) {
+                    tiltElliottProgrammer(e.touches[0].clientX, e.touches[0].clientY);
+                } else {
+                    tiltElliottProgrammer(e.clientX, e.clientY);
+                }
+            }
+            const handleResetElliottProgrammer = (e) => {
+                tiltElliottProgrammer(0, 0);
             }
 
             /**
@@ -1283,32 +1388,52 @@
                         window.addEventListener("touchstart", handleMovePupils);
                         window.addEventListener("touchmove", handleMovePupils);
                         window.addEventListener("touchend", handleResetPupils);
+                        window.addEventListener("touchstart", handleTiltElliottProgrammer);
+                        window.addEventListener("touchmove", handleTiltElliottProgrammer);
+                        window.addEventListener("touchend", handleResetElliottProgrammer);
                     } else {
                         // Mouse event
                         window.addEventListener("mousemove", handleMovePupils);
+                        window.addEventListener("mousemove", handleTiltElliottProgrammer);
+                        document.addEventListener("mouseleave", handleResetPupils);
+                        document.addEventListener("mouseleave", handleResetElliottProgrammer);
                     }
                 },
                 onEnterBack: (self) => {
                     // When section enters the viewport from the top (when scrolling back up to the top)
                     // Not currenty in use. 
                     window.addEventListener("mousemove", handleMovePupils);
+                    window.addEventListener("mousemove", handleTiltElliottProgrammer);
+                    document.addEventListener("mouseleave", handleResetPupils);
+                    document.addEventListener("mouseleave", handleResetElliottProgrammer);
                 },
                 onLeaveBack: (self) => {
                     // When section leaves the viewport from the bottom (when scrolling back up to the top)
+                    movePupils(0, 0);
+                    tiltElliottProgrammer(0, 0);
                     if (supportsSwipeEvents()) {
                         // Mobile touch events
                         window.removeEventListener("touchstart", handleMovePupils);
                         window.removeEventListener("touchmove", handleMovePupils);
                         window.removeEventListener("touchend", handleResetPupils);
+                        window.removeEventListener("touchstart", handleTiltElliottProgrammer);
+                        window.removeEventListener("touchmove", handleTiltElliottProgrammer);
+                        window.removeEventListener("touchend", handleResetElliottProgrammer);
                     } else {
                         // Mouse event
                         window.removeEventListener("mousemove", handleMovePupils);
+                        window.removeEventListener("mousemove", handleTiltElliottProgrammer);
+                        document.removeEventListener("mouseleave", handleResetPupils);
+                        document.removeEventListener("mouseleave", handleResetElliottProgrammer);
                     } 
                 },
                 onLeave: (self) => {
                     // When section leaves the viewport from the top (when scrolling down the page)
                     // Not currently in use.
                     window.removeEventListener("mousemove", handleMovePupils);
+                    window.removeEventListener("mousemove", handleTiltElliottProgrammer);
+                    document.removeEventListener("mouseleave", handleResetPupils);
+                    document.removeEventListener("mouseleave", handleResetElliottProgrammer);
                 }
             });
 
@@ -1936,6 +2061,17 @@
                 });
             });
         }
+
+        function injectFooterYear() {
+            const footerYearSpan = document.getElementById('footer-current-year');
+            if (footerYearSpan) {
+                const currentYear = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"})).getFullYear();
+                footerYearSpan.textContent = currentYear;
+            }
+        }
+        
+        initElliottAIChat();
+        injectFooterYear();
 
         export { getDeviceType };
             

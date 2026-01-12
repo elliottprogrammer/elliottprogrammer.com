@@ -1,9 +1,8 @@
 @font-face {
-    font-family: 'ImpactFont';
-    src: url('fonts/impact.ttf') format('truetype');
-    font-weight: normal;
+    font-family: 'Impact';
     font-style: normal;
-    font-display: swap;
+    font-weight: 400;
+    src: local('Impact'), url('https://fonts.cdnfonts.com/s/87898/impact.woff') format('woff');
 }
 @font-face {
     font-family: 'WF Visual Sans';
@@ -73,7 +72,7 @@ img.aboutme-bg-3 {
 }
 
 html, body {
-    font-family: Impact, 'ImpactFont', Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-size: 18px;
     color: white;
     width: 100%;
@@ -349,7 +348,7 @@ section#hero-footer {
     position: absolute;
     top: 200px;
     left: calc((100% - 731px) / 2);
-    font-family: Impact, 'ImpactFont', Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-size: 28px;
 }
 
@@ -398,7 +397,7 @@ section#experience .page-container h2 {
 
 .bg-text-effect {
     display: inline-block;
-    font-family: Impact, 'ImpactFont', Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-size: 350px;
     line-height: 1;
     text-transform: uppercase;
@@ -417,12 +416,17 @@ section#experience .page-container h2 {
     color: #23252fb5;
 }
 
-#motion-path {
+#motion-path,
+.text-motion-path {
     position: absolute;
     top: 0;
-    left: -20%;
-    width: 140%;
+    left: -30%;
+    width: 160%;
     height: auto;
+}
+#open-source .text-motion-path {
+    left: -45%;
+    width: 190%;
 }
 
 #nebula-element canvas:last-child {
@@ -512,7 +516,7 @@ section#experience .page-container h2 {
 }
 
 .challenge-complete-text {
-    font-family: Impact, 'ImpactFont', Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-weight: 500;
     line-height: 1;
     color: #00c903;
@@ -1836,7 +1840,7 @@ img.legend {
     display: block;
 }
 .work-date {
-    font-family: Impact, 'ImpactFont', Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-size: 9px;
     line-height: 1;
     padding-bottom: .1em;
@@ -2141,18 +2145,65 @@ img.legend {
 }
 
 /* elliottprogrammer rotating logo */
-
+#contact .right {
+    position: relative;
+}
+#contact .right::before {
+    content: '';
+    display: block;
+    background-color: rgb(26 154 214 / 33%);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    position: absolute;
+    box-shadow: 0 0 10px 10px #000 inset;
+    width: calc(100% + 30px);
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg);
+}
 .logo-rotation-container {
     position: relative;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+
+    transform-style: preserve-3d;
+    transform:
+        perspective(5000px)
+        rotateY(var(--rotateY))
+        rotateX(var(--rotateX));
+    overflow: visible;
+    transition: transform .3s linear;
 }
-.logo-rotation-container img.img-rotate {
+.logo-inset {
     position: absolute;
-    left: 0;
-    top: 0;
+    inset: 0;
+}
+.logo-round-bg-shadow {
+    transform: translateZ(5px)
+}
+.logo-round-bg {
+    transform: translateZ(50px)
+}
+.logo-round-shadow {
+    transform: translateZ(50px)
+}
+.logo-round {
+    transform: translateZ(85px)
+}
+
+.logo-outer-shadow {
+    position: absolute;
+    inset: 0;
+    transform: translateZ(5px);
+}
+.logo-outer {
+    position: absolute;
+    inset: 0;
+    transform: translateZ(100px);
 }
 
 .logo-rotation-container img {
@@ -2162,6 +2213,7 @@ img.legend {
 
 .logo-rotation-container .eye-wrapper {
     position: absolute;
+    transform: translateZ(86px);
 }
 .logo-rotation-container .left-eye {
     width: 5.04%;
@@ -2499,7 +2551,8 @@ section#footer-top {
     display: flex;
     align-items: center;
     justify-content: center;
-    column-gap: 30px;
+    gap: 30px;
+    flex-wrap: wrap;
 }
 .footer-socials li a {
     display: flex;
@@ -2520,6 +2573,11 @@ section#footer-top {
 .copyright {
     text-align: center;
     font-size: 14px;
+}
+.condensed {
+    font-family: 'Arial Narrow', Arial, sans-serif;
+    font-weight: normal;
+    letter-spacing: -0.2px; 
 }
 
 /* AI Loading text. */
@@ -2694,6 +2752,12 @@ section#footer-top {
     }
     .form-row.flex.mobile-col-collapse {
         flex-direction: column;
+    }
+    #contact .right::before {
+        width: 100%;
+    }
+    #contact .right {
+        padding: 25px;
     }
 }
 
