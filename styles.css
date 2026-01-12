@@ -317,9 +317,13 @@ section#hero-footer {
     color: #b1b1b1;
     text-decoration: none;
     text-shadow: 1px 1px 2px #000;
+    transition: color .2s ease-in-out;
 }
 .view-on-github-link svg {
     filter: drop-shadow(1px 1px 2px #000);
+}
+.view-on-github-link:hover {
+    color: white
 }
 
 .name {
@@ -1048,12 +1052,17 @@ img.stack-logo {
 .ps-absolute {
     position: absolute;
 }
-.profile-summary-container h3 {
+.profile-summary-container h3,
+.profile-summary-container h4 {
     font-weight: 300;
     font-size: 20px;
     margin: 8px 0 3px;
     color: #dedede;
     padding: 0;
+}
+.profile-summary-container h4 {
+    font-size: 16px;
+    margin: 10px 0;
 }
 .summary-container {
     padding: 10px;
@@ -1342,6 +1351,34 @@ img.automattic-org-icon {
     color: var(--fgColor-accent);
     background-color: var(--bgColor-accent-muted);
     border: var(--borderWidth-thin) solid var(--topicTag-borderColor, transparent);
+}
+
+.badge-item {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    white-space: nowrap;
+    border-radius: 2em;
+    border: 1px solid rgb(112 159 255 / 30%);
+    background: rgb(81 146 251 / 10%);
+    color: #b8c8e3;
+}
+
+.badge-container {
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px 5px;
+}
+
+.tag-name {
+    padding-right: 8px;
+}
+.tag-rank {
+    padding-left: 8px;
+    border-left: 1px solid #8b949e
 }
 
 /* Git Contribution Slider */
@@ -1678,6 +1715,27 @@ img.legend {
     top: 43.7%;
     left: 3.8%;
     width: 22.5%
+}
+.github-reference {
+    position: absolute;
+    bottom: 10px;
+    left: 12px;
+    text-align: center;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+.github-reference p {
+    margin: 0;
+}
+.github-reference .repo-title {
+    font-size: 12px;
+    color: #b1b1b1;
+}
+.github-reference .view-on-github-link {
+    font-size: 14px;
 }
 
 /* Experience section */
@@ -2333,7 +2391,7 @@ img.legend {
     margin: 0 auto;
 }
 
-small.ai-footnote {
+.footnote {
     font-size: .73rem;
     a {
         font-weight: 600;
