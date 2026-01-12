@@ -1313,13 +1313,10 @@
             };
 
             const tiltElliottProgrammer = (mouseX, mouseY) => {
-                console.log(`mouseX: ${mouseX}, mouseY: ${mouseY}`);
                 const elliottProgrammer = document.querySelector(".logo-rotation-container");
                 const rect = elliottProgrammer.getBoundingClientRect();
-                console.log(`rect:`, rect);
                 const centerX = rect.left + (rect.width / 2);
                 const centerY = rect.top + (rect.height / 2);
-                console.log(`centerX: ${centerX}, centerY: ${centerY}`);
 
                 const dx = mouseX - centerX;
                 const dy = mouseY - centerY;
@@ -1340,7 +1337,6 @@
 
                 const offsetX = mouseX === 0 ? 0 : normalizedX * 25;
                 const offsetY = mouseY === 0 ? 0 : normalizedY * 25 * -1;
-                console.log(`offsetX: ${offsetX}, offsetY: ${offsetY}`);
 
                 elliottProgrammer.style.setProperty('--rotateX', `${offsetY}deg`);
                 elliottProgrammer.style.setProperty('--rotateY', `${offsetX}deg`);
