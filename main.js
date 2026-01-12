@@ -1846,7 +1846,7 @@
     
                 // MIDDLE WEEKS
                 
-                for(let i = 1; i < weeks.length - 2; i++) {
+                for(let i = 1; i <= weeks.length - 1; i++) {
                     markup += `<div class="week">
                                     `;
                     for(let day of weeks[i].contributionDays) {
@@ -1857,18 +1857,18 @@
                 }
     
                 // Last week
-                markup += `<div class="week">
-                                    `;
-                const lastWeekOffset = 7 - lastWeek.length;
-                for(let i = 0; i < lastWeekOffset; i++) {
-                    markup += `<div class="day activity-0"></div>
-                                `
-                }
-                for(let i = 0; i < lastWeek.length; i++) {
-                    markup += generateContributionDayMarkup(lastWeek[i]);
-                }
-                markup += `</div> <!-- end .week -->
-                                `;
+                // markup += `<div class="week">
+                //                     `;
+                // const lastWeekOffset = 7 - lastWeek.length;
+                // for(let i = 0; i < lastWeekOffset; i++) {
+                //     markup += `<div class="day activity-0"></div>
+                //                 `
+                // }
+                // for(let i = 0; i < lastWeek.length; i++) {
+                //     markup += generateContributionDayMarkup(lastWeek[i]);
+                // }
+                // markup += `</div> <!-- end .week -->
+                //                `;
                 markup += `</div> <!-- end .year -->
                             `;
                 markup += `<div class="year-text">${yearText}</div>

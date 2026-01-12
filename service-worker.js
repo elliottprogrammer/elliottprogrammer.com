@@ -1,7 +1,7 @@
 const CACHE_NAME = 'git-contributions-cache-v1';
 const CONTRIBUTIONS_ENDPOINT = '/.netlify/functions/git-contributions';
 const META_KEY = `${CONTRIBUTIONS_ENDPOINT}-meta`;
-const STALE_AFTER_MS = 1000 * 60 * 60 * 24; // 24 hours
+const STALE_AFTER_MS = 1; //1000 * 60 * 60 * 24; // 24 hours
 
 self.addEventListener('install', (event) => {
     self.skipWaiting();
