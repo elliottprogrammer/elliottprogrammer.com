@@ -1732,6 +1732,7 @@ img.legend {
 }
 .github-reference .repo-title {
     font-size: 12px;
+    font-weight: 400;
     color: #b1b1b1;
 }
 .github-reference .view-on-github-link {
@@ -2931,12 +2932,16 @@ section#footer-top {
     section#hero-footer {
         padding: 10px;
     }
-    p.repo-title {
-        font-size: 12px;
-        font-weight: 400;
-        margin: 6px;
+    .github-reference {
+        left: 10px;
+        bottom: 10px;
+        gap: 2px;
     }
-    .view-on-github-link {
+    .github-reference p.repo-title {
+        font-size: 11px;
+        margin: 6px 0 2px;
+    }
+    .github-reference .view-on-github-link {
         font-size: 12px;
     }
     .bg-text-effect {
