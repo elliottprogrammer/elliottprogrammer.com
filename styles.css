@@ -414,6 +414,7 @@ section#experience .page-container h2 {
     transform: translateX(100vw);
     white-space: nowrap;
     pointer-events: none;
+    letter-spacing: -0.03em;
 }
 
 .bg-text-effect.level-up {
@@ -2204,6 +2205,27 @@ img.legend {
 }
 
 /* elliottprogrammer rotating logo */
+.logo-ratation-wrapper {
+    position: relative;
+}
+.tap-to-tilt-container {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+}
+.tap-to-tilt-text {
+    font-size: 11px;
+    span {
+        font-size: 12px;
+    }
+}
+.tap-to-tilt-container img {
+    height: 55px;
+    width: auto;
+    user-select: none;
+    pointer-events: none;
+    opacity: 0;
+}
 #contact .right {
     position: relative;
 }
@@ -2751,7 +2773,9 @@ section#footer-top {
         max-width: 600px;
         margin: 0 auto;
     }
-
+    .bg-text-effect {
+        font-size: 290px;
+    }
     .spark-positioner {
         top: 21%;
         left: 83%;
@@ -2779,14 +2803,15 @@ section#footer-top {
         margin-left: auto;
         margin-right: auto;
     }
+    .hover-me {
+        width: 80px;
+    }
     .bg-text-effect {
+        letter-spacing: normal;
         color: #20232b;
         -webkit-text-stroke: 3px #282c37;
         font-size: 38vw;
         top: calc(100px - 5vw);
-    }
-    .hover-me {
-        width: 80px;
     }
 }
 

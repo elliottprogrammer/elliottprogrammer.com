@@ -25,6 +25,10 @@
         let isGitSliderPlaying = false;
         const sliderScrollDuration = 60;
         let sliderDirection = 'forward';
+        const supportsSwipeEvents = function() {
+            return window && 'ontouchstart' in window;
+        }
+        let isMobileTouchDevice = supportsSwipeEvents() && (deviceType == 'phone' || deviceType == 'mobile');
 
         document.addEventListener('DOMContentLoaded', function() {
             // Register GSAP plugins
@@ -1342,9 +1346,6 @@
                 elliottProgrammer.style.setProperty('--rotateY', `${offsetX}deg`);
             }
 
-            const supportsSwipeEvents = function() {
-                return window && 'ontouchstart' in window;
-            }
             const handleMovePupils = (e) => {
                 if (supportsSwipeEvents()) {
                     movePupils(e.touches[0].clientX, e.touches[0].clientY);
@@ -1366,6 +1367,62 @@
                 tiltElliottProgrammer(0, 0);
             }
 
+            // Tap/Drag gesture icon animation timeline
+            const tapGestureIcon = document.querySelector('.tap-to-tilt-icon');
+            const containerWidth = document.querySelector('.right')?.clientWidth ?? 500;
+            const tapTl = gsap.timeline({
+                defaults: {
+                    ease: 'power1.inOut',
+                },
+                paused: true,
+                repeat: 3,
+                repeatDelay: 2,
+                delay: 1,
+             });
+            tapTl.to(tapGestureIcon, {
+                duration: 0.2,
+                opacity: 1,
+            }).to(tapGestureIcon, {
+               opacity: 0,
+                duration: 0.2,
+            }).to(tapGestureIcon, {
+                opacity: 1,
+                duration: 0.2,
+            }).to(tapGestureIcon, {
+                x: containerWidth * 0.06,
+                y: -5,
+                duration: 1,
+            }).to(tapGestureIcon, {
+                x: 0,
+                y: 0,
+                duration: 1,
+            }).to(tapGestureIcon, {
+               opacity: 0,
+                duration: 0.2,
+            });
+
+            const rotatingTiltContainer = document.querySelector('#contact .right');
+            ScrollTrigger.create({
+                trigger: rotatingTiltContainer,
+                start: 'top bottom',
+                end: 'top+=150 top',
+                onEnter: (self) => {
+                    if (isMobileTouchDevice) {
+                        // Show tap gesture icon animation on mobile devices
+                        gsap.delayedCall(2, () => {
+                            tapTl.play(0);
+                        });
+                    }   
+                },
+                onLeaveBack: (self) => {
+                    if (isMobileTouchDevice) {
+                        // Reset tap gesture icon animation when scrolling back up
+                        tapTl.pause();
+                        tapTl.time(0);
+                    }
+                },
+            });
+
             /**
              * Add movePupils eventListeners only when Contact section is in view.
              * And remove eventListeners when its scrolled out of view.
@@ -1379,7 +1436,7 @@
                 end: 'bottom top',
                 onEnter: (self) => {
                     // When section enters viewport from the bottom (when scrolling down the page)
-                    if (supportsSwipeEvents()) {
+                    if (isMobileTouchDevice) {
                         // Mobile touch events
                         window.addEventListener("touchstart", handleMovePupils);
                         window.addEventListener("touchmove", handleMovePupils);
@@ -1407,7 +1464,7 @@
                     // When section leaves the viewport from the bottom (when scrolling back up to the top)
                     movePupils(0, 0);
                     tiltElliottProgrammer(0, 0);
-                    if (supportsSwipeEvents()) {
+                    if (isMobileTouchDevice) {
                         // Mobile touch events
                         window.removeEventListener("touchstart", handleMovePupils);
                         window.removeEventListener("touchmove", handleMovePupils);
@@ -1571,6 +1628,7 @@
 
             window.addEventListener('resize', () => {
                 deviceType = getDeviceType();
+                isMobileTouchDevice = supportsSwipeEvents() && (deviceType !== 'phone' || deviceType !== 'mobile');
             });
         });
    
