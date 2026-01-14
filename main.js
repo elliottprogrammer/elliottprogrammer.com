@@ -709,7 +709,11 @@
             const bugsCompleteText2 = document.querySelector('#searching-bugs .word2');
             const bugsCompleteCheck3 = document.querySelector('#searching-bugs .check');
 
-            const bugsCompleteTl = gsap.timeline();
+            const bugsCompleteTl = gsap.timeline({
+                onComplete: () => {
+                    magnifyArm && magnifyArm.stop();
+                }
+            });
             const bugsComplete = bugsCompleteTl.from(bugsCompleteText1, {
                 duration: 1.0,
                 xPercent: -50,
@@ -925,7 +929,9 @@
                 eyesBlinker1.start();
                 eyesBlinker2.start();
                 typingHand.start();
-                magnifyArm.start();
+                if ( !hasFoundBug ) {
+                    magnifyArm.start();
+                }
 
                 if (!arrow1Timer && !hasLightBeenClicked) {
                     nudgeArrow1Randomly();
