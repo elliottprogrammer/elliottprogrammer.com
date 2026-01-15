@@ -1286,6 +1286,46 @@
                 }
             });
 
+            // Place random circles in the background of the Elliott AI section
+            const container = document.getElementById('elliott-ai');
+            const numCircles = 50;
+            const minSize = 2;
+            const maxSize = 10;
+
+            function getRandomColor() {
+                const r = getRandomInt(50, 120);
+                const g = getRandomInt(150, 250);
+                const b = getRandomInt(230, 255);
+                return `rgb(${r}, ${g}, ${b})`;
+            }
+
+            function createRandomCircles() {
+                const containerWidth = container.offsetWidth;
+                const containerHeight = container.offsetHeight;
+
+                for (let i = 0; i < numCircles; i++) {
+                    const size = getRandomInt(minSize, maxSize);
+                    
+                    // Calculate random position within container bounds, accounting for circle size
+                    const x = getRandomInt(0, containerWidth - size);
+                    const y = getRandomInt(0, containerHeight - size);
+
+                    const circle = document.createElement('div');
+                    circle.classList.add('circle');
+                    
+                    // Apply random size, position, and color
+                    circle.style.width = `${size}px`;
+                    circle.style.height = `${size}px`;
+                    circle.style.left = `${x}px`;
+                    circle.style.top = `${y}px`;
+                    circle.style.backgroundColor = getRandomColor();
+
+                    container.prepend(circle);
+                }
+            }
+
+            createRandomCircles();
+
             // gsap.to(contactBgText, {
             //     x: contactBgText.offsetWidth * -1,
             //     ease: 'none',

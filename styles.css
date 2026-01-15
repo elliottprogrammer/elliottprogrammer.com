@@ -1719,14 +1719,18 @@ img.legend {
 }
 .github-reference {
     position: absolute;
-    bottom: 10px;
-    left: 12px;
+    bottom: 0;
+    left: 0;
     text-align: center;
     font-size: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 2px;
+    background: rgba(0, 0, 0, .65);
+    padding: 12px;
+    border: 1px solid #222;
+    border-top-right-radius: 6px;
 }
 .github-reference p {
     margin: 0;
@@ -1734,7 +1738,7 @@ img.legend {
 .github-reference .repo-title {
     font-size: 12px;
     font-weight: 400;
-    color: #b1b1b1;
+    color: white;
 }
 .github-reference .view-on-github-link {
     font-size: 14px;
@@ -2349,11 +2353,29 @@ img.legend {
     color: #e7edf5;
 }
 
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    background-color: #269efc; /* Default color */
+    filter: drop-shadow(0 0 7px rgba(112, 169, 255, 1));
+    /* Transition for smoother visual effects (optional) */
+    transition: all 0.3s ease-out;  
+}
+
 .elliott-ai-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 32px;
     align-items: stretch;
+}
+
+.ai-copy img.img-eyebrow {
+    max-width: 300px;
+    filter: drop-shadow(0 0 12px rgba(112, 169, 255, 0.25));
+    transition: filter 0.3s ease;
+}
+.ai-copy img.img-eyebrow:hover {
+  filter: drop-shadow(0 0 18px rgba(112, 169, 255, 1));
 }
 
 .ai-copy .eyebrow {
@@ -2388,7 +2410,8 @@ img.legend {
     align-items: center;
     gap: 8px;
     padding: 6px 12px;
-    background: rgba(255,255,255,0.04);
+    background: rgba(22,26,36,0.75);
+    background: rgb(22 26 36 / 75%);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 10px;
     font-size: 0.9rem;
@@ -2958,13 +2981,12 @@ section#footer-top {
         padding: 10px;
     }
     .github-reference {
-        left: 10px;
-        bottom: 10px;
         gap: 2px;
+        padding: 7px;
     }
     .github-reference p.repo-title {
         font-size: 11px;
-        margin: 6px 0 2px;
+        margin: 0 0 2px;
     }
     .github-reference .view-on-github-link {
         font-size: 12px;
