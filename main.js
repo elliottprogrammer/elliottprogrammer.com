@@ -20,6 +20,7 @@
 
         asciiArtToConsole();
         let deviceType = getDeviceType();
+        let atomizer;
         let gitSlider;
         let sliderTl;
         let isGitSliderPlaying = false;
@@ -194,11 +195,12 @@
                     }
                 }
 
-                var atomizer = new ImageAtomizer(logoImgSrc, {
+                atomizer = new ImageAtomizer(logoImgSrc, {
                     particleGap: 2, //getDeviceType() == 'phone' ? 3 : 0,
                     particleSize: 3, //getDeviceType() == 'phone' ? 3 : 1,
                     restless: false,
                     offsetY: offsetY,
+                    timeScale: 0.5,
                     onInitialized: () => {
                         atomizerWrapper.classList.add('has-initialized');
                         const {width, height} = getAtomizerImageSize();
@@ -226,6 +228,22 @@
 
                 showAtomizer();
 
+                // Pause and unpause atomizer on scroll in and out of viewport.
+                ScrollTrigger.create({
+                    trigger: '#image-atomizer',
+                    start: 'top bottom',
+                    end: 'bottom-=100 top',
+                    //markers: true,
+                    onEnterBack: (self) => {
+                        // When section enters the viewport from the top (when scrolling back up to the top)
+                        atomizer.play();
+                    },
+                    onLeave: (self) => {
+                        // When section leaves the viewport from the top (when scrolling down the page)
+                        atomizer.pause();
+                    }
+                });
+
             }
 
             (window.addEventListener
@@ -235,7 +253,6 @@
             const handleTypewriterRestart = debounce( () => {
                 writer1.clear().start();
             }, 200);
-
             
             // About Me Section - Slide up & fade in
             const aboutMeSection1 = document.getElementById('about-me');
@@ -1288,7 +1305,7 @@
 
             // Place random circles in the background of the Elliott AI section
             const container = document.getElementById('elliott-ai');
-            const numCircles = 50;
+            const numCircles = 60;
             const minSize = 2;
             const maxSize = 10;
 

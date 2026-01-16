@@ -12,17 +12,22 @@ class ImageAtomizer {
         this.monochromeColor = "#fff";
         this.mouseForce = 4000;
         this.restless = false;
+        this.timeScale = 1;
         this.onWidthChange = null;
         this.onHeightChange = null;
         this.onSizeChange = null;
         this.onInitialized = null;
+        this.isRunning = false;
+        this.rafId = null;
+
+        this.nextFrame = this.nextFrame.bind(this);
         
         // Apply custom options
         if (options) {
             const optionKeys = [
                 'elementId', 'width', 'height', 'particleGap', 'particleSize', 'monochrome', 'monochromeColor',
                 'mouseForce', 'restless', 'onWidthChange', 'onHeightChange', 'onSizeChange', 'onInitialized',
-                'offsetX', 'offsetY'
+                'offsetX', 'offsetY', 'timeScale'
             ];
             
             for (let i = 0, len = optionKeys.length; i < len; i++) {
@@ -64,6 +69,8 @@ class ImageAtomizer {
         // Animation properties
         this.frame = 0;
         this.hasInitialized = false;
+        this.lastTimestamp = null;
+        this.baseFrameDuration = 1000 / 60;
         
         // Particle buffers
         this.pxlBuffer = { first: null };
@@ -154,9 +161,7 @@ class ImageAtomizer {
                     this.isImageLoaded = true;
                     this.resize();
                     // Start animation
-                    this.requestAnimationFrame(() => {
-                        this.nextFrame();
-                    });
+                    this.play();
                 };
             } else {
                 return console.error('ImageAtomizer: You must provide an image source as the first argument when instanciating a `new ImageAtomizer(imageSrc, options)`.');
@@ -185,10 +190,10 @@ class ImageAtomizer {
             this.velocityY = Math.random() * 10;
         }
         
-        move() {
+        move(timeStep) {
             const imageAtomizer = this.atomizer;
             
-            if (this.ttl !== null && this.ttl-- <= 0) {
+            if (this.ttl !== null && (this.ttl -= timeStep) <= 0) {
                 imageAtomizer.swapList(this, imageAtomizer.pxlBuffer, imageAtomizer.recycleBuffer);
                 this.ttl = null;
             } else {
@@ -222,13 +227,15 @@ class ImageAtomizer {
                     mouseForce = 0;
                     mouseAngle = 0;
                 }
+
+                this.velocityX += (force * Math.cos(angle) + mouseForce * Math.cos(mouseAngle)) * timeStep;
+                this.velocityY += (force * Math.sin(angle) + mouseForce * Math.sin(mouseAngle)) * timeStep;
+
+                this.velocityX *= Math.pow(0.90, timeStep);
+                this.velocityY *= Math.pow(0.90, timeStep);
                 
-                this.velocityX += force * Math.cos(angle) + mouseForce * Math.cos(mouseAngle);
-                this.velocityY += force * Math.sin(angle) + mouseForce * Math.sin(mouseAngle);
-                
-                this.velocityX *= 0.94;
-                this.velocityY *= 0.94;
-                
+                // this.x += this.velocityX * timeStep;
+                // this.y += this.velocityY * timeStep;
                 this.x += this.velocityX;
                 this.y += this.velocityY;
             }
@@ -300,14 +307,26 @@ class ImageAtomizer {
         return result;
     }
     
-    nextFrame() {
+    nextFrame(timestamp) {
+        if (!this.isRunning) {
+            return;
+        }
+        if (typeof timestamp !== "number") {
+            timestamp = performance.now();
+        }
+        if (this.lastTimestamp === null) {
+            this.lastTimestamp = timestamp - this.baseFrameDuration;
+        }
+        const deltaMs = timestamp - this.lastTimestamp;
+        this.lastTimestamp = timestamp;
+        const timeStep = (deltaMs / this.baseFrameDuration) * this.timeScale;
         
         let particle = this.pxlBuffer.first;
         let nextParticle = null;
         
         while (particle !== null) {
             nextParticle = particle.next;
-            particle.move();
+            particle.move(timeStep);
             particle = nextParticle;
         }
         
@@ -329,11 +348,9 @@ class ImageAtomizer {
             this.resize();
         }
         
-        setTimeout(() => {
-            this.requestAnimationFrame(() => {
-                this.nextFrame();
-            });
-        }, 15);
+        if (this.isRunning) {
+            this.rafId = this.requestAnimationFrame(this.nextFrame);
+        }
     }
     
     drawParticles() {
@@ -452,6 +469,27 @@ class ImageAtomizer {
     setColor(color) {
         this.monochromeColorArr = this.parseColor(color);
     }
+
+    play() {
+        if (this.isRunning) {
+            return;
+        }
+        this.isRunning = true;
+        this.lastTimestamp = null; // avoid a large delta after a pause
+        this.rafId = this.requestAnimationFrame(this.nextFrame);
+    }
+
+    pause() {
+        if (!this.isRunning) {
+            return;
+        }
+        this.isRunning = false;
+        if (this.rafId !== null) {
+            cancelAnimationFrame(this.rafId);
+            this.rafId = null;
+        }
+        this.lastTimestamp = null;
+    }
     
     requestAnimationFrame(callback) {
         const requestAnimFrame = window.requestAnimationFrame || 
@@ -460,9 +498,9 @@ class ImageAtomizer {
                               window.oRequestAnimationFrame || 
                               window.msRequestAnimationFrame || 
                               function(callback) {
-                                  window.setTimeout(callback, 1000 / 60);
+                                  return window.setTimeout(callback, 1000 / 60);
                               };
-        requestAnimFrame(callback);
+        return requestAnimFrame(callback);
     }
 }
 
