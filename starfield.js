@@ -14,7 +14,8 @@ class Starfield {
             throw new Error(`Starfield: canvas with id "${canvasId}" not found.`);
         }
         this.ctx = this.canvas.getContext("2d");
-        this.colorCtx = document.createElement("canvas").getContext("2d");
+        this.colorCanvas = document.createElement("canvas");
+        this.colorCtx = this.colorCanvas.getContext("2d", { willReadFrequently: true });
         this.starsCount = starsCount;
         this.starsColor = this.parseColor(starsColor);
         this.starsRotationSpeed = starsRotationSpeed;
@@ -25,8 +26,8 @@ class Starfield {
 
         this.nebulaCanvas = document.createElement("canvas");
         this.nebulaCtx = this.nebulaCanvas.getContext("2d");
-        this.randomSeed = 43214;
-        this.nebulaColors = ["rgb(6,2,122)", "rgb(6,66,18)", "#57046e"].map((c) => this.parseColor(c));
+        this.randomSeed = 32173;
+        this.nebulaColors = ["rgb(6,2,122)", "rgba(6, 76, 20, 1)", "#57046e"].map((c) => this.parseColor(c));
         this.nebulaLayers = this.buildNebulaLayers();
 
         this.stars = [];
@@ -59,7 +60,7 @@ class Starfield {
 
     parseColor(color) {
         if (!this.colorCtx) {
-            this.colorCtx = document.createElement("canvas").getContext("2d");
+            this.colorCtx = this.colorCanvas.getContext("2d", { willReadFrequently: true });
         }
         const ctx = this.colorCtx;
         if (!ctx) {
@@ -84,9 +85,9 @@ class Starfield {
         const layersPerColor = 2;
         for (let c = 0; c < this.nebulaColors.length; c++) {
             for (let i = 0; i < layersPerColor; i++) {
-                const cxNorm = 0.1 + this.nextRandom() * 0.8;
-                const cyNorm = 0.1 + this.nextRandom() * 0.8;
-                const radiusFactor = 0.25 + this.nextRandom() * 0.15;
+                const cxNorm = 0.1 + this.nextRandom() * 0.9;
+                const cyNorm = 0.1 + this.nextRandom() * 0.9;
+                const radiusFactor = 0.30 + this.nextRandom() * 0.10;
                 layers.push({
                     color: this.nebulaColors[c],
                     cxNorm,
@@ -99,12 +100,12 @@ class Starfield {
     }
 
     resize() {
-        this.canvas.width = this.canvas.clientWidth;
-        this.canvas.height = this.canvas.clientHeight;
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
         this.originX = this.canvas.width / 2 + this.originOffsetX;
         this.originY = this.canvas.height / 2 + this.originOffsetY;
-        this.starBuffer.width = this.canvas.width;
-        this.starBuffer.height = this.canvas.height;
+        this.starBuffer.width = window.innerWidth;
+        this.starBuffer.height = window.innerHeight;
         this.renderNebula();
         this.initStars();
     }
@@ -115,7 +116,7 @@ class Starfield {
             // sqrt-distribution to spread stars more evenly across the area
             const distance = Math.sqrt(Math.random()) * maxRadius;
             const angle = Math.random() * Math.PI * 2;
-            const size = Math.random() * 1.5 + 0.2;
+            const size = Math.random() * 2 + 0.1;
             return { distance, angle, size };
         });
         this.renderStarBuffer();
@@ -129,7 +130,7 @@ class Starfield {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = bgColor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        const alphaScale = Math.min(0.3, nebulasIntensity * 0.01);
+        const alphaScale = Math.min(.3, nebulasIntensity * 0.1);
         ctx.globalCompositeOperation = "lighter";
         this.nebulaLayers.forEach((layer) => {
             const cx = canvas.width * layer.cxNorm;
