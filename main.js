@@ -1,3 +1,4 @@
+        import { Starfield } from './starfield.js';
         import { ImageAtomizer } from './image-atomizer.js';
         import { Typewriter } from './t-writer.js';
         import { confettea } from './confettea.js';
@@ -21,6 +22,7 @@
         asciiArtToConsole();
         let deviceType = getDeviceType();
         let atomizer;
+        let starfield;
         let gitSlider;
         let sliderTl;
         let isGitSliderPlaying = false;
@@ -117,19 +119,15 @@
             }
             hoverMe();
 
-            // Nebula (Stars background)
-            const config = {
-                starsCount: 350,
-                starsRotationSpeed: 6,
-                nebulasIntensity: 10,
-                cometFrequence: 60,
-                sunScale: 0,
-                planetsScale: 0,
-                solarSystemOrbite: 0,
-                solarSystemSpeedOrbit: 0,
-            };
-            const element = document.getElementById("nebula-element");
-            const starsNebula = new Nebula({ config, element });
+            starfield = new Starfield({
+                starsCount: 700,
+                starsColor: '#cce5ff',
+                starsRotationSpeed: 4,
+                nebulasIntensity: 14,
+                bgColor: 'rgb(5,5,12)',
+                originOffsetX: 0,
+                originOffsetY: 0,
+            });
 
             function getAtomizerImageSrc(canvasWidth, canvasHeight) {
                 if (canvasWidth > 1766) {
@@ -237,10 +235,14 @@
                     onEnterBack: (self) => {
                         // When section enters the viewport from the top (when scrolling back up to the top)
                         atomizer.play();
+                        //starsNebula.play();
+                        starfield.play();
                     },
                     onLeave: (self) => {
                         // When section leaves the viewport from the top (when scrolling down the page)
                         atomizer.pause();
+                        //starsNebula.pause();
+                        starfield.pause();
                     }
                 });
 

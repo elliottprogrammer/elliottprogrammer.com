@@ -164,7 +164,7 @@ figcaption {
     display: none;
 }
 
-#nebula-element {
+#nebula-element, #starfield {
     height: 100%;
     width: 100%;
     position: absolute;
