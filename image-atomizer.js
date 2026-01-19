@@ -19,6 +19,13 @@ class ImageAtomizer {
         this.onInitialized = null;
         this.isRunning = false;
         this.rafId = null;
+        this.enablePerfLog = false;
+        this.perfLogInterval = 120;
+        this.imageData = null;
+        this.imageDataWidth = 0;
+        this.imageDataHeight = 0;
+        this.imageData32 = null;
+        this.isLittleEndian = null;
 
         this.nextFrame = this.nextFrame.bind(this);
         
@@ -27,7 +34,7 @@ class ImageAtomizer {
             const optionKeys = [
                 'elementId', 'width', 'height', 'particleGap', 'particleSize', 'monochrome', 'monochromeColor',
                 'mouseForce', 'restless', 'onWidthChange', 'onHeightChange', 'onSizeChange', 'onInitialized',
-                'offsetX', 'offsetY', 'timeScale'
+                'offsetX', 'offsetY', 'timeScale', 'enablePerfLog', 'perfLogInterval'
             ];
             
             for (let i = 0, len = optionKeys.length; i < len; i++) {
@@ -35,6 +42,11 @@ class ImageAtomizer {
                     this[optionKeys[i]] = options[optionKeys[i]];
                 }
             }
+        }
+
+        this.isLittleEndian = this.detectLittleEndian();
+        if (!this.isLittleEndian) {
+            console.warn("ImageAtomizer: Packed draw path expects little-endian byte order.");
         }
         
         // DOM elements
@@ -71,10 +83,24 @@ class ImageAtomizer {
         this.hasInitialized = false;
         this.lastTimestamp = null;
         this.baseFrameDuration = 1000 / 60;
+        this.perfFrameCount = 0;
+        this.perfAccumulatedMs = 0;
+        this.perfAccumulatedDrawMs = 0;
+        this.perfLastLog = null;
         
-        // Particle buffers
-        this.pxlBuffer = { first: null };
-        this.recycleBuffer = { first: null };
+        // Particle buffers (struct-of-arrays)
+        this.capacity = 0;
+        this.activeCount = 0;
+        this.posX = new Float32Array(0);
+        this.posY = new Float32Array(0);
+        this.velX = new Float32Array(0);
+        this.velY = new Float32Array(0);
+        this.gravityX = new Float32Array(0);
+        this.gravityY = new Float32Array(0);
+        this.ttl = new Float32Array(0);
+        this.colorPacked = new Uint32Array(0);
+        this.colorIsFunc = new Uint8Array(0);
+        this.colorFuncs = [];
         
         // Canvas contexts
         this.ctx = this.$canv.getContext("2d");
@@ -173,106 +199,59 @@ class ImageAtomizer {
         }
         this.loadImage(imageSrc);   
     }
-    
-    // Particle class as inner class
-    static Particle = class {
-        constructor(imageAtomizer) {
-            this.atomizer = imageAtomizer;
-            this.ttl = null;
-            this.color = imageAtomizer.colorArr;
-            this.next = null;
-            this.prev = null;
-            this.gravityX = 0;
-            this.gravityY = 0;
-            this.x = Math.random() * imageAtomizer.cw;
-            this.y = Math.random() * imageAtomizer.ch;
-            this.velocityX = Math.random() * 10;
-            this.velocityY = Math.random() * 10;
-        }
-        
-        move(timeStep) {
-            const imageAtomizer = this.atomizer;
-            
-            if (this.ttl !== null && (this.ttl -= timeStep) <= 0) {
-                imageAtomizer.swapList(this, imageAtomizer.pxlBuffer, imageAtomizer.recycleBuffer);
-                this.ttl = null;
-            } else {
-                const dx = this.gravityX - this.x;
-                const dy = this.gravityY - this.y;
-                const distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-                const angle = Math.atan2(dy, dx);
-                let force = distance * 0.008;
-                
-                if (imageAtomizer.restless === true) {
-                    force += Math.random() * 0.1 - 0.05;
-                } else if (force < 0.01) {
-                    this.x = this.gravityX + 0.25;
-                    this.y = this.gravityY + 0.25;
-                }
-                
-                let mouseForce = 0;
-                let mouseAngle = 0;
-                
-                if (imageAtomizer.mx >= 0 && imageAtomizer.mouseForce) {
-                    const mouseDx = this.x - imageAtomizer.mx;
-                    const mouseDy = this.y - imageAtomizer.my;
-                    mouseForce = Math.min(imageAtomizer.mouseForce / (Math.pow(mouseDx, 2) + Math.pow(mouseDy, 2)), imageAtomizer.mouseForce);
-                    mouseAngle = Math.atan2(mouseDy, mouseDx);
-                    
-                    if (typeof this.color === "function") {
-                        mouseAngle += Math.PI;
-                        mouseForce *= 0.001 + Math.random() * 0.1 - 0.05;
-                    }
-                } else {
-                    mouseForce = 0;
-                    mouseAngle = 0;
-                }
 
-                this.velocityX += (force * Math.cos(angle) + mouseForce * Math.cos(mouseAngle)) * timeStep;
-                this.velocityY += (force * Math.sin(angle) + mouseForce * Math.sin(mouseAngle)) * timeStep;
-
-                this.velocityX *= Math.pow(0.90, timeStep);
-                this.velocityY *= Math.pow(0.90, timeStep);
-                
-                // this.x += this.velocityX * timeStep;
-                // this.y += this.velocityY * timeStep;
-                this.x += this.velocityX;
-                this.y += this.velocityY;
-            }
-        }
-    };
+    packColor(color) {
+        return ((color[3] & 0xff) << 24) | ((color[2] & 0xff) << 16) | ((color[1] & 0xff) << 8) | (color[0] & 0xff);
+    }
     
-    swapList(particle, fromList, toList) {
-        if (particle === null) {
-            particle = new ImageAtomizer.Particle(this);
+    ensureCapacity(required) {
+        if (required <= this.capacity) {
+            return;
         }
-        
-        if (fromList.first === particle) {
-            if (particle.next !== null) {
-                particle.next.prev = null;
-                fromList.first = particle.next;
-            } else {
-                fromList.first = null;
-            }
-        } else {
-            if (particle.next === null) {
-                particle.prev = null;
-            } else {
-                particle.prev.next = particle.next;
-                particle.next.prev = particle.prev;
-            }
+        const newCapacity = Math.max(required, this.capacity ? this.capacity * 2 : 256);
+        const posX = new Float32Array(newCapacity);
+        const posY = new Float32Array(newCapacity);
+        const velX = new Float32Array(newCapacity);
+        const velY = new Float32Array(newCapacity);
+        const gravityX = new Float32Array(newCapacity);
+        const gravityY = new Float32Array(newCapacity);
+        const ttl = new Float32Array(newCapacity);
+        const colorPacked = new Uint32Array(newCapacity);
+        const colorIsFunc = new Uint8Array(newCapacity);
+        const colorFuncs = new Array(newCapacity);
+
+        posX.set(this.posX);
+        posY.set(this.posY);
+        velX.set(this.velX);
+        velY.set(this.velY);
+        gravityX.set(this.gravityX);
+        gravityY.set(this.gravityY);
+        ttl.set(this.ttl);
+        colorPacked.set(this.colorPacked);
+        colorIsFunc.set(this.colorIsFunc);
+        for (let i = 0; i < this.colorFuncs.length; i++) {
+            colorFuncs[i] = this.colorFuncs[i];
         }
-        
-        if (toList.first === null) {
-            toList.first = particle;
-            particle.prev = null;
-            particle.next = null;
-        } else {
-            particle.next = toList.first;
-            toList.first.prev = particle;
-            toList.first = particle;
-            particle.prev = null;
-        }
+
+        this.posX = posX;
+        this.posY = posY;
+        this.velX = velX;
+        this.velY = velY;
+        this.gravityX = gravityX;
+        this.gravityY = gravityY;
+        this.ttl = ttl;
+        this.colorPacked = colorPacked;
+        this.colorIsFunc = colorIsFunc;
+        this.colorFuncs = colorFuncs;
+        this.capacity = newCapacity;
+    }
+
+    detectLittleEndian() {
+        const buffer = new ArrayBuffer(4);
+        const view32 = new Uint32Array(buffer);
+        const view8 = new Uint8Array(buffer);
+        view32[0] = 0x0a0b0c0d;
+        return view8[0] === 0x0d;
     }
     
     parseColor(color) {
@@ -320,17 +299,103 @@ class ImageAtomizer {
         const deltaMs = timestamp - this.lastTimestamp;
         this.lastTimestamp = timestamp;
         const timeStep = (deltaMs / this.baseFrameDuration) * this.timeScale;
+        this.dampingFactor = Math.pow(0.90, timeStep);
+        const frameStart = this.enablePerfLog ? performance.now() : 0;
         
-        let particle = this.pxlBuffer.first;
-        let nextParticle = null;
-        
-        while (particle !== null) {
-            nextParticle = particle.next;
-            particle.move(timeStep);
-            particle = nextParticle;
+        const posX = this.posX;
+        const posY = this.posY;
+        const velX = this.velX;
+        const velY = this.velY;
+        const gravityX = this.gravityX;
+        const gravityY = this.gravityY;
+        const ttl = this.ttl;
+        const colorIsFunc = this.colorIsFunc;
+        const colorFuncs = this.colorFuncs;
+        const mouseX = this.mx;
+        const mouseY = this.my;
+        const hasMouse = mouseX >= 0 && this.mouseForce;
+        const baseForce = 0.008;
+        let i = 0;
+        while (i < this.activeCount) {
+            if (ttl[i] >= 0) {
+                ttl[i] -= timeStep;
+                if (ttl[i] <= 0) {
+                    const last = this.activeCount - 1;
+                    if (i !== last) {
+                        posX[i] = posX[last];
+                        posY[i] = posY[last];
+                        velX[i] = velX[last];
+                        velY[i] = velY[last];
+                        gravityX[i] = gravityX[last];
+                        gravityY[i] = gravityY[last];
+                        ttl[i] = ttl[last];
+                        this.colorPacked[i] = this.colorPacked[last];
+                        colorIsFunc[i] = colorIsFunc[last];
+                        colorFuncs[i] = colorFuncs[last];
+                    }
+                    this.activeCount = last;
+                    continue;
+                }
+            }
+
+            const dx = gravityX[i] - posX[i];
+            const dy = gravityY[i] - posY[i];
+            const distanceSq = dx * dx + dy * dy;
+            let forceX = 0;
+            let forceY = 0;
+
+            if (this.restless === true) {
+                const distance = Math.sqrt(distanceSq) || 1;
+                const jitter = Math.random() * 0.1 - 0.05;
+                const invDistance = 1 / distance;
+                forceX = dx * baseForce + dx * invDistance * jitter;
+                forceY = dy * baseForce + dy * invDistance * jitter;
+            } else if (distanceSq < 1.5625) {
+                posX[i] = gravityX[i] + 0.25;
+                posY[i] = gravityY[i] + 0.25;
+            }
+
+            let mouseForce = 0;
+            let mouseDx = 0;
+            let mouseDy = 0;
+            let mouseInvDistance = 0;
+            let mouseScale = 1;
+
+            if (hasMouse) {
+                mouseDx = posX[i] - mouseX;
+                mouseDy = posY[i] - mouseY;
+                const mouseDistanceSq = mouseDx * mouseDx + mouseDy * mouseDy;
+                if (mouseDistanceSq > 0.0001) {
+                    mouseForce = Math.min(this.mouseForce / mouseDistanceSq, this.mouseForce);
+                    mouseInvDistance = 1 / Math.sqrt(mouseDistanceSq);
+                }
+                if (colorIsFunc[i]) {
+                    mouseScale = -1;
+                    mouseForce *= 0.001 + Math.random() * 0.1 - 0.05;
+                }
+            }
+
+            if (forceX === 0 && forceY === 0 && distanceSq >= 1.5625) {
+                forceX = dx * baseForce;
+                forceY = dy * baseForce;
+            }
+            if (mouseInvDistance > 0) {
+                forceX += mouseForce * mouseScale * mouseDx * mouseInvDistance;
+                forceY += mouseForce * mouseScale * mouseDy * mouseInvDistance;
+            }
+
+            velX[i] += forceX * timeStep;
+            velY[i] += forceY * timeStep;
+            velX[i] *= this.dampingFactor;
+            velY[i] *= this.dampingFactor;
+            posX[i] += velX[i];
+            posY[i] += velY[i];
+            i += 1;
         }
         
+        const drawStart = this.enablePerfLog ? performance.now() : 0;
         this.drawParticles();
+        const drawEnd = this.enablePerfLog ? performance.now() : 0;
         
         if (this.frame++ % 25 === 0 && (this.cw !== this.getCanvasWidth() || this.ch !== this.getCanvasHeight())) {
             const newWidth = this.getCanvasWidth();
@@ -347,6 +412,32 @@ class ImageAtomizer {
             }
             this.resize();
         }
+
+        if (this.enablePerfLog) {
+            const frameEnd = performance.now();
+            this.perfFrameCount += 1;
+            this.perfAccumulatedMs += frameEnd - frameStart;
+            this.perfAccumulatedDrawMs += drawEnd - drawStart;
+            if (!this.perfLastLog) {
+                this.perfLastLog = frameEnd;
+            }
+            if (this.perfFrameCount >= this.perfLogInterval) {
+                const avgFrameMs = this.perfAccumulatedMs / this.perfFrameCount;
+                const avgDrawMs = this.perfAccumulatedDrawMs / this.perfFrameCount;
+                const fps = 1000 / avgFrameMs;
+                console.log(
+                    "ImageAtomizer perf:",
+                    `frames=${this.perfFrameCount}`,
+                    `avgFrameMs=${avgFrameMs.toFixed(2)}`,
+                    `avgDrawMs=${avgDrawMs.toFixed(2)}`,
+                    `fps=${fps.toFixed(1)}`
+                );
+                this.perfFrameCount = 0;
+                this.perfAccumulatedMs = 0;
+                this.perfAccumulatedDrawMs = 0;
+                this.perfLastLog = frameEnd;
+            }
+        }
         
         if (this.isRunning) {
             this.rafId = this.requestAnimationFrame(this.nextFrame);
@@ -354,26 +445,55 @@ class ImageAtomizer {
     }
     
     drawParticles() {
-        let imageData = this.ctx.createImageData(this.cw, this.ch);
-        let pixelIndex, x, y, pixelX, pixelY, color;
+        if (!this.imageData || this.imageDataWidth !== this.cw || this.imageDataHeight !== this.ch) {
+            this.imageData = this.ctx.createImageData(this.cw, this.ch);
+            this.imageDataWidth = this.cw;
+            this.imageDataHeight = this.ch;
+            this.imageData32 = null;
+        }
+        const imageData = this.imageData;
+        const data = imageData.data;
+        if (!this.imageData32) {
+            this.imageData32 = new Uint32Array(data.buffer, data.byteOffset, data.byteLength / 4);
+        }
+        const data32 = this.imageData32;
+        data32.fill(0);
+        let x, y, pixelX, pixelY;
+        const posX = this.posX;
+        const posY = this.posY;
+        const colorPacked = this.colorPacked;
+        const colorIsFunc = this.colorIsFunc;
+        const colorFuncs = this.colorFuncs;
         
-        let particle = this.pxlBuffer.first;
-        while (particle !== null) {
-            x = ~~particle.x;
-            y = ~~particle.y;
-            
-            for (pixelX = x; pixelX < x + this.particleSize && pixelX >= 0 && pixelX < this.cw; pixelX++) {
-                for (pixelY = y; pixelY < y + this.particleSize && pixelY >= 0 && pixelY < this.ch; pixelY++) {
-                    pixelIndex = (pixelY * imageData.width + pixelX) * 4;
-                    color = typeof particle.color === "function" ? particle.color() : particle.color;
-                    
-                    imageData.data[pixelIndex + 0] = color[0];
-                    imageData.data[pixelIndex + 1] = color[1];
-                    imageData.data[pixelIndex + 2] = color[2];
-                    imageData.data[pixelIndex + 3] = color[3];
+        for (let i = 0; i < this.activeCount; i++) {
+            x = ~~posX[i];
+            y = ~~posY[i];
+
+            let startX = x;
+            let startY = y;
+            let endX = x + this.particleSize;
+            let endY = y + this.particleSize;
+            if (startX < 0) startX = 0;
+            if (startY < 0) startY = 0;
+            if (endX > this.cw) endX = this.cw;
+            if (endY > this.ch) endY = this.ch;
+
+            if (startX < endX && startY < endY) {
+                let packed = colorPacked[i];
+                if (colorIsFunc[i]) {
+                    const color = colorFuncs[i] ? colorFuncs[i]() : null;
+                    if (color) {
+                        packed = this.packColor(color);
+                    }
+                }
+                const width = imageData.width;
+                for (pixelY = startY; pixelY < endY; pixelY++) {
+                    let rowIndex = pixelY * width + startX;
+                    for (pixelX = startX; pixelX < endX; pixelX++) {
+                        data32[rowIndex++] = packed;
+                    }
                 }
             }
-            particle = particle.next;
         }
         
         this.ctx.putImageData(imageData, 0 + this.offsetX, 0 + this.offsetY);
@@ -416,29 +536,44 @@ class ImageAtomizer {
             );
             
             pixels.shuffle();
-            
-            let particle = this.pxlBuffer.first;
-            for (let i = 0; i < pixels.length; ++i) {
-                var newParticle = null;
-                
-                if (particle !== null) {
-                    newParticle = particle;
-                    particle = particle.next;
-                } else {
-                    this.swapList(this.recycleBuffer.first, this.recycleBuffer, this.pxlBuffer);
-                    newParticle = this.pxlBuffer.first;
-                }
-                
-                newParticle.gravityX = pixels[i].x;
-                newParticle.gravityY = pixels[i].y;
-                newParticle.color = pixels[i].color;
+
+            const targetCount = pixels.length;
+            const prevActive = this.activeCount;
+            if (targetCount > this.capacity) {
+                this.ensureCapacity(targetCount);
             }
-            
-            while (particle !== null) {
-                particle.ttl = ~~(Math.random() * 10);
-                particle.gravityY = ~~(this.ch * Math.random());
-                particle.gravityX = ~~(this.cw * Math.random());
-                particle = particle.next;
+            if (targetCount > prevActive) {
+                for (let i = prevActive; i < targetCount; i++) {
+                    this.posX[i] = Math.random() * this.cw;
+                    this.posY[i] = Math.random() * this.ch;
+                    this.velX[i] = Math.random() * 10;
+                    this.velY[i] = Math.random() * 10;
+                    this.ttl[i] = -1;
+                    this.colorIsFunc[i] = 0;
+                    this.colorFuncs[i] = null;
+                }
+            }
+            this.activeCount = Math.max(prevActive, targetCount);
+
+            for (let i = 0; i < targetCount; i++) {
+                const color = pixels[i].color;
+                this.ttl[i] = -1;
+                this.gravityX[i] = pixels[i].x;
+                this.gravityY[i] = pixels[i].y;
+                if (typeof color === "function") {
+                    this.colorIsFunc[i] = 1;
+                    this.colorFuncs[i] = color;
+                } else {
+                    this.colorIsFunc[i] = 0;
+                    this.colorFuncs[i] = null;
+                    this.colorPacked[i] = this.packColor(color);
+                }
+            }
+
+            for (let i = targetCount; i < this.activeCount; i++) {
+                this.ttl[i] = ~~(Math.random() * 10);
+                this.gravityY[i] = ~~(this.ch * Math.random());
+                this.gravityX[i] = ~~(this.cw * Math.random());
             }
         }
         if (!this.hasInitialized && this.onInitialized) {
@@ -463,6 +598,10 @@ class ImageAtomizer {
         this.ch = this.getCanvasHeight();
         this.$canv.width = this.cw;
         this.$canv.height = this.ch;
+        this.imageData = null;
+        this.imageDataWidth = 0;
+        this.imageDataHeight = 0;
+        this.imageData32 = null;
         this.init();
     }
     

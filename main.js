@@ -230,6 +230,8 @@
                     restless: false,
                     offsetY: offsetY,
                     timeScale: 0.5,
+                    enablePerfLog: true,
+                    perfLogInterval: 120,
                     onInitialized: () => {
                         atomizerWrapper.classList.add('has-initialized');
                         const {width, height} = getAtomizerImageSize();
