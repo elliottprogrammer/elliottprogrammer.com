@@ -827,10 +827,25 @@ canvas.draw {
     left: 50%;
     display: block;
     opacity: 0;
-    transform: translate(-50%, -50%) rotateZ(5deg);
+    translate: -50% -50%;
+    rotate: 5deg;
     width: 100px;
     height: auto;
     transform-origin: center;
+    will-change: rotate;
+}
+
+.hover-me[data-animation="wobble"] {
+    animation: hover-me-wobble .15s ease-in-out 4 alternate;
+}
+
+@keyframes hover-me-wobble {
+  0% {
+    rotate: 5deg;
+  }
+  100% {
+    rotate: 15deg;  
+  }
 }
 
 .the-bug {

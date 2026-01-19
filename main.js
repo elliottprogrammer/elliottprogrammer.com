@@ -93,32 +93,63 @@
                 },
             });
 
+            let hoverMeTimer;
             function showHoverMe() {
                 // Hover Me arrow.
-               gsap.to( '.hover-me', {
-                   delay:1.5,
-                   opacity: 1,
-               });
-           }
+                gsap.to( '.hover-me', {
+                    delay:1.5,
+                    opacity: 1,
+                });
+                if ( !hoverMeTimer ) {
+                    hoverMe();
+                }
+            }
+
+            const delay = (callback, ms) => new Promise(resolve => setTimeout(() => { callback(resolve) }, ms));
 
             // HoverMe image shakes every random 1 - 5 seconds
-            let hoverMeTimer;
-            function hoverMe() {
-                gsap.to( '.hover-me', {
-                    delay: 3.5,
-                    duration: .1,
-                    rotationZ: 20,
-                    yoyo: true,
-                    repeat: 5,
-                    ease: "power1.inOut",
-                    onComplete() {
-                        const randomWait = getRandomInt(1000, 5000);
-                        hoverMeTimer = setTimeout( hoverMe, randomWait );
-                    },
-                });
+            const hoverMeElem = document.querySelector('.hover-me');
+            async function hoverMe() {
+                const randomWait = getRandomInt(1500, 5000);
+                hoverMeElem.setAttribute('data-animation', 'wobble');
+                await delay( (resolve) => {
+                    hoverMeElem.setAttribute('data-animation', '');
+                    resolve();
+                }, 610); // remove just after .6 seconds
+                hoverMeTimer = setTimeout( hoverMe, randomWait );
             }
-            hoverMe();
 
+            function getAtomizerCanvasProps() {
+                return {
+                    navHeight: 62,
+                    headingHeight: document.getElementById('intro').clientHeight,
+                    get canvasHeight() {
+                        return window.innerHeight - this.navHeight;
+                    },
+                    get canvasCenterHeight() {
+                        return this.canvasHeight / 2;
+                    },
+                    get adjustedCanvasCenterHeight() {
+                        return ( this.canvasHeight - this.headingHeight ) / 2;
+                    },
+                    get offsetY() {
+                        return this.canvasCenterHeight - this.adjustedCanvasCenterHeight;
+                    }
+                };
+            }
+
+            function getStarfieldMetaProps() {
+                const { height: atmzrImgHeight } = getAtomizerImageSize();
+                const { canvasHeight, canvasCenterHeight, offsetY, headingHeight } = getAtomizerCanvasProps();
+                const atmzrImageTop = (canvasCenterHeight + offsetY) - ( atmzrImgHeight / 2 );
+                
+                return {
+                    startYMin: Math.round((headingHeight / canvasHeight) * 100) / 100,
+                    startYMax: Math.round((atmzrImageTop / canvasHeight) * 100) / 100,
+                }
+            }
+            
+            const { startYMin, startYMax } = getStarfieldMetaProps();
             starfield = new Starfield({
                 starsCount: 700,
                 starsColor: '#cce5ff',
@@ -127,6 +158,7 @@
                 bgColor: 'rgb(5,5,12)',
                 originOffsetX: 0,
                 originOffsetY: 0,
+                metaData: {deviceType, isMobileTouchDevice, startYMin, startYMax},
             });
 
             function getAtomizerImageSrc(canvasWidth, canvasHeight) {
@@ -147,13 +179,8 @@
 
             // Image Atomizer
             function showAtomizer() {
-                const navHeight = 62;
-                const headingHeight = deviceType === 'phone' ? 150: 229;
-                const viewportHeight = window.innerHeight;
-                const canvasHeight = viewportHeight - navHeight;
-                const canvasCenterHeight = canvasHeight / 2;
-                const adjustedCanvasCenterHeight = ( canvasHeight - headingHeight ) / 2;
-                const offsetY = canvasCenterHeight - adjustedCanvasCenterHeight;
+                const { offsetY } = getAtomizerCanvasProps();
+                
                 const hoverMeElem = document.querySelector('.hover-me');
 
                 function hoverMeSetPosition(canvasWidth, canvasHeight, imageWidth, imageHeight) {
@@ -170,6 +197,10 @@
                 let logoImgSrc = getAtomizerImageSrc(atomizerWrapper.clientWidth, atomizerWrapper.clientHeight);
                 
                 function atomizerSizeChange(atomizer, newWidth, newHeight) {
+                    deviceType = getDeviceType();
+                    isMobileTouchDevice = supportsSwipeEvents() && (deviceType !== 'phone' || deviceType !== 'mobile');
+                    const { startYMin, startYMax } = getStarfieldMetaProps(); 
+                    starfield.resize({deviceType, isMobileTouchDevice, startYMin, startYMax});
                     // replace the atomizer image when necessary, on viewport size change.
                     const newImageSrc = getAtomizerImageSrc(newWidth, newHeight);
                     if (newImageSrc !== logoImgSrc) {
@@ -203,7 +234,6 @@
                         atomizerWrapper.classList.add('has-initialized');
                         const {width, height} = getAtomizerImageSize();
                         hoverMeSetPosition(atomizerWrapper.clientWidth, atomizerWrapper.clientHeight, width, height);
-                        showHoverMe();
                     },
                     onSizeChange: atomizerSizeChange,
                 });
@@ -237,12 +267,19 @@
                         atomizer.play();
                         //starsNebula.play();
                         starfield.play();
+                        if ( !hoverMeTimer ) {
+                            hoverMe();
+                        }
                     },
                     onLeave: (self) => {
                         // When section leaves the viewport from the top (when scrolling down the page)
                         atomizer.pause();
-                        //starsNebula.pause();
+                        //starfield.pause();
                         starfield.pause();
+                        if ( hoverMeTimer ) {
+                            clearTimeout(hoverMeTimer);
+                            hoverMeTimer = null;
+                        }
                     }
                 });
 
@@ -1689,12 +1726,6 @@
               };
               
               document.querySelector('#contact .form-container form[name="elliottprogrammer-contact"]').addEventListener("submit", handleSubmit);
-
-
-            window.addEventListener('resize', () => {
-                deviceType = getDeviceType();
-                isMobileTouchDevice = supportsSwipeEvents() && (deviceType !== 'phone' || deviceType !== 'mobile');
-            });
         });
    
         function gitSliderStart() {   
