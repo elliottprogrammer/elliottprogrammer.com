@@ -21,11 +21,16 @@ class ImageAtomizer {
         this.rafId = null;
         this.enablePerfLog = false;
         this.perfLogInterval = 120;
+        this.enableOffscreenWorker = false;
         this.imageData = null;
         this.imageDataWidth = 0;
         this.imageDataHeight = 0;
         this.imageData32 = null;
         this.isLittleEndian = null;
+        this.useWorker = false;
+        this.worker = null;
+        this.offscreenCanvas = null;
+        this.resizeObserver = null;
 
         this.nextFrame = this.nextFrame.bind(this);
         
@@ -34,7 +39,7 @@ class ImageAtomizer {
             const optionKeys = [
                 'elementId', 'width', 'height', 'particleGap', 'particleSize', 'monochrome', 'monochromeColor',
                 'mouseForce', 'restless', 'onWidthChange', 'onHeightChange', 'onSizeChange', 'onInitialized',
-                'offsetX', 'offsetY', 'timeScale', 'enablePerfLog', 'perfLogInterval'
+                'offsetX', 'offsetY', 'timeScale', 'enablePerfLog', 'perfLogInterval', 'enableOffscreenWorker'
             ];
             
             for (let i = 0, len = optionKeys.length; i < len; i++) {
@@ -52,11 +57,15 @@ class ImageAtomizer {
         // DOM elements
         this.$container = document.getElementById(this.elementId);
         this.$canv = this.$container.querySelector("canvas.atomizer");
+
+        this.useWorker = this.enableOffscreenWorker === true && this.supportsOffscreenWorker();
         
         // Canvas elements
-        this.$srcCanv = document.createElement("canvas");
-        this.$srcCanv.style.display = "none";
-        this.$container.appendChild(this.$srcCanv);
+        if (!this.useWorker) {
+            this.$srcCanv = document.createElement("canvas");
+            this.$srcCanv.style.display = "none";
+            this.$container.appendChild(this.$srcCanv);
+        }
         
         // Set dimensions if not specified
         if (this.width <= 0) {
@@ -103,12 +112,17 @@ class ImageAtomizer {
         this.colorFuncs = [];
         
         // Canvas contexts
-        this.ctx = this.$canv.getContext("2d");
-        this.srcCtx = this.$srcCanv.getContext("2d", { willReadFrequently: true });
+        this.ctx = this.useWorker ? null : this.$canv.getContext("2d");
+        this.srcCtx = this.useWorker ? null : this.$srcCanv.getContext("2d", { willReadFrequently: true });
         
         // Set canvas dimensions
         this.$canv.width = this.cw;
         this.$canv.height = this.ch;
+        if (this.useWorker) {
+            this.offscreenCanvas = this.$canv.transferControlToOffscreen();
+            this.initWorker();
+            this.initResizeObserver();
+        }
 
         this.supportsSwipeEvents = function() {
             return window && 'ontouchstart' in window;
@@ -149,6 +163,9 @@ class ImageAtomizer {
         this.$canv.onmouseout = () => {
             this.mx = -1;
             this.my = -1;
+            if (this.useWorker) {
+                this.postWorker({ type: "pointerOut" });
+            }
         };
         
         if (this.supportsSwipeEvents()) {
@@ -156,6 +173,9 @@ class ImageAtomizer {
                 const offset = getOffset(this.$container);
                 this.mx = x - offset.x + window.scrollX;
                 this.my = y - offset.y + window.scrollY;
+                if (this.useWorker) {
+                    this.postWorker({ type: "pointer", x: this.mx, y: this.my });
+                }
             }
             this.$canv.ontouchstart = (event) => {
                 trackTouchCoordinates(event.touches[0].clientX, event.touches[0].clientY);
@@ -166,12 +186,18 @@ class ImageAtomizer {
             this.$canv.ontouchend = (event) => {
                 this.mx = -1;
                 this.my = -1;
+                if (this.useWorker) {
+                    this.postWorker({ type: "pointerOut" });
+                }
             }
         } else {
             this.$canv.onmousemove = (event) => {
                 const offset = getOffset(this.$container);
                 this.mx = event.clientX - offset.x + window.scrollX;
                 this.my = event.clientY - offset.y + window.scrollY;
+                if (this.useWorker) {
+                    this.postWorker({ type: "pointer", x: this.mx, y: this.my });
+                }
             };
         }
         
@@ -185,9 +211,14 @@ class ImageAtomizer {
                 
                 this.image.onload = () => {
                     this.isImageLoaded = true;
-                    this.resize();
-                    // Start animation
-                    this.play();
+                    if (this.useWorker) {
+                        this.setImage(this.image);
+                        this.play();
+                    } else {
+                        this.resize();
+                        // Start animation
+                        this.play();
+                    }
                 };
             } else {
                 return console.error('ImageAtomizer: You must provide an image source as the first argument when instanciating a `new ImageAtomizer(imageSrc, options)`.');
@@ -202,6 +233,117 @@ class ImageAtomizer {
 
     packColor(color) {
         return ((color[3] & 0xff) << 24) | ((color[2] & 0xff) << 16) | ((color[1] & 0xff) << 8) | (color[0] & 0xff);
+    }
+
+    supportsOffscreenWorker() {
+        return typeof OffscreenCanvas !== "undefined"
+            && typeof Worker !== "undefined"
+            && typeof HTMLCanvasElement !== "undefined"
+            && typeof HTMLCanvasElement.prototype.transferControlToOffscreen === "function"
+            && typeof createImageBitmap === "function";
+    }
+
+    getWorkerOptions() {
+        return {
+            particleGap: this.particleGap,
+            particleSize: this.particleSize,
+            offsetX: this.offsetX,
+            offsetY: this.offsetY,
+            monochrome: this.monochrome,
+            monochromeColor: this.monochromeColor,
+            mouseForce: this.mouseForce,
+            restless: this.restless,
+            timeScale: this.timeScale,
+            enablePerfLog: this.enablePerfLog,
+            perfLogInterval: this.perfLogInterval
+        };
+    }
+
+    initWorker() {
+        if (!this.useWorker || this.worker) {
+            return;
+        }
+        this.worker = new Worker(new URL("./atomizer-worker.js", import.meta.url), { type: "module" });
+        this.worker.onmessage = (event) => {
+            const data = event.data;
+            if (data && data.type === "initialized") {
+                if (!this.hasInitialized && this.onInitialized) {
+                    this.onInitialized();
+                }
+                this.hasInitialized = true;
+            }
+        };
+    }
+
+    initResizeObserver() {
+        if (!this.useWorker || this.resizeObserver || typeof ResizeObserver === "undefined") {
+            return;
+        }
+        this.resizeObserver = new ResizeObserver((entries) => {
+            const entry = entries[0];
+            if (!entry) return;
+            const newWidth = Math.round(entry.contentRect.width);
+            const newHeight = Math.round(entry.contentRect.height);
+            if (newWidth === this.cw && newHeight === this.ch) return;
+            if (this.cw !== newWidth && typeof this.onWidthChange === "function") {
+                this.onWidthChange(this, newWidth);
+            }
+            if (this.ch !== newHeight && typeof this.onHeightChange === "function") {
+                this.onHeightChange(this, newHeight);
+            }
+            if ((this.cw !== newWidth || this.ch !== newHeight) && typeof this.onSizeChange === "function") {
+                this.onSizeChange(this, newWidth, newHeight);
+            }
+            this.resize();
+        });
+        this.resizeObserver.observe(this.$container);
+    }
+
+    postWorker(message, transferList) {
+        if (!this.worker) {
+            return;
+        }
+        if (transferList && transferList.length) {
+            this.worker.postMessage(message, transferList);
+        } else {
+            this.worker.postMessage(message);
+        }
+    }
+
+    setImage(image) {
+        this.image = image;
+        this.isImageLoaded = true;
+        if (!this.useWorker) {
+            this.resize();
+            return;
+        }
+        if (!this.worker) {
+            this.initWorker();
+        }
+        createImageBitmap(image).then((bitmap) => {
+            if (!this.worker) return;
+            if (this.offscreenCanvas) {
+                this.postWorker({
+                    type: "init",
+                    canvas: this.offscreenCanvas,
+                    width: this.cw,
+                    height: this.ch,
+                    options: this.getWorkerOptions(),
+                    imageBitmap: bitmap
+                }, [this.offscreenCanvas, bitmap]);
+                this.offscreenCanvas = null;
+                if (this.isRunning) {
+                    this.postWorker({ type: "play" });
+                }
+            } else {
+                this.postWorker({ type: "setImage", imageBitmap: bitmap }, [bitmap]);
+                this.postWorker({ type: "resize", width: this.cw, height: this.ch });
+                this.postWorker({ type: "initParticles" });
+                if (this.isRunning) {
+                    this.postWorker({ type: "play" });
+                }
+            }
+        });
     }
     
     ensureCapacity(required) {
@@ -288,6 +430,9 @@ class ImageAtomizer {
     
     nextFrame(timestamp) {
         if (!this.isRunning) {
+            return;
+        }
+        if (this.useWorker) {
             return;
         }
         if (typeof timestamp !== "number") {
@@ -462,8 +607,6 @@ class ImageAtomizer {
         const posX = this.posX;
         const posY = this.posY;
         const colorPacked = this.colorPacked;
-        const colorIsFunc = this.colorIsFunc;
-        const colorFuncs = this.colorFuncs;
         
         for (let i = 0; i < this.activeCount; i++) {
             x = ~~posX[i];
@@ -479,13 +622,7 @@ class ImageAtomizer {
             if (endY > this.ch) endY = this.ch;
 
             if (startX < endX && startY < endY) {
-                let packed = colorPacked[i];
-                if (colorIsFunc[i]) {
-                    const color = colorFuncs[i] ? colorFuncs[i]() : null;
-                    if (color) {
-                        packed = this.packColor(color);
-                    }
-                }
+                const packed = colorPacked[i];
                 const width = imageData.width;
                 for (pixelY = startY; pixelY < endY; pixelY++) {
                     let rowIndex = pixelY * width + startX;
@@ -523,6 +660,10 @@ class ImageAtomizer {
     }
     
     init() {
+        if (this.useWorker) {
+            this.postWorker({ type: "initParticles" });
+            return;
+        }
         if (this.isImageLoaded) {
             this.$srcCanv.width = this.image.width;
             this.$srcCanv.height = this.image.height;
@@ -563,6 +704,8 @@ class ImageAtomizer {
                 if (typeof color === "function") {
                     this.colorIsFunc[i] = 1;
                     this.colorFuncs[i] = color;
+                    const resolved = color();
+                    this.colorPacked[i] = resolved ? this.packColor(resolved) : 0;
                 } else {
                     this.colorIsFunc[i] = 0;
                     this.colorFuncs[i] = null;
@@ -596,17 +739,24 @@ class ImageAtomizer {
     resize() {
         this.cw = this.getCanvasWidth();
         this.ch = this.getCanvasHeight();
-        this.$canv.width = this.cw;
-        this.$canv.height = this.ch;
-        this.imageData = null;
-        this.imageDataWidth = 0;
-        this.imageDataHeight = 0;
-        this.imageData32 = null;
-        this.init();
+        if (this.useWorker) {
+            this.postWorker({ type: "resize", width: this.cw, height: this.ch });
+        } else {
+            this.$canv.width = this.cw;
+            this.$canv.height = this.ch;
+            this.imageData = null;
+            this.imageDataWidth = 0;
+            this.imageDataHeight = 0;
+            this.imageData32 = null;
+            this.init();
+        }
     }
     
     setColor(color) {
         this.monochromeColorArr = this.parseColor(color);
+        if (this.useWorker) {
+            this.postWorker({ type: "setColor", color });
+        }
     }
 
     play() {
@@ -614,6 +764,12 @@ class ImageAtomizer {
             return;
         }
         this.isRunning = true;
+        if (this.useWorker) {
+            if (this.worker && !this.offscreenCanvas) {
+                this.postWorker({ type: "play" });
+            }
+            return;
+        }
         this.lastTimestamp = null; // avoid a large delta after a pause
         this.rafId = this.requestAnimationFrame(this.nextFrame);
     }
@@ -623,11 +779,29 @@ class ImageAtomizer {
             return;
         }
         this.isRunning = false;
-        if (this.rafId !== null) {
-            cancelAnimationFrame(this.rafId);
-            this.rafId = null;
+        if (this.useWorker) {
+            this.postWorker({ type: "pause" });
+        } else {
+            if (this.rafId !== null) {
+                cancelAnimationFrame(this.rafId);
+                this.rafId = null;
+            }
+            this.lastTimestamp = null;
         }
-        this.lastTimestamp = null;
+    }
+
+    destroy() {
+        if (this.useWorker) {
+            this.postWorker({ type: "destroy" });
+            if (this.worker) {
+                this.worker.terminate();
+                this.worker = null;
+            }
+        }
+        if (this.resizeObserver) {
+            this.resizeObserver.disconnect();
+            this.resizeObserver = null;
+        }
     }
     
     requestAnimationFrame(callback) {

@@ -209,9 +209,7 @@
                         logoImgSrc = newImageSrc;
     
                         newImage.onload = () => {
-                            atomizer.image = newImage;
-                            atomizer.pxlBuffer = { first: null };
-                            atomizer.resize();
+                            atomizer.setImage(newImage);
                             hoverMeSetPosition(newWidth, newHeight, newImage.width, newImage.height);
                         };
         
@@ -230,7 +228,8 @@
                     restless: false,
                     offsetY: offsetY,
                     timeScale: 0.5,
-                    enablePerfLog: true,
+                    enableOffscreenWorker: true,
+                    enablePerfLog: false,
                     perfLogInterval: 120,
                     onInitialized: () => {
                         atomizerWrapper.classList.add('has-initialized');
