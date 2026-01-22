@@ -120,7 +120,12 @@
                 </div>
                 <div>
                     <figure>
-                        <div id="about-me-image" class="interactive-image">
+                        <div
+                            id="about-me-image"
+                            class="interactive-image"
+                            data-scroll-in-callback="aboutMeImageScrollInCallback"
+                            data-scroll-out-callback="aboutMeImageScrollOutCallback"
+                        >
                             <div class="challenge-complete-text"><span class="word1">Challenge</span> <span class="word2">Completed!</span> <span class="check">&#x2713;</span></div>
                             <div class="glow-light"><span></span></div>
                             <img class="main-image responsive" src="images/elliottprogrammer-desk-600-600.png" alt="elliottprogrammer cartoon at desk working on computer." />
@@ -182,11 +187,16 @@
             <div class="two-col right-text">
                 <div>
                     <figure>
-                        <div id="searching-bugs" class="interactive-image">
+                        <div
+                            id="searching-bugs"
+                            class="interactive-image"
+                            data-scroll-in-callback="searchingBugsImageScrollInCallback"
+                            data-scroll-out-callback="searchingBugsImageScrollOutCallback"
+                        >
                             <div class="frames-container fan-frames">
-                                <img class="fan-0 responsive" src="images/elliottprogrammer-searching-bugs-fan-0.png" data-id="0" alt="Ceiling fan frame 0" />
+                                <img class="fan-0 responsive" src="images/elliottprogrammer-searching-bugs-fan-2.png" data-id="0" alt="Ceiling fan frame 0" />
                                 <img class="fan-1 responsive" src="images/elliottprogrammer-searching-bugs-fan-1.png" data-id="1" alt="Ceiling fan frame 1" />
-                                <img class="fan-2 responsive" src="images/elliottprogrammer-searching-bugs-fan-2.png" data-id="2" alt="Ceiling fan frame 2" />
+                                <img class="fan-2 responsive frame-visible" src="images/elliottprogrammer-searching-bugs-fan-0.png" data-id="2" alt="Ceiling fan frame 2" />
                             </div>
                             <div class="cone-light-container">
                                 <img src="images/ceiling-fan-glow-light.png" class="responsive" alt="Illuminate light glow" />

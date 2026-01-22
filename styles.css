@@ -525,10 +525,11 @@ section#experience .page-container h2 {
     visibility: hidden;
 }
 
-.interactive-image .frames-container:not(.fan-frames) img[data-id="0"] {
+.interactive-image .frames-container img.frame-visible {
     visibility: visible;
 }
-.interactive-image .frames-container.fan-frames img[data-id="2"] {
+
+.interactive-image .frames-container:not(.fan-frames) img[data-id="0"] {
     visibility: visible;
 }
 

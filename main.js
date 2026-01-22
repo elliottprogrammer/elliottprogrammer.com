@@ -1,5 +1,6 @@
         import { Starfield } from './starfield.js';
         import { ImageAtomizer } from './image-atomizer.js';
+        import { imageFrameCycler as imageFrameCyclerV2 } from './image-frame-cycler-v2.js';
         import { Typewriter } from './t-writer.js';
         import { confettea } from './confettea.js';
         import {
@@ -8,10 +9,7 @@
             getAtomizerImageSize,
             getElementProps,
             getRandomInt,
-            CeilingFan,
             Twinkler,
-            EyesBlinker,
-            TypingHand,
             MagnifyArm,
             timeSince,
             numberWithCommas,
@@ -105,18 +103,25 @@
                 }
             }
 
-            const delay = (callback, ms) => new Promise(resolve => setTimeout(() => { callback(resolve) }, ms));
+            const delay = (ms) =>
+              new Promise((resolve) => {
+                const timer = setTimeout((timer) => {
+                  resolve(timer);
+                }, ms);
+              });
 
             // HoverMe image shakes every random 1 - 5 seconds
             const hoverMeElem = document.querySelector('.hover-me');
             async function hoverMe() {
                 const randomWait = getRandomInt(1500, 5000);
                 hoverMeElem.setAttribute('data-animation', 'wobble');
-                await delay( (resolve) => {
+                delay(610).then((timer) => {
                     hoverMeElem.setAttribute('data-animation', '');
-                    resolve();
-                }, 610); // remove just after .6 seconds
-                hoverMeTimer = setTimeout( hoverMe, randomWait );
+                }); // remove just after .6 seconds
+                delay(randomWait).then((timer) => {
+                  hoverMeTimer = timer;
+                  hoverMe();
+                }); 
             }
 
             function getAtomizerCanvasProps() {
@@ -463,15 +468,88 @@
                 y: 0,       
             });
 
-            // Blinking Eyes on both images
-            const eyesBlinker1 = new EyesBlinker('#about-me-image .frames-container.about-eyes-frames');
-            const eyesBlinker2 = new EyesBlinker('#searching-bugs .frames-container.searching-eyes-frames');
-            eyesBlinker1.start();
-            eyesBlinker2.start();
+            // About Me - Blinking Eyes
+            const eyesFrames1 = document.querySelectorAll('#about-me-image .frames-container.about-eyes-frames img');
+            const eyesBlinker1 = imageFrameCyclerV2(eyesFrames1, {
+                fps: 18,
+                shouldReverse: true,
+                //reverseDelay: 50,
+                cycleCount: 2,
+                delayRange: { min: 1700, max: 6000 },
+                autoStart: false,
+            });
 
-            //typing hands
-            const typingHand = new TypingHand('#about-me-image .frames-container.typing-hands');
-            typingHand.start();
+            // About Me - Typing Hands
+            const typingHandsFrames = document.querySelectorAll('#about-me-image .frames-container.typing-hands img');
+            const typingHands = imageFrameCyclerV2(typingHandsFrames, {
+                fps: 14,
+                shouldReverse: true,
+                cycleCount: 8,
+                delayRange: { min: 1700, max: 3700 },
+                autoStart: false,
+            });
+
+            // Searching Bugs - Blinking Eyes
+            const eyesFrames2 = document.querySelectorAll('#searching-bugs .frames-container.searching-eyes-frames img');
+            const eyesBlinker2 = imageFrameCyclerV2(eyesFrames2, {
+                fps: 20,
+                shouldReverse: true,
+                cycleCount: 2,
+                delayRange: { min: 1700, max: 5000 },
+                autoStart: false,
+            });
+
+            // Searching Bugs - Ceiling Fan
+            const fanFrames = document.querySelectorAll('#searching-bugs .frames-container.fan-frames img');
+            const fanSpinner = imageFrameCyclerV2(fanFrames, {
+                fps: 20,
+                shouldReverse: false,
+                delayRange: null,
+                autoStart: false,
+            });
+
+            const scrollHandlers = {
+                aboutMeImageScrollInCallback: function(target) {
+                    eyesBlinker1.start();
+                    typingHands.start();
+                },
+                aboutMeImageScrollOutCallback: function(target) {  
+                    eyesBlinker1.stop();
+                    typingHands.stop();
+                },
+                searchingBugsImageScrollInCallback: function(target) { 
+                    eyesBlinker2.start();
+                },
+                searchingBugsImageScrollOutCallback: function(target) {
+                    eyesBlinker2.stop();
+                },
+            }
+
+            const scrollObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const target = entry.target;
+                        const callbackName = target.dataset.scrollInCallback;
+
+                        if (callbackName && typeof scrollHandlers[callbackName] === 'function') {
+                            scrollHandlers[callbackName](target);
+                        }
+                    } else {
+                        const target = entry.target;
+                        const callbackName = target.dataset.scrollOutCallback;
+
+                        if (callbackName && typeof scrollHandlers[callbackName] === 'function') {
+                            scrollHandlers[callbackName](target);
+                        }
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            const aboutMeImg = document.querySelector('#about-me-image.interactive-image');
+            scrollObserver.observe(aboutMeImg);
+
+            const searchingBugsImg = document.querySelector('#searching-bugs.interactive-image');
+            scrollObserver.observe(searchingBugsImg);
 
             //magnifying arm
             const magnifyArm = new MagnifyArm('#searching-bugs .frames-container.magnify-arm-frames');
@@ -696,7 +774,7 @@
                         function showChallengeComplete() {
                             setTimeout(() => {
                                 aboutMeComplete.play();
-                                typingHand.stop();
+                                typingHands.stop();
                             }, 1000);
                         }
                         playBuffer('taDaSound', audioCtx.currentTime);
@@ -817,17 +895,14 @@
             });
             // Start Bug animation around here...
             const searchingBugsFanSwitch = document.querySelector('#searching-bugs button.fan-switch');
-            const fan = new CeilingFan();
             searchingBugsFanSwitch.addEventListener('click', (e) => {
                 imageStatus.isFanOn = !imageStatus.isFanOn;
                 setSwitchRecepticle(imageStatus);
                 if (imageStatus.isFanOn) {
-                    fan.start();
+                    fanSpinner.start();
                     maybeDeployBug();
                 } else {
-                    if (fan.animationId) {
-                        fan.stop();
-                    } 
+                    fanSpinner.stop();
                 }
             });
             
@@ -952,9 +1027,9 @@
                     hoverMeTimer = null;
                 }
                 // Stop blinking when window loses focus.
-                eyesBlinker1.stop();
-                eyesBlinker2.stop();
-                typingHand.stop();
+                eyesBlinker1.pause();
+                eyesBlinker2.pause();
+                typingHands.pause();
                 magnifyArm.stop();
 
                 if (arrow1Timer) {
@@ -971,8 +1046,8 @@
                 if (cupTwinkler && cupTwinkler?.hasStarted) {
                     cupTwinkler.stop();
                 }
-                if (fan && !fan?.stopped) {
-                    fan.stop();
+                if (fanSpinner && !fanSpinner.isStopped()) {
+                    fanSpinner.stop();
                 }
             });
 
@@ -983,9 +1058,9 @@
                     hoverMe();
                 }
                 // Start blinking eyes again
-                eyesBlinker1.start();
-                eyesBlinker2.start();
-                typingHand.start();
+                eyesBlinker1.resume();
+                eyesBlinker2.resume();
+                typingHands.resume();
                 if ( !hasFoundBug ) {
                     magnifyArm.start();
                 }
@@ -1002,8 +1077,8 @@
                 if (cupTwinkler && !cupTwinkler?.hasStarted && hasLightBeenClicked && !hasFoundCoffee) {
                     cupTwinkler.start();
                 }
-                if (fan && fan?.stopped && imageStatus?.isFanOn) {
-                    fan.start();
+                if (fanSpinner && fanSpinner.isStopped() && imageStatus?.isFanOn) {
+                    fanSpinner.start();
                 }
             });
 

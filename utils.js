@@ -116,35 +116,6 @@ export function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-// Ceiling fan logic (class)
-export class CeilingFan {
-    constructor( framesSelector = '#searching-bugs .frames-container' ) {
-        this.animationId = null;
-        this.fanCycler = imageFrameCycler(framesSelector, { targetFPS: 18 });
-        this.stopped = false;
-        this.timer = null;
-    }
-
-    doFanCycle = () => {
-        if (! this.stopped) {
-            this.animationId = requestAnimationFrame((timestamp) => { this.fanCycler.doFrameCycle(timestamp, 0, true, false)});
-            this.timer = setTimeout(this.doFanCycle, 222);
-        }
-    }
-
-    start = () => {
-        this.fanCycler.resetCycler();
-        this.stopped = false;
-        this.doFanCycle();
-    }
-
-    stop = () => {
-        this.stopped = true;
-        clearTimeout(this.timer);
-        this.fanCycler.stopCycler();
-    }
-};
-
 // Twinkler logic (class)
 export class Twinkler {
     constructor(twinkleElem, randomRange) {
@@ -191,88 +162,6 @@ export class Twinkler {
         }
     }
 }
-
-// Image eyes blinking logic (class)
-class EyesBlinker {
-    constructor(framesSelector, randomRange = [1700, 6000]) {
-        this.blinkCycler = imageFrameCycler(framesSelector, { shouldReverse: true });
-        this.animationId = null;
-        this.randomRange = {
-            low: randomRange[0],
-            high: randomRange[1],
-        };
-        this.timer = null;
-        this.stopped = false;
-    }
-
-    _doBlinkCycle = () => {
-        if (! this.stopped) {
-            const randomWait = getRandomInt(this.randomRange.low, this.randomRange.high);
-            this.animationId = requestAnimationFrame((timestamp) => { this.blinkCycler.doFrameCycle(timestamp, 0, true, false)});
-            this.timer = setTimeout(this._doBlinkCycle, randomWait);
-        }
-    }
-
-    start = () => {
-        this.blinkCycler.resetCycler();
-        this.stopped = false;
-        this._doBlinkCycle();
-    }
-
-    stop = () => {
-        this.stopped = true;
-        clearTimeout(this.timer);
-        this.blinkCycler.stopCycler();
-    }
-}
-
-export { EyesBlinker };
-
-class TypingHand {
-    constructor(framesSelector, randomRange = [2000, 5000]) {
-        this.typeCycler = imageFrameCycler(framesSelector, { targetFPS: 8 });
-        this.animationId = null;
-        this.randomRange = {
-            low: randomRange[0],
-            high: randomRange[1],
-        };
-        this.timer = null;
-        this.stopped = false;
-        this.cycleWaitTime ;
-        this.numTypeCyclesBeforePause = getRandomInt(6, 15);
-    }
-
-
-    _doTypeCycle = () => {
-        let cycleWaitTime = 444;
-        if (! this.stopped) {
-            const frameCount = this.typeCycler.getFrameCount();
-            if (frameCount >= this.numTypeCyclesBeforePause) {
-                cycleWaitTime = getRandomInt(this.randomRange.low, this.randomRange.high);
-                this.typeCycler.resetFrameCount();
-                this.numTypeCyclesBeforePause = getRandomInt(5, 17);
-            } 
-            
-            this.animationId = requestAnimationFrame((timestamp) => { this.typeCycler.doFrameCycle(timestamp, 0, true, false)});
-            this.timer = setTimeout(this._doTypeCycle, cycleWaitTime);
-        }
-    }
-
-    start = () => {
-        this.typeCycler.resetCycler();
-        this.stopped = false;
-        this._doTypeCycle();
-    }
-
-    stop = () => {
-        this.stopped = true;
-        clearTimeout(this.timer);
-        this.typeCycler.stopCycler();
-    }
-}
-
-export { TypingHand };
-
 class MagnifyArm {
     constructor(framesSelector, randomRange = [7000, 16000]) {
         this.armCycler = imageFrameCycler(framesSelector, { targetFPS: 20, shouldReverse: true });
