@@ -10,7 +10,6 @@
             getElementProps,
             getRandomInt,
             Twinkler,
-            MagnifyArm,
             timeSince,
             numberWithCommas,
             debounce
@@ -49,7 +48,7 @@
             // Enable lag smoothing in GSAP to prevent any delay in scroll animations
             gsap.ticker.lagSmoothing(500, 20);
             // Might need to normalizeScroll for Safari mobile browser?
-            //ScrollTrigger.normalizeScroll(true);
+            ScrollTrigger.normalizeScroll(true);
             const shouldUseTextMotionPath = (getDeviceType() === 'desktop' || getDeviceType() === 'tablet');
 
             initElliottAIChat();
@@ -499,6 +498,37 @@
                 autoStart: false,
             });
 
+            // Searching Bugs - Magnifying Arm
+            let armTLDelayedRepeat = null;
+            const magnifyArmElem = document.querySelector('#searching-bugs .magnify-arm-container');
+            const magnifyArmHandElem = document.querySelector('#searching-bugs .magnify-arm-hand');
+            const armTl = gsap.timeline({
+                yoyo: true,
+                paused: true,
+                defaults: {
+                    ease: 'power1.out',
+                    duration: 1.3,
+                },
+                onComplete: () => {
+                    armTLDelayedRepeat = gsap.delayedCall(gsap.utils.random(2, 7), () => armTl.restart());
+                },
+            });
+            armTl.to(magnifyArmElem, {
+                rotation: 16,
+            }).to(magnifyArmHandElem, {
+                rotation: -12,
+            }, '<').to(magnifyArmElem, {
+                rotation: -19,
+            }).to(magnifyArmHandElem, {
+                rotation: 14,
+                y: 4,
+            }, '<').to(magnifyArmElem, {
+                rotation: 0,
+            }).to(magnifyArmHandElem, {
+                rotation: 0,
+                y: 0,
+            }, '<');
+
             // Searching Bugs - Ceiling Fan
             const fanFrames = document.querySelectorAll('#searching-bugs .frames-container.fan-frames img');
             const fanSpinner = imageFrameCyclerV2(fanFrames, {
@@ -519,9 +549,15 @@
                 },
                 searchingBugsImageScrollInCallback: function(target) { 
                     eyesBlinker2.start();
+                    armTl.restart();
                 },
                 searchingBugsImageScrollOutCallback: function(target) {
                     eyesBlinker2.stop();
+                    armTl.pause();
+                    if (armTLDelayedRepeat) {
+                        armTLDelayedRepeat.kill();
+                        armTLDelayedRepeat = null;
+                    }
                 },
             }
 
@@ -550,11 +586,6 @@
 
             const searchingBugsImg = document.querySelector('#searching-bugs.interactive-image');
             scrollObserver.observe(searchingBugsImg);
-
-            //magnifying arm
-            const magnifyArm = new MagnifyArm('#searching-bugs .frames-container.magnify-arm-frames');
-            magnifyArm.start();
-
             
             // Light switch twinkle
             const clickMeTwinkle = document.querySelector('img.click-me-twinkle');
@@ -846,7 +877,8 @@
 
             const bugsCompleteTl = gsap.timeline({
                 onComplete: () => {
-                    magnifyArm && magnifyArm.stop();
+                    armTl && armTl.pause();
+                    armTLDelayedRepeat && armTLDelayedRepeat.kill();
                 }
             });
             const bugsComplete = bugsCompleteTl.from(bugsCompleteText1, {
@@ -1030,7 +1062,8 @@
                 eyesBlinker1.pause();
                 eyesBlinker2.pause();
                 typingHands.pause();
-                magnifyArm.stop();
+                armTl && armTl.pause();
+                armTLDelayedRepeat && armTLDelayedRepeat.kill();
 
                 if (arrow1Timer) {
                     clearTimeout(arrow1Timer);
@@ -1062,7 +1095,7 @@
                 eyesBlinker2.resume();
                 typingHands.resume();
                 if ( !hasFoundBug ) {
-                    magnifyArm.start();
+                    armTl && armTl.restart();
                 }
 
                 if (!arrow1Timer && !hasLightBeenClicked) {
@@ -1546,6 +1579,8 @@
             }
 
             // Tap/Drag gesture icon animation timeline
+            let tapGesturePlayCount = 0;
+            const tapGestureContainer = document.querySelector('.tap-to-tilt-container');
             const tapGestureIcon = document.querySelector('.tap-to-tilt-icon');
             const containerWidth = document.querySelector('.right')?.clientWidth ?? 500;
             const tapTl = gsap.timeline({
@@ -1553,31 +1588,36 @@
                     ease: 'power1.inOut',
                 },
                 paused: true,
-                repeat: 3,
-                repeatDelay: 2,
-                delay: 1,
-             });
-            tapTl.to(tapGestureIcon, {
-                duration: 0.2,
-                opacity: 1,
-            }).to(tapGestureIcon, {
-               opacity: 0,
-                duration: 0.2,
-            }).to(tapGestureIcon, {
-                opacity: 1,
-                duration: 0.2,
-            }).to(tapGestureIcon, {
-                x: containerWidth * 0.06,
-                y: -5,
-                duration: 1,
-            }).to(tapGestureIcon, {
-                x: 0,
-                y: 0,
-                duration: 1,
-            }).to(tapGestureIcon, {
-               opacity: 0,
-                duration: 0.2,
+                onComplete: () => {
+                    // Blink on left side, then blink on right side, then stop.
+                    ++tapGesturePlayCount;
+                    if (tapGesturePlayCount <= 1) {
+                        if (tapGestureContainer.classList.contains('right-side')) {
+                            tapGestureContainer.classList.remove('right-side');
+                        } else {
+                            tapGestureContainer.classList.add('right-side');
+                        }
+                    
+                        gsap.delayedCall(1, () => {
+                            tapTl.play(0);
+                        });
+                    }
+                },
             });
+            // Blink tapGestureIcon (hand tap icon) twice.
+            tapTl.to(tapGestureIcon, {
+                duration: 0.3,
+                opacity: 1,
+            }, '+=0.1').to(tapGestureIcon, {
+               opacity: 0,
+                duration: 0.3,
+            }, '+=0.3').to(tapGestureIcon, {
+                opacity: 1,
+                duration: 0.3,
+            }, '+=0.1').to(tapGestureIcon, {
+               opacity: 0,
+                duration: 0.3,
+            }, '+=0.3');
 
             const rotatingTiltContainer = document.querySelector('#contact .right');
             ScrollTrigger.create({
@@ -1609,7 +1649,7 @@
              * Contact section is so close to the end of the web page)
              */ 
             ScrollTrigger.create({
-                trigger: '#contact',
+                trigger: '.logo-rotation-container',
                 start: 'top bottom',
                 end: 'bottom top',
                 onEnter: (self) => {
@@ -1633,10 +1673,12 @@
                 onEnterBack: (self) => {
                     // When section enters the viewport from the top (when scrolling back up to the top)
                     // Not currenty in use. 
-                    window.addEventListener("mousemove", handleMovePupils);
-                    window.addEventListener("mousemove", handleTiltElliottProgrammer);
-                    document.addEventListener("mouseleave", handleResetPupils);
-                    document.addEventListener("mouseleave", handleResetElliottProgrammer);
+                    if (!isMobileTouchDevice) {
+                        window.addEventListener("mousemove", handleMovePupils);
+                        window.addEventListener("mousemove", handleTiltElliottProgrammer);
+                        document.addEventListener("mouseleave", handleResetPupils);
+                        document.addEventListener("mouseleave", handleResetElliottProgrammer);
+                    }
                 },
                 onLeaveBack: (self) => {
                     // When section leaves the viewport from the bottom (when scrolling back up to the top)
@@ -1661,10 +1703,12 @@
                 onLeave: (self) => {
                     // When section leaves the viewport from the top (when scrolling down the page)
                     // Not currently in use.
-                    window.removeEventListener("mousemove", handleMovePupils);
-                    window.removeEventListener("mousemove", handleTiltElliottProgrammer);
-                    document.removeEventListener("mouseleave", handleResetPupils);
-                    document.removeEventListener("mouseleave", handleResetElliottProgrammer);
+                    if (!isMobileTouchDevice) {
+                        window.removeEventListener("mousemove", handleMovePupils);
+                        window.removeEventListener("mousemove", handleTiltElliottProgrammer);
+                        document.removeEventListener("mouseleave", handleResetPupils);
+                        document.removeEventListener("mouseleave", handleResetElliottProgrammer);
+                    }
                 }
             });
 
