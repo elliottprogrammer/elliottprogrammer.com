@@ -2321,13 +2321,15 @@
                 streamQuestion(question);
             });
             exampleQuestions.forEach(questionEl => {
-                const question = questionEl?.dataset?.question;
-                if (!question) return;
+                if (!questionEl?.dataset?.question)
+                    return;
 
-                questionEl.addEventListener('click', () => {
-                    appendMessage('user', question);
-                    setLoading(true);
-                    streamQuestion(question);
+                questionEl.addEventListener('click', (e) => {
+                    if (e.target.dataset.question) {
+                        appendMessage('user', e.target.dataset.question);
+                        setLoading(true);
+                        streamQuestion(e.target.dataset.question);
+                    }
                 });
             });
         }
@@ -2340,7 +2342,6 @@
             }
         }
         
-        initElliottAIChat();
         injectFooterYear();
 
         export { getDeviceType };
