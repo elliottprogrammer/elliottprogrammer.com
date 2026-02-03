@@ -189,7 +189,7 @@ class Starfield {
     }
 
     resize({deviceType, isMobileTouchDevice} = {}) {
-        this.canvas.width = window.innerWidth;
+        this.canvas.width = document.documentElement.clientWidth;
         this.canvas.height = this.parentContainer.clientHeight;
         this.originX = this.canvas.width / 2 + this.originOffsetX;
         this.originY = this.canvas.height / 2 + this.originOffsetY;

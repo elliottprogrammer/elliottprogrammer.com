@@ -227,12 +227,12 @@
                 }
 
                 atomizer = new ImageAtomizer(logoImgSrc, {
-                    particleGap: 2, //getDeviceType() == 'phone' ? 3 : 0,
-                    particleSize: 3, //getDeviceType() == 'phone' ? 3 : 1,
+                    particleGap: 0, //getDeviceType() == 'phone' ? 3 : 0,
+                    particleSize: 2, //getDeviceType() == 'phone' ? 3 : 1,
                     restless: false,
                     offsetY: offsetY,
                     timeScale: 0.5,
-                    enableOffscreenWorker: true,
+                    enableOffscreenWorker: false,
                     enablePerfLog: false,
                     perfLogInterval: 120,
                     onInitialized: () => {

@@ -633,14 +633,14 @@ class ImageAtomizer {
             }
         }
         
-        this.ctx.putImageData(imageData, 0 + this.offsetX, 0 + this.offsetY);
+        this.ctx.putImageData(imageData, this.offsetX, this.offsetY);
     }
     
     getPixelFromImageData(imageData, offsetX, offsetY) {
         const pixels = [];
         
-        for (let x = 0; x < imageData.width; x += this.particleGap + 1) {
-            for (let y = 0; y < imageData.height; y += this.particleGap + 1) {
+        for (let x = 0; x < imageData.width; x += this.particleGap + this.particleSize) {
+            for (let y = 0; y < imageData.height; y += this.particleGap + this.particleSize) {
                 const pixelIndex = (y * imageData.width + x) * 4;
                 const alpha = imageData.data[pixelIndex + 3];
                 
@@ -727,12 +727,10 @@ class ImageAtomizer {
     }
     
     getCanvasWidth() {
-        //return Math.min(document.body.clientWidth, this.width, this.$container.clientWidth);
         return this.$container.clientWidth;
     }
     
     getCanvasHeight() {
-        //return Math.min(document.body.clientHeight, this.height, this.$container.clientHeight);
         return this.$container.clientHeight;
     }
     

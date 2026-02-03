@@ -175,8 +175,8 @@ class AtomizerWorker {
     getPixelFromImageData(imageData, offsetX, offsetY) {
         const pixels = [];
 
-        for (let x = 0; x < imageData.width; x += this.particleGap + 1) {
-            for (let y = 0; y < imageData.height; y += this.particleGap + 1) {
+        for (let x = 0; x < imageData.width; x += this.particleGap + this.particleSize) {
+            for (let y = 0; y < imageData.height; y += this.particleGap + this.particleSize) {
                 const pixelIndex = (y * imageData.width + x) * 4;
                 const alpha = imageData.data[pixelIndex + 3];
 
@@ -236,8 +236,8 @@ class AtomizerWorker {
 
         const pixels = this.getPixelFromImageData(
             this.srcCtx.getImageData(0, 0, this.srcCanvas.width, this.srcCanvas.height),
-            ~~(this.cw / 2 - this.srcCanvas.width / 2),
-            ~~(this.ch / 2 - this.srcCanvas.height / 2),
+            ~~((this.cw / 2) - (this.srcCanvas.width / 2)),
+            ~~((this.ch / 2) - (this.srcCanvas.height / 2)),
         );
 
         this.shufflePixels(pixels);
