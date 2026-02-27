@@ -488,6 +488,34 @@
                 autoStart: false,
             });
 
+            // About Me - Tilting head
+            let headTLDelayedRepeat = null;
+            let randomRotation = parseInt(gsap.utils.random(-7, -3));
+            const headTiltElem = document.querySelector('#about-me-image .desk-scene-head');
+            const headTiltTl = gsap.timeline({
+                yoyo: true,
+                paused: true,
+                defaults: {
+                    ease: 'power1.out',
+                    duration: 1.9,
+                },
+                repeatRefresh: true,
+                onComplete: () => {
+                    randomRotation = parseInt(gsap.utils.random(-20, -1));
+                    console.log(randomRotation);
+                    headTLDelayedRepeat = gsap.delayedCall(gsap.utils.random(.2, 1), () => headTiltTl.restart());
+                },
+            });
+            headTiltTl.to(headTiltElem, {
+                rotation: () => { return randomRotation; },
+            }).to(headTiltElem, {
+                rotation: 0,
+            }).to(headTiltElem, {
+                rotation: -4,
+            }).to(headTiltElem, {
+                rotation: 0,
+            });
+
             // Searching Bugs - Blinking Eyes
             const eyesFrames2 = document.querySelectorAll('#searching-bugs .frames-container.searching-eyes-frames img');
             const eyesBlinker2 = imageFrameCyclerV2(eyesFrames2, {
@@ -542,10 +570,12 @@
                 aboutMeImageScrollInCallback: function(target) {
                     eyesBlinker1.start();
                     typingHands.start();
+                    headTiltTl.restart();
                 },
                 aboutMeImageScrollOutCallback: function(target) {  
                     eyesBlinker1.stop();
                     typingHands.stop();
+                    headTiltTl.pause();
                 },
                 searchingBugsImageScrollInCallback: function(target) { 
                     eyesBlinker2.start();

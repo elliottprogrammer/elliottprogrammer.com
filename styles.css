@@ -483,8 +483,21 @@ section#experience .page-container h2 {
     position: relative;
 }
 
-.interactive-image .main-image {
+.interactive-image .desk-scene {
     position: relative;
+}
+
+.interactive-image .desk-scene-head {
+    position: absolute;
+    width: 23.16%;
+    height: 29.83%;
+    left: 43.66%;
+    top: 10%;
+    transform-origin: 76.25% 74.3%;
+    image-rendering: -webkit-optimize-contrast;
+}
+.interactive-image .desk-scene-head img {
+    image-rendering: -webkit-optimize-contrast;
 }
 
 .interactive-image .frames-container, .interactive-image .frames-container img {
@@ -492,6 +505,13 @@ section#experience .page-container h2 {
     width: 100%;
     Left: 0;
     top: 0;
+}
+
+.interactive-image .frames-container.about-eyes-frames {
+    left: 12.8%;
+    top: 46.368%;
+    width: 45.323%;
+    height: 17.318%;
 }
 
 .interactive-image .frames-container.searching-eyes-frames {
